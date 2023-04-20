@@ -358,6 +358,41 @@ impl<'tcx> GotocHook<'tcx> for MemCmp {
     }
 }
 
+/// This hook intercepts calls to `std::ptr::align_offset<T>` as CBMC's memory model has no concept
+/// of alignment of allocations, so we would have to non-deterministically choose an alignment of
+/// the base pointer, add the pointer's offset to it, and then do the math that is done in
+/// `library/core/src/ptr/mod.rs`. Instead, we choose to always return `usize::MAX`, per
+/// `align_offset`'s documentation, which states: "It is permissible for the implementation to
+/// always return usize::MAX. Only your algorithm’s performance can depend on getting a usable
+/// offset here, not its correctness."
+pub struct AlignOffset;
+
+impl<'tcx> GotocHook<'tcx> for AlignOffset {
+    fn hook_applies(&self, tcx: TyCtxt<'tcx>, instance: Instance<'tcx>) -> bool {
+        let name = with_no_trimmed_paths!(tcx.def_path_str(instance.def_id()));
+        name == "std::ptr::align_offset"
+    }
+
+    fn handle(
+        &self,
+        tcx: &mut GotocCtx<'tcx>,
+        _instance: Instance<'tcx>,
+        mut _fargs: Vec<Expr>,
+        assign_to: Place<'tcx>,
+        target: Option<BasicBlock>,
+        span: Option<Span>,
+    ) -> Stmt {
+        let loc = tcx.codegen_span_option(span);
+        let target = target.unwrap();
+        let place_expr =
+            unwrap_or_return_codegen_unimplemented_stmt!(tcx, tcx.codegen_place(&assign_to))
+                .goto_expr;
+        let rhs = Expr::int_constant(usize::MAX, place_expr.typ().clone());
+        let code = place_expr.assign(rhs, loc).with_location(loc);
+        Stmt::block(vec![code, Stmt::goto(tcx.current_fn().find_label(&target), loc)], loc)
+    }
+}
+
 pub fn fn_hooks<'tcx>() -> GotocHooks<'tcx> {
     GotocHooks {
         hooks: vec![
@@ -369,6 +404,7 @@ pub fn fn_hooks<'tcx>() -> GotocHooks<'tcx> {
             Rc::new(RustAlloc),
             Rc::new(SliceFromRawPart),
             Rc::new(MemCmp),
+            Rc::new(AlignOffset),
         ],
     }
 }
