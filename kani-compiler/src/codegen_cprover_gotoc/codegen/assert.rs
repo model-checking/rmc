@@ -48,6 +48,9 @@ pub enum PropertyClass {
     ///
     /// SPECIAL BEHAVIOR: "Errors" for this type of assertion just mean "reachable" not failure.
     Cover,
+    /// Same codegen as `Cover`, but failure will cause verification failure.
+    /// Used internally for contract instrumentation; see the contracts module in kani_macros for details.
+    ContractCover,
     /// The class of checks used for code coverage instrumentation. Only needed
     /// when working on coverage-related features.
     ///
@@ -148,6 +151,12 @@ impl GotocCtx<'_> {
         // https://github.com/diffblue/cbmc/issues/6613). So for now use
         // assert(!cond).
         self.codegen_assert(cond.not(), PropertyClass::Cover, msg, loc)
+    }
+
+    /// Generate a cover statement for a contract at the current location
+    pub fn codegen_contract_cover(&self, cond: Expr, msg: &str, span: SpanStable) -> Stmt {
+        let loc = self.codegen_caller_span_stable(span);
+        self.codegen_assert(cond.not(), PropertyClass::ContractCover, msg, loc)
     }
 
     /// Generate a cover statement for code coverage reports.

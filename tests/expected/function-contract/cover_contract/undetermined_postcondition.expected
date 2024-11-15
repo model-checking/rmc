@@ -1,0 +1,9 @@
+
+contract_cover.2\
+	 - Status: UNDETERMINED\
+	 - Description: "The contract's postcondition is reachable."
+
+unsupported_construct.1\
+	 - Status: FAILURE
+
+VERIFICATION:- FAILED

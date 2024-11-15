@@ -25,6 +25,7 @@ impl<'a> ContractConditionsHandler<'a> {
             ContractConditionsData::Requires { attr } => {
                 quote!({
                     kani::assume(#attr);
+                    kani::internal::contract_cover(#attr, "The contract's precondition is satisfiable.");
                     #(#body_stmts)*
                 })
             }
@@ -46,6 +47,7 @@ impl<'a> ContractConditionsHandler<'a> {
                     #(#assumes)*
                     #remembers
                     #(#rest_of_body)*
+                    kani::internal::contract_cover(#ensures_clause, "The contract's postcondition is reachable.");
                     #exec_postconditions
                     #return_expr
                 })

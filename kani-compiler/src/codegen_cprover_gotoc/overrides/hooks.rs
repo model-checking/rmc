@@ -82,6 +82,45 @@ impl GotocHook for Cover {
     }
 }
 
+/// A hook for Kani's `contract_cover` function.
+/// This is only used internally for contract instrumentation.
+/// We use it to check that a contract's preconditions are satisfiable and that its postconditions are reachable.
+/// Unlike the standard `cover`, failing this check does cause verification failure.
+struct ContractCover;
+impl GotocHook for ContractCover {
+    fn hook_applies(&self, tcx: TyCtxt, instance: Instance) -> bool {
+        matches_function(tcx, instance.def, "KaniContractCover")
+    }
+
+    fn handle(
+        &self,
+        gcx: &mut GotocCtx,
+        _instance: Instance,
+        mut fargs: Vec<Expr>,
+        _assign_to: &Place,
+        target: Option<BasicBlockIdx>,
+        span: Span,
+    ) -> Stmt {
+        assert_eq!(fargs.len(), 2);
+        let cond = fargs.remove(0).cast_to(Type::bool());
+        let msg = fargs.remove(0);
+        let msg = gcx.extract_const_message(&msg).unwrap();
+        let target = target.unwrap();
+        let caller_loc = gcx.codegen_caller_span_stable(span);
+
+        let (msg, reach_stmt) = gcx.codegen_reachability_check(msg, span);
+
+        Stmt::block(
+            vec![
+                reach_stmt,
+                gcx.codegen_contract_cover(cond, &msg, span),
+                Stmt::goto(bb_label(target), caller_loc),
+            ],
+            caller_loc,
+        )
+    }
+}
+
 struct Assume;
 impl GotocHook for Assume {
     fn hook_applies(&self, tcx: TyCtxt, instance: Instance) -> bool {
@@ -621,6 +660,7 @@ pub fn fn_hooks() -> GotocHooks {
         hooks: vec![
             Rc::new(Panic),
             Rc::new(Assume),
+            Rc::new(ContractCover),
             Rc::new(Assert),
             Rc::new(Check),
             Rc::new(Cover),

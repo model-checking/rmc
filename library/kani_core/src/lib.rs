@@ -199,7 +199,7 @@ macro_rules! kani_intrinsics {
         #[inline(never)]
         #[doc(hidden)]
         pub fn any_modifies<T>() -> T {
-            // This function should not be reacheable.
+            // This function should not be reachable.
             // Users must include `#[kani::recursion]` in any function contracts for recursive functions;
             // otherwise, this might not be properly instantiate. We mark this as unreachable to make
             // sure Kani doesn't report any false positives.
@@ -291,7 +291,7 @@ macro_rules! kani_intrinsics {
         /// function, both cause Kani to produce a warning since we don't support caller location.
         /// (see https://github.com/model-checking/kani/issues/2010).
         ///
-        /// This function is dead, since its caller is always  handled via a hook anyway,
+        /// This function is dead, since its caller is always handled via a hook anyway,
         /// so we just need to put a body that rustc does not complain about.
         /// An infinite loop works out nicely.
         fn kani_intrinsic<T>() -> T {
@@ -346,6 +346,14 @@ macro_rules! kani_intrinsics {
                 }
             }
 
+            /// This function is only used for function contract instrumentation.
+            /// It is the same as cover(), but if the cover statement is unreachable, it fails the contract harness.
+            /// See the contracts module in kani_macros for details.
+            #[inline(never)]
+            #[rustc_diagnostic_item = "KaniContractCover"]
+            #[doc(hidden)]
+            pub const fn contract_cover(_cond: bool, _msg: &'static str) {}
+
             /// A way to break the ownerhip rules. Only used by contracts where we can
             /// guarantee it is done safely.
             #[inline(never)]
@@ -383,7 +391,7 @@ macro_rules! kani_intrinsics {
             #[inline(never)]
             #[doc(hidden)]
             pub unsafe fn write_any<T: ?Sized>(_pointer: *mut T) {
-                // This function should not be reacheable.
+                // This function should not be reachable.
                 // Users must include `#[kani::recursion]` in any function contracts for recursive functions;
                 // otherwise, this might not be properly instantiate. We mark this as unreachable to make
                 // sure Kani doesn't report any false positives.

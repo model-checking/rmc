@@ -1,0 +1,9 @@
+contract_cover.2\
+	 - Status: FAILURE\
+	 - Description: "The contract's postcondition is reachable."
+
+unwind.0\
+    - Status: FAILURE\
+    - Description: "unwinding assertion loop 0"
+
+VERIFICATION:- FAILED

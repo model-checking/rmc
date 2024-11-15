@@ -95,11 +95,17 @@ pub struct PropertyId {
 }
 
 impl Property {
+    const CONTRACT_COVER_PROPERTY_CLASS: &'static str = "contract_cover";
     const COVER_PROPERTY_CLASS: &'static str = "cover";
     const COVERAGE_PROPERTY_CLASS: &'static str = "code_coverage";
 
     pub fn property_class(&self) -> String {
         self.property_id.class.clone()
+    }
+
+    /// Returns true if this is an contract_cover property
+    pub fn is_contract_cover_property(&self) -> bool {
+        self.property_id.class == Self::CONTRACT_COVER_PROPERTY_CLASS
     }
 
     // Returns true if this is a code_coverage check
