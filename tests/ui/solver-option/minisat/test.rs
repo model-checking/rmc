@@ -1,6 +1,6 @@
 // Copyright Kani Contributors
 // SPDX-License-Identifier: Apache-2.0 OR MIT
-// kani-flags: --solver minisat
+// kani-flags: --solver minisat --enable-unstable --cbmc-args --verbosity 9
 
 //! Checks that `--solver minisat` is accepted
 

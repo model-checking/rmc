@@ -1,6 +1,6 @@
 // Copyright Kani Contributors
 // SPDX-License-Identifier: Apache-2.0 OR MIT
-// kani-flags: --solver cadical
+// kani-flags: --solver cadical --enable-unstable --cbmc-args --verbosity 9
 
 //! Checks that the `cadical` is supported as an argument to `--solver`
 

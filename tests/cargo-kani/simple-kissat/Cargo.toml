@@ -12,4 +12,4 @@ description = "Tests that Kani can be invoked with Kissat"
 
 [kani.flags]
 enable-unstable = true
-cbmc-args = ["--external-sat-solver", "kissat" ]
+cbmc-args = ["--external-sat-solver", "kissat", "--verbosity", "9" ]

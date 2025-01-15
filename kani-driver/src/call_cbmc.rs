@@ -204,11 +204,6 @@ impl KaniSession {
 
         args.push(file.to_owned().into_os_string());
 
-        // Make CBMC verbose by default to tell users about unwinding progress. This should be
-        // reviewed as CBMC's verbosity defaults evolve.
-        args.push("--verbosity".into());
-        args.push("9".into());
-
         Ok(args)
     }
 

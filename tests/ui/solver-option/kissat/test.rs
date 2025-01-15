@@ -1,6 +1,6 @@
 // Copyright Kani Contributors
 // SPDX-License-Identifier: Apache-2.0 OR MIT
-// kani-flags: --solver kissat
+// kani-flags: --solver kissat --enable-unstable --cbmc-args --verbosity 9
 
 //! Checks that the solver option overrides the solver attribute
 
