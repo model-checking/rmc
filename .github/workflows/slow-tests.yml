@@ -1,14 +1,10 @@
 # Copyright Kani Contributors
 # SPDX-License-Identifier: Apache-2.0 OR MIT
 
-# We use block scalar notation to allow us to add ":" to the workflow name.
-name: >-
-  Nightly: Slow tests
-
+name: Slow tests
 on:
-  schedule:
-    - cron: "30 5 * * *" # Run this every day at 05:30 UTC
-  workflow_dispatch:     # Allow manual dispatching for a custom branch / tag.
+  push:
+    branches: [ main ]
 
 env:
   RUST_BACKTRACE: 1
