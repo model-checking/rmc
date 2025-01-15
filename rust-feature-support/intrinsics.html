@@ -1,0 +1,452 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Intrinsics - The Kani Rust Verifier</title>
+        <!-- Custom HTML head -->
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="Documentation for the Kani Rust Verifier">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded "><a href="../getting-started.html"><strong aria-hidden="true">1.</strong> Getting started</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../install-guide.html"><strong aria-hidden="true">1.1.</strong> Installation</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../build-from-source.html"><strong aria-hidden="true">1.1.1.</strong> Building from source</a></li><li class="chapter-item expanded "><a href="../install-github-ci.html"><strong aria-hidden="true">1.1.2.</strong> GitHub CI Action</a></li></ol></li><li class="chapter-item expanded "><a href="../usage.html"><strong aria-hidden="true">1.2.</strong> Using Kani</a></li><li class="chapter-item expanded "><a href="../verification-results.html"><strong aria-hidden="true">1.3.</strong> Verification results</a></li></ol></li><li class="chapter-item expanded "><a href="../crates/index.html"><strong aria-hidden="true">2.</strong> Crates Documentation</a></li><li class="chapter-item expanded "><a href="../kani-tutorial.html"><strong aria-hidden="true">3.</strong> Tutorial</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../tutorial-first-steps.html"><strong aria-hidden="true">3.1.</strong> First steps</a></li><li class="chapter-item expanded "><a href="../tutorial-kinds-of-failure.html"><strong aria-hidden="true">3.2.</strong> Failures that Kani can spot</a></li><li class="chapter-item expanded "><a href="../tutorial-loop-unwinding.html"><strong aria-hidden="true">3.3.</strong> Loop unwinding</a></li><li class="chapter-item expanded "><a href="../tutorial-nondeterministic-variables.html"><strong aria-hidden="true">3.4.</strong> Nondeterministic variables</a></li></ol></li><li class="chapter-item expanded "><a href="../reference.html"><strong aria-hidden="true">4.</strong> Reference</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../reference/attributes.html"><strong aria-hidden="true">4.1.</strong> Attributes</a></li><li class="chapter-item expanded "><a href="../reference/experimental/experimental-features.html"><strong aria-hidden="true">4.2.</strong> Experimental features</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../reference/experimental/coverage.html"><strong aria-hidden="true">4.2.1.</strong> Coverage</a></li><li class="chapter-item expanded "><a href="../reference/experimental/stubbing.html"><strong aria-hidden="true">4.2.2.</strong> Stubbing</a></li><li class="chapter-item expanded "><a href="../reference/experimental/contracts.html"><strong aria-hidden="true">4.2.3.</strong> Contracts</a></li><li class="chapter-item expanded "><a href="../reference/experimental/concrete-playback.html"><strong aria-hidden="true">4.2.4.</strong> Concrete Playback</a></li></ol></li></ol></li><li class="chapter-item expanded "><a href="../application.html"><strong aria-hidden="true">5.</strong> Application</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../tool-comparison.html"><strong aria-hidden="true">5.1.</strong> Comparison with other tools</a></li><li class="chapter-item expanded "><a href="../tutorial-real-code.html"><strong aria-hidden="true">5.2.</strong> Where to start on real code</a></li></ol></li><li class="chapter-item expanded "><a href="../dev-documentation.html"><strong aria-hidden="true">6.</strong> Developer documentation</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../conventions.html"><strong aria-hidden="true">6.1.</strong> Coding conventions</a></li><li class="chapter-item expanded "><a href="../cbmc-hacks.html"><strong aria-hidden="true">6.2.</strong> Working with CBMC</a></li><li class="chapter-item expanded "><a href="../rustc-hacks.html"><strong aria-hidden="true">6.3.</strong> Working with rustc</a></li><li class="chapter-item expanded "><a href="../stable-mir.html"><strong aria-hidden="true">6.4.</strong> Migrating to StableMIR</a></li><li class="chapter-item expanded "><a href="../cheat-sheets.html"><strong aria-hidden="true">6.5.</strong> Command cheat sheets</a></li><li class="chapter-item expanded "><a href="../dev-assess.html"><strong aria-hidden="true">6.6.</strong> cargo kani assess</a></li><li class="chapter-item expanded "><a href="../testing.html"><strong aria-hidden="true">6.7.</strong> Testing</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../regression-testing.html"><strong aria-hidden="true">6.7.1.</strong> Regression testing</a></li><li class="chapter-item expanded "><a href="../repo-crawl.html"><strong aria-hidden="true">6.7.2.</strong> (Experimental) Testing with a Large Number of Repositories</a></li></ol></li><li class="chapter-item expanded "><a href="../performance-comparisons.html"><strong aria-hidden="true">6.8.</strong> Performance comparisons</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../benchcomp-cli.html"><strong aria-hidden="true">6.8.1.</strong> benchcomp command line</a></li><li class="chapter-item expanded "><a href="../benchcomp-conf.html"><strong aria-hidden="true">6.8.2.</strong> benchcomp configuration file</a></li><li class="chapter-item expanded "><a href="../benchcomp-parse.html"><strong aria-hidden="true">6.8.3.</strong> Custom parsers</a></li></ol></li></ol></li><li class="chapter-item expanded "><a href="../limitations.html"><strong aria-hidden="true">7.</strong> Limitations</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../undefined-behaviour.html"><strong aria-hidden="true">7.1.</strong> Undefined behaviour</a></li><li class="chapter-item expanded "><a href="../rust-feature-support.html"><strong aria-hidden="true">7.2.</strong> Rust feature support</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../rust-feature-support/intrinsics.html" class="active"><strong aria-hidden="true">7.2.1.</strong> Intrinsics</a></li><li class="chapter-item expanded "><a href="../rust-feature-support/unstable.html"><strong aria-hidden="true">7.2.2.</strong> Unstable features</a></li></ol></li><li class="chapter-item expanded "><a href="../overrides.html"><strong aria-hidden="true">7.3.</strong> Overrides</a></li><li class="spacer"></li></ol></li><li class="chapter-item expanded "><a href="../faq.html"><strong aria-hidden="true">8.</strong> FAQ</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">The Kani Rust Verifier</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/model-checking/kani" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+                        <a href="https://github.com/model-checking/kani/edit/main/docs/src/rust-feature-support/intrinsics.md" title="Suggest an edit" aria-label="Suggest an edit">
+                            <i id="git-edit-button" class="fa fa-edit"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="intrinsics"><a class="header" href="#intrinsics">Intrinsics</a></h1>
+<p>The tables below try to summarize the current support in Kani for Rust intrinsics.
+We define the level of support similar to how we indicate <a href="../rust-feature-support.html">Rust feature support</a>:</p>
+<ul>
+<li><strong>Yes</strong>: The intrinsic is fully supported. We are not aware of any issue with it.</li>
+<li><strong>Partial</strong>: The intrinsic is at least partially supported. We are aware of some issue with
+with it.</li>
+<li><strong>No</strong>: The intrinsic is not supported.</li>
+</ul>
+<p>In general, code generation for unsupported intrinsics follows the rule
+described in <a href="../rust-feature-support.html#code-generation-for-unsupported-features">Rust feature support - Code generation for unsupported
+features</a>.</p>
+<p>Any intrinsic not appearing in the tables below is considered not supported.
+Please <a href="https://github.com/model-checking/kani/issues/new?assignees=&amp;labels=%5BC%5D+Feature+%2F+Enhancement&amp;template=feature_request.md&amp;title=">open a feature request</a>
+if your code depends on an unsupported intrinsic.</p>
+<h3 id="compiler-intrinsics"><a class="header" href="#compiler-intrinsics">Compiler intrinsics</a></h3>
+<table><thead><tr><th>Name</th><th>Support</th><th>Notes</th></tr></thead><tbody>
+<tr><td>abort</td><td>Yes</td><td></td></tr>
+<tr><td>add_with_overflow</td><td>Yes</td><td></td></tr>
+<tr><td>arith_offset</td><td>Yes</td><td></td></tr>
+<tr><td>assert_inhabited</td><td>Yes</td><td></td></tr>
+<tr><td>assert_uninit_valid</td><td>Yes</td><td></td></tr>
+<tr><td>assert_zero_valid</td><td>Yes</td><td></td></tr>
+<tr><td>assume</td><td>Yes</td><td></td></tr>
+<tr><td>atomic_and_seqcst</td><td>Partial</td><td>See <a href="#atomics">Atomics</a></td></tr>
+<tr><td>atomic_and_acquire</td><td>Partial</td><td>See <a href="#atomics">Atomics</a></td></tr>
+<tr><td>atomic_and_acqrel</td><td>Partial</td><td>See <a href="#atomics">Atomics</a></td></tr>
+<tr><td>atomic_and_release</td><td>Partial</td><td>See <a href="#atomics">Atomics</a></td></tr>
+<tr><td>atomic_and_relaxed</td><td>Partial</td><td>See <a href="#atomics">Atomics</a></td></tr>
+<tr><td>atomic_cxchg_acqrel_acquire</td><td>Partial</td><td>See <a href="#atomics">Atomics</a></td></tr>
+<tr><td>atomic_cxchg_acqrel_relaxed</td><td>Partial</td><td>See <a href="#atomics">Atomics</a></td></tr>
+<tr><td>atomic_cxchg_acqrel_seqcst</td><td>Partial</td><td>See <a href="#atomics">Atomics</a></td></tr>
+<tr><td>atomic_cxchg_acquire_acquire</td><td>Partial</td><td>See <a href="#atomics">Atomics</a></td></tr>
+<tr><td>atomic_cxchg_acquire_relaxed</td><td>Partial</td><td>See <a href="#atomics">Atomics</a></td></tr>
+<tr><td>atomic_cxchg_acquire_seqcst</td><td>Partial</td><td>See <a href="#atomics">Atomics</a></td></tr>
+<tr><td>atomic_cxchg_relaxed_acquire</td><td>Partial</td><td>See <a href="#atomics">Atomics</a></td></tr>
+<tr><td>atomic_cxchg_relaxed_relaxed</td><td>Partial</td><td>See <a href="#atomics">Atomics</a></td></tr>
+<tr><td>atomic_cxchg_relaxed_seqcst</td><td>Partial</td><td>See <a href="#atomics">Atomics</a></td></tr>
+<tr><td>atomic_cxchg_release_acquire</td><td>Partial</td><td>See <a href="#atomics">Atomics</a></td></tr>
+<tr><td>atomic_cxchg_release_relaxed</td><td>Partial</td><td>See <a href="#atomics">Atomics</a></td></tr>
+<tr><td>atomic_cxchg_release_seqcst</td><td>Partial</td><td>See <a href="#atomics">Atomics</a></td></tr>
+<tr><td>atomic_cxchg_seqcst_acquire</td><td>Partial</td><td>See <a href="#atomics">Atomics</a></td></tr>
+<tr><td>atomic_cxchg_seqcst_relaxed</td><td>Partial</td><td>See <a href="#atomics">Atomics</a></td></tr>
+<tr><td>atomic_cxchg_seqcst_seqcst</td><td>Partial</td><td>See <a href="#atomics">Atomics</a></td></tr>
+<tr><td>atomic_cxchgweak_acqrel_acquire</td><td>Partial</td><td>See <a href="#atomics">Atomics</a></td></tr>
+<tr><td>atomic_cxchgweak_acqrel_relaxed</td><td>Partial</td><td>See <a href="#atomics">Atomics</a></td></tr>
+<tr><td>atomic_cxchgweak_acqrel_seqcst</td><td>Partial</td><td>See <a href="#atomics">Atomics</a></td></tr>
+<tr><td>atomic_cxchgweak_acquire_acquire</td><td>Partial</td><td>See <a href="#atomics">Atomics</a></td></tr>
+<tr><td>atomic_cxchgweak_acquire_relaxed</td><td>Partial</td><td>See <a href="#atomics">Atomics</a></td></tr>
+<tr><td>atomic_cxchgweak_acquire_seqcst</td><td>Partial</td><td>See <a href="#atomics">Atomics</a></td></tr>
+<tr><td>atomic_cxchgweak_relaxed_acquire</td><td>Partial</td><td>See <a href="#atomics">Atomics</a></td></tr>
+<tr><td>atomic_cxchgweak_relaxed_relaxed</td><td>Partial</td><td>See <a href="#atomics">Atomics</a></td></tr>
+<tr><td>atomic_cxchgweak_relaxed_seqcst</td><td>Partial</td><td>See <a href="#atomics">Atomics</a></td></tr>
+<tr><td>atomic_cxchgweak_release_acquire</td><td>Partial</td><td>See <a href="#atomics">Atomics</a></td></tr>
+<tr><td>atomic_cxchgweak_release_relaxed</td><td>Partial</td><td>See <a href="#atomics">Atomics</a></td></tr>
+<tr><td>atomic_cxchgweak_release_seqcst</td><td>Partial</td><td>See <a href="#atomics">Atomics</a></td></tr>
+<tr><td>atomic_cxchgweak_seqcst_acquire</td><td>Partial</td><td>See <a href="#atomics">Atomics</a></td></tr>
+<tr><td>atomic_cxchgweak_seqcst_relaxed</td><td>Partial</td><td>See <a href="#atomics">Atomics</a></td></tr>
+<tr><td>atomic_cxchgweak_seqcst_seqcst</td><td>Partial</td><td>See <a href="#atomics">Atomics</a></td></tr>
+<tr><td>atomic_fence_seqcst</td><td>Partial</td><td>See <a href="#atomics">Atomics</a></td></tr>
+<tr><td>atomic_fence_acquire</td><td>Partial</td><td>See <a href="#atomics">Atomics</a></td></tr>
+<tr><td>atomic_fence_acqrel</td><td>Partial</td><td>See <a href="#atomics">Atomics</a></td></tr>
+<tr><td>atomic_fence_release</td><td>Partial</td><td>See <a href="#atomics">Atomics</a></td></tr>
+<tr><td>atomic_load_seqcst</td><td>Partial</td><td>See <a href="#atomics">Atomics</a></td></tr>
+<tr><td>atomic_load_acquire</td><td>Partial</td><td>See <a href="#atomics">Atomics</a></td></tr>
+<tr><td>atomic_load_relaxed</td><td>Partial</td><td>See <a href="#atomics">Atomics</a></td></tr>
+<tr><td>atomic_load_unordered</td><td>Partial</td><td>See <a href="#atomics">Atomics</a></td></tr>
+<tr><td>atomic_max_seqcst</td><td>Partial</td><td>See <a href="#atomics">Atomics</a></td></tr>
+<tr><td>atomic_max_acquire</td><td>Partial</td><td>See <a href="#atomics">Atomics</a></td></tr>
+<tr><td>atomic_max_acqrel</td><td>Partial</td><td>See <a href="#atomics">Atomics</a></td></tr>
+<tr><td>atomic_max_release</td><td>Partial</td><td>See <a href="#atomics">Atomics</a></td></tr>
+<tr><td>atomic_max_relaxed</td><td>Partial</td><td>See <a href="#atomics">Atomics</a></td></tr>
+<tr><td>atomic_min_seqcst</td><td>Partial</td><td>See <a href="#atomics">Atomics</a></td></tr>
+<tr><td>atomic_min_acquire</td><td>Partial</td><td>See <a href="#atomics">Atomics</a></td></tr>
+<tr><td>atomic_min_acqrel</td><td>Partial</td><td>See <a href="#atomics">Atomics</a></td></tr>
+<tr><td>atomic_min_release</td><td>Partial</td><td>See <a href="#atomics">Atomics</a></td></tr>
+<tr><td>atomic_min_relaxed</td><td>Partial</td><td>See <a href="#atomics">Atomics</a></td></tr>
+<tr><td>atomic_nand_seqcst</td><td>Partial</td><td>See <a href="#atomics">Atomics</a></td></tr>
+<tr><td>atomic_nand_acquire</td><td>Partial</td><td>See <a href="#atomics">Atomics</a></td></tr>
+<tr><td>atomic_nand_acqrel</td><td>Partial</td><td>See <a href="#atomics">Atomics</a></td></tr>
+<tr><td>atomic_nand_release</td><td>Partial</td><td>See <a href="#atomics">Atomics</a></td></tr>
+<tr><td>atomic_nand_relaxed</td><td>Partial</td><td>See <a href="#atomics">Atomics</a></td></tr>
+<tr><td>atomic_or_seqcst</td><td>Partial</td><td>See <a href="#atomics">Atomics</a></td></tr>
+<tr><td>atomic_or_acquire</td><td>Partial</td><td>See <a href="#atomics">Atomics</a></td></tr>
+<tr><td>atomic_or_acqrel</td><td>Partial</td><td>See <a href="#atomics">Atomics</a></td></tr>
+<tr><td>atomic_or_release</td><td>Partial</td><td>See <a href="#atomics">Atomics</a></td></tr>
+<tr><td>atomic_or_relaxed</td><td>Partial</td><td>See <a href="#atomics">Atomics</a></td></tr>
+<tr><td>atomic_singlethreadfence_seqcst</td><td>Partial</td><td>See <a href="#atomics">Atomics</a></td></tr>
+<tr><td>atomic_singlethreadfence_acquire</td><td>Partial</td><td>See <a href="#atomics">Atomics</a></td></tr>
+<tr><td>atomic_singlethreadfence_acqrel</td><td>Partial</td><td>See <a href="#atomics">Atomics</a></td></tr>
+<tr><td>atomic_singlethreadfence_release</td><td>Partial</td><td>See <a href="#atomics">Atomics</a></td></tr>
+<tr><td>atomic_store_seqcst</td><td>Partial</td><td>See <a href="#atomics">Atomics</a></td></tr>
+<tr><td>atomic_store_release</td><td>Partial</td><td>See <a href="#atomics">Atomics</a></td></tr>
+<tr><td>atomic_store_relaxed</td><td>Partial</td><td>See <a href="#atomics">Atomics</a></td></tr>
+<tr><td>atomic_store_unordered</td><td>Partial</td><td>See <a href="#atomics">Atomics</a></td></tr>
+<tr><td>atomic_umax_seqcst</td><td>Partial</td><td>See <a href="#atomics">Atomics</a></td></tr>
+<tr><td>atomic_umax_acquire</td><td>Partial</td><td>See <a href="#atomics">Atomics</a></td></tr>
+<tr><td>atomic_umax_acqrel</td><td>Partial</td><td>See <a href="#atomics">Atomics</a></td></tr>
+<tr><td>atomic_umax_release</td><td>Partial</td><td>See <a href="#atomics">Atomics</a></td></tr>
+<tr><td>atomic_umax_relaxed</td><td>Partial</td><td>See <a href="#atomics">Atomics</a></td></tr>
+<tr><td>atomic_umin_seqcst</td><td>Partial</td><td>See <a href="#atomics">Atomics</a></td></tr>
+<tr><td>atomic_umin_acquire</td><td>Partial</td><td>See <a href="#atomics">Atomics</a></td></tr>
+<tr><td>atomic_umin_acqrel</td><td>Partial</td><td>See <a href="#atomics">Atomics</a></td></tr>
+<tr><td>atomic_umin_release</td><td>Partial</td><td>See <a href="#atomics">Atomics</a></td></tr>
+<tr><td>atomic_umin_relaxed</td><td>Partial</td><td>See <a href="#atomics">Atomics</a></td></tr>
+<tr><td>atomic_xadd_seqcst</td><td>Partial</td><td>See <a href="#atomics">Atomics</a></td></tr>
+<tr><td>atomic_xadd_acquire</td><td>Partial</td><td>See <a href="#atomics">Atomics</a></td></tr>
+<tr><td>atomic_xadd_acqrel</td><td>Partial</td><td>See <a href="#atomics">Atomics</a></td></tr>
+<tr><td>atomic_xadd_release</td><td>Partial</td><td>See <a href="#atomics">Atomics</a></td></tr>
+<tr><td>atomic_xadd_relaxed</td><td>Partial</td><td>See <a href="#atomics">Atomics</a></td></tr>
+<tr><td>atomic_xchg_seqcst</td><td>Partial</td><td>See <a href="#atomics">Atomics</a></td></tr>
+<tr><td>atomic_xchg_acquire</td><td>Partial</td><td>See <a href="#atomics">Atomics</a></td></tr>
+<tr><td>atomic_xchg_acqrel</td><td>Partial</td><td>See <a href="#atomics">Atomics</a></td></tr>
+<tr><td>atomic_xchg_release</td><td>Partial</td><td>See <a href="#atomics">Atomics</a></td></tr>
+<tr><td>atomic_xchg_relaxed</td><td>Partial</td><td>See <a href="#atomics">Atomics</a></td></tr>
+<tr><td>atomic_xor_seqcst</td><td>Partial</td><td>See <a href="#atomics">Atomics</a></td></tr>
+<tr><td>atomic_xor_acquire</td><td>Partial</td><td>See <a href="#atomics">Atomics</a></td></tr>
+<tr><td>atomic_xor_acqrel</td><td>Partial</td><td>See <a href="#atomics">Atomics</a></td></tr>
+<tr><td>atomic_xor_release</td><td>Partial</td><td>See <a href="#atomics">Atomics</a></td></tr>
+<tr><td>atomic_xor_relaxed</td><td>Partial</td><td>See <a href="#atomics">Atomics</a></td></tr>
+<tr><td>atomic_xsub_seqcst</td><td>Partial</td><td>See <a href="#atomics">Atomics</a></td></tr>
+<tr><td>atomic_xsub_acquire</td><td>Partial</td><td>See <a href="#atomics">Atomics</a></td></tr>
+<tr><td>atomic_xsub_acqrel</td><td>Partial</td><td>See <a href="#atomics">Atomics</a></td></tr>
+<tr><td>atomic_xsub_release</td><td>Partial</td><td>See <a href="#atomics">Atomics</a></td></tr>
+<tr><td>atomic_xsub_relaxed</td><td>Partial</td><td>See <a href="#atomics">Atomics</a></td></tr>
+<tr><td>blackbox</td><td>Yes</td><td></td></tr>
+<tr><td>bitreverse</td><td>Yes</td><td></td></tr>
+<tr><td>breakpoint</td><td>Yes</td><td></td></tr>
+<tr><td>bswap</td><td>Yes</td><td></td></tr>
+<tr><td>caller_location</td><td>No</td><td></td></tr>
+<tr><td>ceilf32</td><td>Yes</td><td></td></tr>
+<tr><td>ceilf64</td><td>Yes</td><td></td></tr>
+<tr><td>copy</td><td>Yes</td><td></td></tr>
+<tr><td>copy_nonoverlapping</td><td>Yes</td><td></td></tr>
+<tr><td>copysignf32</td><td>Yes</td><td></td></tr>
+<tr><td>copysignf64</td><td>Yes</td><td></td></tr>
+<tr><td>cosf32</td><td>Partial</td><td>Results are overapproximated; <a href="https://github.com/model-checking/kani/blob/main/tests/kani/Intrinsics/Math/Trigonometry/cosf32.rs">this test</a> explains how</td></tr>
+<tr><td>cosf64</td><td>Partial</td><td>Results are overapproximated; <a href="https://github.com/model-checking/kani/blob/main/tests/kani/Intrinsics/Math/Trigonometry/cosf64.rs">this test</a> explains how</td></tr>
+<tr><td>ctlz</td><td>Yes</td><td></td></tr>
+<tr><td>ctlz_nonzero</td><td>Yes</td><td></td></tr>
+<tr><td>ctpop</td><td>Yes</td><td></td></tr>
+<tr><td>cttz</td><td>Yes</td><td></td></tr>
+<tr><td>cttz_nonzero</td><td>Yes</td><td></td></tr>
+<tr><td>discriminant_value</td><td>Yes</td><td></td></tr>
+<tr><td>drop_in_place</td><td>No</td><td></td></tr>
+<tr><td>exact_div</td><td>Yes</td><td></td></tr>
+<tr><td>exp2f32</td><td>Partial</td><td>Results are overapproximated</td></tr>
+<tr><td>exp2f64</td><td>Partial</td><td>Results are overapproximated</td></tr>
+<tr><td>expf32</td><td>Partial</td><td>Results are overapproximated</td></tr>
+<tr><td>expf64</td><td>Partial</td><td>Results are overapproximated</td></tr>
+<tr><td>fabsf32</td><td>Yes</td><td></td></tr>
+<tr><td>fabsf64</td><td>Yes</td><td></td></tr>
+<tr><td>fadd_fast</td><td>Yes</td><td></td></tr>
+<tr><td>fdiv_fast</td><td>Partial</td><td><a href="https://github.com/model-checking/kani/issues/809">#809</a></td></tr>
+<tr><td>float_to_int_unchecked</td><td>Partial</td><td><a href="https://github.com/model-checking/kani/issues/3629">#3629</a></td></tr>
+<tr><td>floorf32</td><td>Yes</td><td></td></tr>
+<tr><td>floorf64</td><td>Yes</td><td></td></tr>
+<tr><td>fmaf32</td><td>Partial</td><td>Results are overapproximated</td></tr>
+<tr><td>fmaf64</td><td>Partial</td><td>Results are overapproximated</td></tr>
+<tr><td>fmul_fast</td><td>Partial</td><td><a href="https://github.com/model-checking/kani/issues/809">#809</a></td></tr>
+<tr><td>forget</td><td>Yes</td><td></td></tr>
+<tr><td>frem_fast</td><td>No</td><td></td></tr>
+<tr><td>fsub_fast</td><td>Yes</td><td></td></tr>
+<tr><td>likely</td><td>Yes</td><td></td></tr>
+<tr><td>log10f32</td><td>Partial</td><td>Results are overapproximated</td></tr>
+<tr><td>log10f64</td><td>Partial</td><td>Results are overapproximated</td></tr>
+<tr><td>log2f32</td><td>Partial</td><td>Results are overapproximated</td></tr>
+<tr><td>log2f64</td><td>Partial</td><td>Results are overapproximated</td></tr>
+<tr><td>logf32</td><td>Partial</td><td>Results are overapproximated</td></tr>
+<tr><td>logf64</td><td>Partial</td><td>Results are overapproximated</td></tr>
+<tr><td>maxnumf32</td><td>Yes</td><td></td></tr>
+<tr><td>maxnumf64</td><td>Yes</td><td></td></tr>
+<tr><td>min_align_of</td><td>Yes</td><td></td></tr>
+<tr><td>min_align_of_val</td><td>Yes</td><td></td></tr>
+<tr><td>minnumf32</td><td>Yes</td><td></td></tr>
+<tr><td>minnumf64</td><td>Yes</td><td></td></tr>
+<tr><td>move_val_init</td><td>No</td><td></td></tr>
+<tr><td>mul_with_overflow</td><td>Yes</td><td></td></tr>
+<tr><td>nearbyintf32</td><td>Yes</td><td></td></tr>
+<tr><td>nearbyintf64</td><td>Yes</td><td></td></tr>
+<tr><td>needs_drop</td><td>Yes</td><td></td></tr>
+<tr><td>nontemporal_store</td><td>No</td><td></td></tr>
+<tr><td>offset</td><td>Partial</td><td>Doesn't check <a href="https://doc.rust-lang.org/std/primitive.pointer.html#safety-2">all UB conditions</a></td></tr>
+<tr><td>powf32</td><td>Partial</td><td>Results are overapproximated</td></tr>
+<tr><td>powf64</td><td>Partial</td><td>Results are overapproximated</td></tr>
+<tr><td>powif32</td><td>Partial</td><td>Results are overapproximated</td></tr>
+<tr><td>powif64</td><td>Partial</td><td>Results are overapproximated</td></tr>
+<tr><td>pref_align_of</td><td>Yes</td><td></td></tr>
+<tr><td>prefetch_read_data</td><td>No</td><td></td></tr>
+<tr><td>prefetch_read_instruction</td><td>No</td><td></td></tr>
+<tr><td>prefetch_write_data</td><td>No</td><td></td></tr>
+<tr><td>prefetch_write_instruction</td><td>No</td><td></td></tr>
+<tr><td>ptr_guaranteed_eq</td><td>Yes</td><td></td></tr>
+<tr><td>ptr_guaranteed_ne</td><td>Yes</td><td></td></tr>
+<tr><td>ptr_offset_from</td><td>Partial</td><td>Doesn't check <a href="https://doc.rust-lang.org/std/primitive.pointer.html#safety-4">all UB conditions</a></td></tr>
+<tr><td>raw_eq</td><td>Partial</td><td>Cannot detect <a href="#uninitialized-memory">uninitialized memory</a></td></tr>
+<tr><td>rintf32</td><td>Yes</td><td></td></tr>
+<tr><td>rintf64</td><td>Yes</td><td></td></tr>
+<tr><td>rotate_left</td><td>Yes</td><td></td></tr>
+<tr><td>rotate_right</td><td>Yes</td><td></td></tr>
+<tr><td>roundf32</td><td>Yes</td><td></td></tr>
+<tr><td>roundf64</td><td>Yes</td><td></td></tr>
+<tr><td>rustc_peek</td><td>No</td><td></td></tr>
+<tr><td>saturating_add</td><td>Yes</td><td></td></tr>
+<tr><td>saturating_sub</td><td>Yes</td><td></td></tr>
+<tr><td>sinf32</td><td>Partial</td><td>Results are overapproximated; <a href="https://github.com/model-checking/kani/blob/main/tests/kani/Intrinsics/Math/Trigonometry/sinf32.rs">this test</a> explains how</td></tr>
+<tr><td>sinf64</td><td>Partial</td><td>Results are overapproximated; <a href="https://github.com/model-checking/kani/blob/main/tests/kani/Intrinsics/Math/Trigonometry/sinf64.rs">this test</a> explains how</td></tr>
+<tr><td>size_of</td><td>Yes</td><td></td></tr>
+<tr><td>size_of_val</td><td>Yes</td><td></td></tr>
+<tr><td>sqrtf32</td><td>Partial</td><td>Results are overapproximated</td></tr>
+<tr><td>sqrtf64</td><td>Partial</td><td>Results are overapproximated</td></tr>
+<tr><td>sub_with_overflow</td><td>Yes</td><td></td></tr>
+<tr><td>transmute</td><td>Partial</td><td>Doesn't check <a href="https://doc.rust-lang.org/nomicon/transmutes.html">all UB conditions</a></td></tr>
+<tr><td>truncf32</td><td>Yes</td><td></td></tr>
+<tr><td>truncf64</td><td>Yes</td><td></td></tr>
+<tr><td>try</td><td>No</td><td><a href="https://github.com/model-checking/kani/issues/267">#267</a></td></tr>
+<tr><td>type_id</td><td>Yes</td><td></td></tr>
+<tr><td>type_name</td><td>Yes</td><td></td></tr>
+<tr><td>typed_swap_nonoverlapping</td><td>Yes</td><td></td></tr>
+<tr><td>unaligned_volatile_load</td><td>No</td><td>See <a href="#concurrency">Notes - Concurrency</a></td></tr>
+<tr><td>unaligned_volatile_store</td><td>No</td><td>See <a href="#concurrency">Notes - Concurrency</a></td></tr>
+<tr><td>unchecked_add</td><td>Yes</td><td></td></tr>
+<tr><td>unchecked_div</td><td>Yes</td><td></td></tr>
+<tr><td>unchecked_mul</td><td>Yes</td><td></td></tr>
+<tr><td>unchecked_rem</td><td>Yes</td><td></td></tr>
+<tr><td>unchecked_shl</td><td>Yes</td><td></td></tr>
+<tr><td>unchecked_shr</td><td>Yes</td><td></td></tr>
+<tr><td>unchecked_sub</td><td>Yes</td><td></td></tr>
+<tr><td>unlikely</td><td>Yes</td><td></td></tr>
+<tr><td>unreachable</td><td>Yes</td><td></td></tr>
+<tr><td>variant_count</td><td>No</td><td></td></tr>
+<tr><td>volatile_copy_memory</td><td>No</td><td>See <a href="#concurrency">Notes - Concurrency</a></td></tr>
+<tr><td>volatile_copy_nonoverlapping_memory</td><td>No</td><td>See <a href="#concurrency">Notes - Concurrency</a></td></tr>
+<tr><td>volatile_load</td><td>Partial</td><td>See <a href="#concurrency">Notes - Concurrency</a></td></tr>
+<tr><td>volatile_set_memory</td><td>No</td><td>See <a href="#concurrency">Notes - Concurrency</a></td></tr>
+<tr><td>volatile_store</td><td>Partial</td><td>See <a href="#concurrency">Notes - Concurrency</a></td></tr>
+<tr><td>wrapping_add</td><td>Yes</td><td></td></tr>
+<tr><td>wrapping_mul</td><td>Yes</td><td></td></tr>
+<tr><td>wrapping_sub</td><td>Yes</td><td></td></tr>
+<tr><td>write_bytes</td><td>Yes</td><td></td></tr>
+</tbody></table>
+<h4 id="atomics"><a class="header" href="#atomics">Atomics</a></h4>
+<p>All atomic intrinsics are compiled as an atomic block where the operation is
+performed. But as noted in <a href="#concurrency">Notes - Concurrency</a>, Kani support for
+concurrent verification is limited and not used by default. Verification on code
+containing atomic intrinsics should not be trusted given that Kani assumes the
+code to be sequential.</p>
+<h3 id="platform-intrinsics"><a class="header" href="#platform-intrinsics">Platform intrinsics</a></h3>
+<p>Intrinsics from <a href="https://rust-lang.github.io/rfcs/1199-simd-infrastructure.html#operations">the <code>platform_intrinsics</code> feature</a>.</p>
+<table><thead><tr><th>Name</th><th>Support</th><th>Notes</th></tr></thead><tbody>
+<tr><td><code>simd_add</code></td><td>Yes</td><td></td></tr>
+<tr><td><code>simd_and</code></td><td>Yes</td><td></td></tr>
+<tr><td><code>simd_div</code></td><td>Yes</td><td></td></tr>
+<tr><td><code>simd_eq</code></td><td>Yes</td><td></td></tr>
+<tr><td><code>simd_extract</code></td><td>Yes</td><td></td></tr>
+<tr><td><code>simd_ge</code></td><td>Yes</td><td></td></tr>
+<tr><td><code>simd_gt</code></td><td>Yes</td><td></td></tr>
+<tr><td><code>simd_insert</code></td><td>Yes</td><td></td></tr>
+<tr><td><code>simd_le</code></td><td>Yes</td><td></td></tr>
+<tr><td><code>simd_lt</code></td><td>Yes</td><td></td></tr>
+<tr><td><code>simd_mul</code></td><td>Yes</td><td></td></tr>
+<tr><td><code>simd_ne</code></td><td>Yes</td><td></td></tr>
+<tr><td><code>simd_or</code></td><td>Yes</td><td></td></tr>
+<tr><td><code>simd_rem</code></td><td>Yes</td><td>Doesn't check for floating point overflow <a href="https://github.com/model-checking/kani/issues/2669">#2669</a></td></tr>
+<tr><td><code>simd_shl</code></td><td>Yes</td><td></td></tr>
+<tr><td><code>simd_shr</code></td><td>Yes</td><td></td></tr>
+<tr><td><code>simd_shuffle*</code></td><td>Yes</td><td></td></tr>
+<tr><td><code>simd_sub</code></td><td>Yes</td><td></td></tr>
+<tr><td><code>simd_xor</code></td><td>Yes</td><td></td></tr>
+</tbody></table>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../rust-feature-support.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                            <a rel="next" href="../rust-feature-support/unstable.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../rust-feature-support.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                    <a rel="next" href="../rust-feature-support/unstable.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+        <script type="text/javascript">
+            window.playground_copyable = true;
+        </script>
+        <script src="../elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../searcher.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+    </body>
+</html>

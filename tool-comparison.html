@@ -1,0 +1,206 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Comparison with other tools - The Kani Rust Verifier</title>
+        <!-- Custom HTML head -->
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="Documentation for the Kani Rust Verifier">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded "><a href="getting-started.html"><strong aria-hidden="true">1.</strong> Getting started</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="install-guide.html"><strong aria-hidden="true">1.1.</strong> Installation</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="build-from-source.html"><strong aria-hidden="true">1.1.1.</strong> Building from source</a></li><li class="chapter-item expanded "><a href="install-github-ci.html"><strong aria-hidden="true">1.1.2.</strong> GitHub CI Action</a></li></ol></li><li class="chapter-item expanded "><a href="usage.html"><strong aria-hidden="true">1.2.</strong> Using Kani</a></li><li class="chapter-item expanded "><a href="verification-results.html"><strong aria-hidden="true">1.3.</strong> Verification results</a></li></ol></li><li class="chapter-item expanded "><a href="crates/index.html"><strong aria-hidden="true">2.</strong> Crates Documentation</a></li><li class="chapter-item expanded "><a href="kani-tutorial.html"><strong aria-hidden="true">3.</strong> Tutorial</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="tutorial-first-steps.html"><strong aria-hidden="true">3.1.</strong> First steps</a></li><li class="chapter-item expanded "><a href="tutorial-kinds-of-failure.html"><strong aria-hidden="true">3.2.</strong> Failures that Kani can spot</a></li><li class="chapter-item expanded "><a href="tutorial-loop-unwinding.html"><strong aria-hidden="true">3.3.</strong> Loop unwinding</a></li><li class="chapter-item expanded "><a href="tutorial-nondeterministic-variables.html"><strong aria-hidden="true">3.4.</strong> Nondeterministic variables</a></li></ol></li><li class="chapter-item expanded "><a href="reference.html"><strong aria-hidden="true">4.</strong> Reference</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="reference/attributes.html"><strong aria-hidden="true">4.1.</strong> Attributes</a></li><li class="chapter-item expanded "><a href="reference/experimental/experimental-features.html"><strong aria-hidden="true">4.2.</strong> Experimental features</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="reference/experimental/coverage.html"><strong aria-hidden="true">4.2.1.</strong> Coverage</a></li><li class="chapter-item expanded "><a href="reference/experimental/stubbing.html"><strong aria-hidden="true">4.2.2.</strong> Stubbing</a></li><li class="chapter-item expanded "><a href="reference/experimental/contracts.html"><strong aria-hidden="true">4.2.3.</strong> Contracts</a></li><li class="chapter-item expanded "><a href="reference/experimental/concrete-playback.html"><strong aria-hidden="true">4.2.4.</strong> Concrete Playback</a></li></ol></li></ol></li><li class="chapter-item expanded "><a href="application.html"><strong aria-hidden="true">5.</strong> Application</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="tool-comparison.html" class="active"><strong aria-hidden="true">5.1.</strong> Comparison with other tools</a></li><li class="chapter-item expanded "><a href="tutorial-real-code.html"><strong aria-hidden="true">5.2.</strong> Where to start on real code</a></li></ol></li><li class="chapter-item expanded "><a href="dev-documentation.html"><strong aria-hidden="true">6.</strong> Developer documentation</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="conventions.html"><strong aria-hidden="true">6.1.</strong> Coding conventions</a></li><li class="chapter-item expanded "><a href="cbmc-hacks.html"><strong aria-hidden="true">6.2.</strong> Working with CBMC</a></li><li class="chapter-item expanded "><a href="rustc-hacks.html"><strong aria-hidden="true">6.3.</strong> Working with rustc</a></li><li class="chapter-item expanded "><a href="stable-mir.html"><strong aria-hidden="true">6.4.</strong> Migrating to StableMIR</a></li><li class="chapter-item expanded "><a href="cheat-sheets.html"><strong aria-hidden="true">6.5.</strong> Command cheat sheets</a></li><li class="chapter-item expanded "><a href="dev-assess.html"><strong aria-hidden="true">6.6.</strong> cargo kani assess</a></li><li class="chapter-item expanded "><a href="testing.html"><strong aria-hidden="true">6.7.</strong> Testing</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="regression-testing.html"><strong aria-hidden="true">6.7.1.</strong> Regression testing</a></li><li class="chapter-item expanded "><a href="repo-crawl.html"><strong aria-hidden="true">6.7.2.</strong> (Experimental) Testing with a Large Number of Repositories</a></li></ol></li><li class="chapter-item expanded "><a href="performance-comparisons.html"><strong aria-hidden="true">6.8.</strong> Performance comparisons</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="benchcomp-cli.html"><strong aria-hidden="true">6.8.1.</strong> benchcomp command line</a></li><li class="chapter-item expanded "><a href="benchcomp-conf.html"><strong aria-hidden="true">6.8.2.</strong> benchcomp configuration file</a></li><li class="chapter-item expanded "><a href="benchcomp-parse.html"><strong aria-hidden="true">6.8.3.</strong> Custom parsers</a></li></ol></li></ol></li><li class="chapter-item expanded "><a href="limitations.html"><strong aria-hidden="true">7.</strong> Limitations</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="undefined-behaviour.html"><strong aria-hidden="true">7.1.</strong> Undefined behaviour</a></li><li class="chapter-item expanded "><a href="rust-feature-support.html"><strong aria-hidden="true">7.2.</strong> Rust feature support</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="rust-feature-support/intrinsics.html"><strong aria-hidden="true">7.2.1.</strong> Intrinsics</a></li><li class="chapter-item expanded "><a href="rust-feature-support/unstable.html"><strong aria-hidden="true">7.2.2.</strong> Unstable features</a></li></ol></li><li class="chapter-item expanded "><a href="overrides.html"><strong aria-hidden="true">7.3.</strong> Overrides</a></li><li class="spacer"></li></ol></li><li class="chapter-item expanded "><a href="faq.html"><strong aria-hidden="true">8.</strong> FAQ</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">The Kani Rust Verifier</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/model-checking/kani" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+                        <a href="https://github.com/model-checking/kani/edit/main/docs/src/tool-comparison.md" title="Suggest an edit" aria-label="Suggest an edit">
+                            <i id="git-edit-button" class="fa fa-edit"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="comparison-with-other-tools"><a class="header" href="#comparison-with-other-tools">Comparison with other tools</a></h1>
+<p><strong>Fuzzing</strong> (for example, with <a href="https://github.com/rust-fuzz/cargo-fuzz"><code>cargo-fuzz</code></a>) is a unguided approach to random testing.
+A fuzzer generally provides an input of random bytes, and then examines fairly generic properties (such as &quot;doesn't crash&quot; or &quot;commit undefined behavior&quot;) about the resulting program.</p>
+<p>Fuzzers generally get their power through a kind of evolutionary algorithm that rewards new mutant inputs that &quot;discover&quot; new branches of the program under test.
+Fuzzers are excellent for testing security boundaries, precisely because they make no validity assumptions (hence, they are &quot;unguided&quot;) when generating the input.</p>
+<p><strong>Property testing</strong> (for example, with <a href="https://github.com/AltSysrq/proptest">Proptest</a>) is a guided approach to random testing.
+&quot;Guided&quot; in the sense that the test generally provides a strategy for generating random values that constrains their range.
+The purpose of this strategy is to either focus on interesting values, or avoid failing assertions that only hold for a constrained set of inputs.
+Tests in this style do actually state properties: <em>For all inputs (of some constrained kind), this condition should hold</em>.</p>
+<p>Property testing is often quite effective, but the engine can't fully prove the property: It can only sample randomly a few of those values to test (though property testing libraries frequently give interesting &quot;edge cases&quot; a higher probability, making them more effective at bug-finding).</p>
+<p><strong>Model checking</strong> is similar to these techniques in how you use them, but it's non-random and exhaustive (though often only up to some bound on input or problem size).
+Thus, properties checked with a model checker are effectively proofs.
+Instead of naively trying all possible <em>concrete</em> inputs (which could be infeasible and blow up exponentially), model checkers like Kani will cleverly encode program traces as <em>symbolic</em> &quot;<a href="https://en.wikipedia.org/wiki/Boolean_satisfiability_problem">SAT</a>/<a href="https://en.wikipedia.org/wiki/Satisfiability_modulo_theories">SMT</a>&quot; problems, and hand them off to SAT/SMT solvers.
+SAT/SMT solving is an <a href="https://en.wikipedia.org/wiki/NP-completeness">NP-complete</a> problem, but many practical programs can be model-checked within milliseconds to seconds (with notable exceptions: you can easily try to reverse a cryptographic hash with a model checker, but good luck getting it to terminate!)</p>
+<p>Model checking allows you to prove non-trivial properties about programs, and check those proofs in roughly the same amount of time as a traditional test suite would take to run.
+The downside is many types of properties can quickly become &quot;too large&quot; to practically model-check, and so writing &quot;proof harnesses&quot; (very similar to property tests and fuzzer harnesses) requires some skill to understand why the solver is not terminating and fix the structure of the problem you're giving it so that it does.
+This process basically boils down to &quot;debugging&quot; the proof.</p>
+<h2 id="looking-for-concurrency"><a class="header" href="#looking-for-concurrency">Looking for concurrency?</a></h2>
+<p>At present, Kani <a href="./rust-feature-support.html">does not support verifying concurrent code</a>.
+Two tools of immediate interest are <a href="https://github.com/tokio-rs/loom">Loom</a> and <a href="https://github.com/awslabs/shuttle">Shuttle</a>.
+Loom attempts to check all possible interleavings, while Shuttle chooses interleavings randomly.
+The former is sound (like Kani), but the latter is more scalable to large problem spaces (like property testing).</p>
+<h2 id="other-tools"><a class="header" href="#other-tools">Other tools</a></h2>
+<p>The Rust Formal Methods Interest Group maintains <a href="https://rust-formal-methods.github.io/tools.html">a list of interesting Rust verification tools</a>.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="application.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                            <a rel="next" href="tutorial-real-code.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="application.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                    <a rel="next" href="tutorial-real-code.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+        <script type="text/javascript">
+            window.playground_copyable = true;
+        </script>
+        <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
+        <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+    </body>
+</html>

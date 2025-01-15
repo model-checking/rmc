@@ -1,0 +1,370 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Rust feature support - The Kani Rust Verifier</title>
+        <!-- Custom HTML head -->
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="Documentation for the Kani Rust Verifier">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded "><a href="getting-started.html"><strong aria-hidden="true">1.</strong> Getting started</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="install-guide.html"><strong aria-hidden="true">1.1.</strong> Installation</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="build-from-source.html"><strong aria-hidden="true">1.1.1.</strong> Building from source</a></li><li class="chapter-item expanded "><a href="install-github-ci.html"><strong aria-hidden="true">1.1.2.</strong> GitHub CI Action</a></li></ol></li><li class="chapter-item expanded "><a href="usage.html"><strong aria-hidden="true">1.2.</strong> Using Kani</a></li><li class="chapter-item expanded "><a href="verification-results.html"><strong aria-hidden="true">1.3.</strong> Verification results</a></li></ol></li><li class="chapter-item expanded "><a href="crates/index.html"><strong aria-hidden="true">2.</strong> Crates Documentation</a></li><li class="chapter-item expanded "><a href="kani-tutorial.html"><strong aria-hidden="true">3.</strong> Tutorial</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="tutorial-first-steps.html"><strong aria-hidden="true">3.1.</strong> First steps</a></li><li class="chapter-item expanded "><a href="tutorial-kinds-of-failure.html"><strong aria-hidden="true">3.2.</strong> Failures that Kani can spot</a></li><li class="chapter-item expanded "><a href="tutorial-loop-unwinding.html"><strong aria-hidden="true">3.3.</strong> Loop unwinding</a></li><li class="chapter-item expanded "><a href="tutorial-nondeterministic-variables.html"><strong aria-hidden="true">3.4.</strong> Nondeterministic variables</a></li></ol></li><li class="chapter-item expanded "><a href="reference.html"><strong aria-hidden="true">4.</strong> Reference</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="reference/attributes.html"><strong aria-hidden="true">4.1.</strong> Attributes</a></li><li class="chapter-item expanded "><a href="reference/experimental/experimental-features.html"><strong aria-hidden="true">4.2.</strong> Experimental features</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="reference/experimental/coverage.html"><strong aria-hidden="true">4.2.1.</strong> Coverage</a></li><li class="chapter-item expanded "><a href="reference/experimental/stubbing.html"><strong aria-hidden="true">4.2.2.</strong> Stubbing</a></li><li class="chapter-item expanded "><a href="reference/experimental/contracts.html"><strong aria-hidden="true">4.2.3.</strong> Contracts</a></li><li class="chapter-item expanded "><a href="reference/experimental/concrete-playback.html"><strong aria-hidden="true">4.2.4.</strong> Concrete Playback</a></li></ol></li></ol></li><li class="chapter-item expanded "><a href="application.html"><strong aria-hidden="true">5.</strong> Application</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="tool-comparison.html"><strong aria-hidden="true">5.1.</strong> Comparison with other tools</a></li><li class="chapter-item expanded "><a href="tutorial-real-code.html"><strong aria-hidden="true">5.2.</strong> Where to start on real code</a></li></ol></li><li class="chapter-item expanded "><a href="dev-documentation.html"><strong aria-hidden="true">6.</strong> Developer documentation</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="conventions.html"><strong aria-hidden="true">6.1.</strong> Coding conventions</a></li><li class="chapter-item expanded "><a href="cbmc-hacks.html"><strong aria-hidden="true">6.2.</strong> Working with CBMC</a></li><li class="chapter-item expanded "><a href="rustc-hacks.html"><strong aria-hidden="true">6.3.</strong> Working with rustc</a></li><li class="chapter-item expanded "><a href="stable-mir.html"><strong aria-hidden="true">6.4.</strong> Migrating to StableMIR</a></li><li class="chapter-item expanded "><a href="cheat-sheets.html"><strong aria-hidden="true">6.5.</strong> Command cheat sheets</a></li><li class="chapter-item expanded "><a href="dev-assess.html"><strong aria-hidden="true">6.6.</strong> cargo kani assess</a></li><li class="chapter-item expanded "><a href="testing.html"><strong aria-hidden="true">6.7.</strong> Testing</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="regression-testing.html"><strong aria-hidden="true">6.7.1.</strong> Regression testing</a></li><li class="chapter-item expanded "><a href="repo-crawl.html"><strong aria-hidden="true">6.7.2.</strong> (Experimental) Testing with a Large Number of Repositories</a></li></ol></li><li class="chapter-item expanded "><a href="performance-comparisons.html"><strong aria-hidden="true">6.8.</strong> Performance comparisons</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="benchcomp-cli.html"><strong aria-hidden="true">6.8.1.</strong> benchcomp command line</a></li><li class="chapter-item expanded "><a href="benchcomp-conf.html"><strong aria-hidden="true">6.8.2.</strong> benchcomp configuration file</a></li><li class="chapter-item expanded "><a href="benchcomp-parse.html"><strong aria-hidden="true">6.8.3.</strong> Custom parsers</a></li></ol></li></ol></li><li class="chapter-item expanded "><a href="limitations.html"><strong aria-hidden="true">7.</strong> Limitations</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="undefined-behaviour.html"><strong aria-hidden="true">7.1.</strong> Undefined behaviour</a></li><li class="chapter-item expanded "><a href="rust-feature-support.html" class="active"><strong aria-hidden="true">7.2.</strong> Rust feature support</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="rust-feature-support/intrinsics.html"><strong aria-hidden="true">7.2.1.</strong> Intrinsics</a></li><li class="chapter-item expanded "><a href="rust-feature-support/unstable.html"><strong aria-hidden="true">7.2.2.</strong> Unstable features</a></li></ol></li><li class="chapter-item expanded "><a href="overrides.html"><strong aria-hidden="true">7.3.</strong> Overrides</a></li><li class="spacer"></li></ol></li><li class="chapter-item expanded "><a href="faq.html"><strong aria-hidden="true">8.</strong> FAQ</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">The Kani Rust Verifier</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/model-checking/kani" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+                        <a href="https://github.com/model-checking/kani/edit/main/docs/src/rust-feature-support.md" title="Suggest an edit" aria-label="Suggest an edit">
+                            <i id="git-edit-button" class="fa fa-edit"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="rust-feature-support"><a class="header" href="#rust-feature-support">Rust feature support</a></h1>
+<p>The table below tries to summarize the current support in Kani for
+the Rust language features according to the <a href="https://doc.rust-lang.org/stable/reference/">Rust Reference</a>.
+We use the following values to indicate the level of support:</p>
+<ul>
+<li><strong>Yes</strong>: The feature is fully supported. We are not aware of any issue with it.</li>
+<li><strong>Partial</strong>: The feature is at least partially supported. We are aware of some issue with
+with it.</li>
+<li><strong>No</strong>: The feature is not supported. Some support may be available but analyses should not be trusted.</li>
+</ul>
+<p>As with all software, bugs may be found anywhere regardless of the level of support. In such cases, we
+would greatly appreciate that you <a href="https://github.com/model-checking/kani/issues/new?assignees=&amp;labels=bug&amp;template=bug_report.md">filed a bug report</a>.</p>
+<table><thead><tr><th>Reference</th><th>Feature</th><th>Support</th><th>Notes</th></tr></thead><tbody>
+<tr><td>3.1</td><td>Macros By Example</td><td>Yes</td><td></td></tr>
+<tr><td>3.2</td><td>Procedural Macros</td><td>Yes</td><td></td></tr>
+<tr><td>4</td><td>Crates and source files</td><td>Yes</td><td></td></tr>
+<tr><td>5</td><td>Conditional compilation</td><td>Yes</td><td></td></tr>
+<tr><td>6.1</td><td>Modules</td><td>Yes</td><td></td></tr>
+<tr><td>6.2</td><td>Extern crates</td><td>Yes</td><td></td></tr>
+<tr><td>6.3</td><td>Use declarations</td><td>Yes</td><td></td></tr>
+<tr><td>6.4</td><td>Functions</td><td>Yes</td><td></td></tr>
+<tr><td>6.5</td><td>Type aliases</td><td>Yes</td><td></td></tr>
+<tr><td>6.6</td><td>Structs</td><td>Yes</td><td></td></tr>
+<tr><td>6.7</td><td>Enumerations</td><td>Yes</td><td></td></tr>
+<tr><td>6.8</td><td>Unions</td><td>Yes</td><td></td></tr>
+<tr><td>6.9</td><td>Constant items</td><td>Yes</td><td></td></tr>
+<tr><td>6.10</td><td>Static items</td><td>Yes</td><td></td></tr>
+<tr><td>6.11</td><td>Traits</td><td>Yes</td><td></td></tr>
+<tr><td>6.12</td><td>Implementations</td><td>Yes</td><td></td></tr>
+<tr><td>6.13</td><td>External blocks</td><td>Yes</td><td></td></tr>
+<tr><td>6.14</td><td>Generic parameters</td><td>Yes</td><td></td></tr>
+<tr><td>6.15</td><td>Associated Items</td><td>Yes</td><td></td></tr>
+<tr><td>7</td><td>Attributes</td><td>Yes</td><td></td></tr>
+<tr><td>8.1</td><td>Statements</td><td>Yes</td><td></td></tr>
+<tr><td>8.2.1</td><td>Literal expressions</td><td>Yes</td><td></td></tr>
+<tr><td>8.2.2</td><td>Path expressions</td><td>Yes</td><td></td></tr>
+<tr><td>8.2.3</td><td>Block expressions</td><td>Yes</td><td></td></tr>
+<tr><td>8.2.4</td><td>Operator expressions</td><td>Yes</td><td></td></tr>
+<tr><td>8.2.5</td><td>Grouped expressions</td><td>Yes</td><td></td></tr>
+<tr><td>8.2.6</td><td>Array and index expressions</td><td>Yes</td><td></td></tr>
+<tr><td>8.2.7</td><td>Tuple and index expressions</td><td>Yes</td><td></td></tr>
+<tr><td>8.2.8</td><td>Struct expressions</td><td>Yes</td><td></td></tr>
+<tr><td>8.2.9</td><td>Call expressions</td><td>Yes</td><td></td></tr>
+<tr><td>8.2.10</td><td>Method call expressions</td><td>Yes</td><td></td></tr>
+<tr><td>8.2.11</td><td>Field access expressions</td><td>Yes</td><td></td></tr>
+<tr><td>8.2.12</td><td>Closure expressions</td><td>Yes</td><td></td></tr>
+<tr><td>8.2.13</td><td>Loop expressions</td><td>Yes</td><td></td></tr>
+<tr><td>8.2.14</td><td>Range expressions</td><td>Yes</td><td></td></tr>
+<tr><td>8.2.15</td><td>If and if let expressions</td><td>Yes</td><td></td></tr>
+<tr><td>8.2.16</td><td>Match expressions</td><td>Yes</td><td></td></tr>
+<tr><td>8.2.17</td><td>Return expressions</td><td>Yes</td><td></td></tr>
+<tr><td>8.2.18</td><td>Await expressions</td><td>No</td><td>See <a href="#concurrency">Notes - Concurrency</a></td></tr>
+<tr><td>9</td><td>Patterns</td><td>Partial</td><td><a href="https://github.com/model-checking/kani/issues/707">#707</a></td></tr>
+<tr><td>10.1.1</td><td>Boolean type</td><td>Yes</td><td></td></tr>
+<tr><td>10.1.2</td><td>Numeric types</td><td>Yes</td><td></td></tr>
+<tr><td>10.1.3</td><td>Textual types</td><td>Yes</td><td></td></tr>
+<tr><td>10.1.4</td><td>Never type</td><td>Yes</td><td></td></tr>
+<tr><td>10.1.5</td><td>Tuple types</td><td>Yes</td><td></td></tr>
+<tr><td>10.1.6</td><td>Array types</td><td>Yes</td><td></td></tr>
+<tr><td>10.1.7</td><td>Slice types</td><td>Yes</td><td></td></tr>
+<tr><td>10.1.8</td><td>Struct types</td><td>Yes</td><td></td></tr>
+<tr><td>10.1.9</td><td>Enumerated types</td><td>Yes</td><td></td></tr>
+<tr><td>10.1.10</td><td>Union types</td><td>Yes</td><td></td></tr>
+<tr><td>10.1.11</td><td>Function item types</td><td>Yes</td><td></td></tr>
+<tr><td>10.1.12</td><td>Closure types</td><td>Partial</td><td>See <a href="#advanced-features">Notes - Advanced features</a></td></tr>
+<tr><td>10.1.13</td><td>Pointer types</td><td>Partial</td><td>See <a href="#advanced-features">Notes - Advanced features</a></td></tr>
+<tr><td>10.1.14</td><td>Function pointer types</td><td>Partial</td><td>See <a href="#advanced-features">Notes - Advanced features</a></td></tr>
+<tr><td>10.1.15</td><td>Trait object types</td><td>Partial</td><td>See <a href="#advanced-features">Notes - Advanced features</a></td></tr>
+<tr><td>10.1.16</td><td>Impl trait type</td><td>Partial</td><td>See <a href="#advanced-features">Notes - Advanced features</a></td></tr>
+<tr><td>10.1.17</td><td>Type parameters</td><td>Partial</td><td>See <a href="#advanced-features">Notes - Advanced features</a></td></tr>
+<tr><td>10.1.18</td><td>Inferred type</td><td>Partial</td><td>See <a href="#advanced-features">Notes - Advanced features</a></td></tr>
+<tr><td>10.2</td><td>Dynamically Sized Types</td><td>Partial</td><td>See <a href="#advanced-features">Notes - Advanced features</a></td></tr>
+<tr><td>10.3</td><td>Type layout</td><td>Yes</td><td></td></tr>
+<tr><td>10.4</td><td>Interior mutability</td><td>Yes</td><td></td></tr>
+<tr><td>10.5</td><td>Subtyping and Variance</td><td>Yes</td><td></td></tr>
+<tr><td>10.6</td><td>Trait and lifetime bounds</td><td>Yes</td><td></td></tr>
+<tr><td>10.7</td><td>Type coercions</td><td>Partial</td><td>See <a href="#advanced-features">Notes - Advanced features</a></td></tr>
+<tr><td>10.8</td><td>Destructors</td><td>Partial</td><td></td></tr>
+<tr><td>10.9</td><td>Lifetime elision</td><td>Yes</td><td></td></tr>
+<tr><td>11</td><td>Special types and traits</td><td>Partial</td><td></td></tr>
+<tr><td></td><td><code>Box&lt;T&gt;</code></td><td>Yes</td><td></td></tr>
+<tr><td></td><td><code>Rc&lt;T&gt;</code></td><td>Yes</td><td></td></tr>
+<tr><td></td><td><code>Arc&lt;T&gt;</code></td><td>Yes</td><td></td></tr>
+<tr><td></td><td><code>Pin&lt;T&gt;</code></td><td>Yes</td><td></td></tr>
+<tr><td></td><td><code>UnsafeCell&lt;T&gt;</code></td><td>Partial</td><td></td></tr>
+<tr><td></td><td><code>PhantomData&lt;T&gt;</code></td><td>Partial</td><td></td></tr>
+<tr><td></td><td>Operator Traits</td><td>Partial</td><td></td></tr>
+<tr><td></td><td><code>Deref</code> and <code>DerefMut</code></td><td>Yes</td><td></td></tr>
+<tr><td></td><td><code>Drop</code></td><td>Partial</td><td></td></tr>
+<tr><td></td><td><code>Copy</code></td><td>Yes</td><td></td></tr>
+<tr><td></td><td><code>Clone</code></td><td>Yes</td><td></td></tr>
+<tr><td>14</td><td>Linkage</td><td>Yes</td><td></td></tr>
+<tr><td>15.1</td><td>Unsafe functions</td><td>Yes</td><td></td></tr>
+<tr><td>15.2</td><td>Unsafe blocks</td><td>Yes</td><td></td></tr>
+<tr><td>15.3</td><td>Behavior considered undefined</td><td>Partial</td><td></td></tr>
+<tr><td></td><td>Data races</td><td>No</td><td>See <a href="#concurrency">Notes - Concurrency</a></td></tr>
+<tr><td></td><td>Dereferencing dangling raw pointers</td><td>Yes</td><td></td></tr>
+<tr><td></td><td>Dereferencing unaligned raw pointers</td><td>No</td><td></td></tr>
+<tr><td></td><td>Breaking pointer aliasing rules</td><td>No</td><td></td></tr>
+<tr><td></td><td>Mutating immutable data</td><td>No</td><td></td></tr>
+<tr><td></td><td>Invoking undefined behavior via compiler intrinsics</td><td>Partial</td><td>See <a href="#intrinsics">Notes - Intrinsics</a></td></tr>
+<tr><td></td><td>Executing code compiled with platform features that the current platform does not support</td><td>No</td><td></td></tr>
+<tr><td></td><td>Producing an invalid value, even in private fields and locals</td><td>No</td><td></td></tr>
+</tbody></table>
+<h2 id="notes-on-partially-or-unsupported-features"><a class="header" href="#notes-on-partially-or-unsupported-features">Notes on partially or unsupported features</a></h2>
+<h3 id="code-generation-for-unsupported-features"><a class="header" href="#code-generation-for-unsupported-features">Code generation for unsupported features</a></h3>
+<p>Kani aims to be an industrial verification tool. Most industrial crates may
+include unsupported features in parts of their code that do not need to be
+verified. In general, this should not prevent users using Kani to verify their code.</p>
+<p>Because of that, the general rule is that Kani generates an <code>assert(false)</code>
+statement followed by an <code>assume(false)</code> statement when compiling any
+unsupported feature. <code>assert(false)</code> will cause verification to fail if the
+statement is reachable during the verification stage, while <code>assume(false)</code> will
+block any further exploration of the path. However, the analysis will not be
+affected if the statement is not reachable from the code under verification, so
+users can still verify components of their code that do not use unsupported
+features.</p>
+<p>In a few cases, Kani aborts execution if the analysis could be affected in
+some way because of an unsupported feature (e.g., global ASM).</p>
+<h3 id="assembly"><a class="header" href="#assembly">Assembly</a></h3>
+<p>Kani does not support assembly code for now. We may add it in the future but at
+present there are no plans to do so.</p>
+<p>Check out the tracking issues for <a href="https://github.com/model-checking/kani/issues/2">inline assembly (<code>asm!</code>
+macro)</a> and <a href="https://github.com/model-checking/kani/issues/316">global assembly
+(<code>asm_global!</code> macro)</a> to know
+more about the current status.</p>
+<h3 id="concurrency"><a class="header" href="#concurrency">Concurrency</a></h3>
+<p>Concurrent features are currently out of scope for Kani. In general, the
+verification of concurrent programs continues to be an open research problem
+where most tools that analyze concurrent code lack support for other features.
+Because of this, Kani emits a warning whenever it encounters concurrent code and
+compiles as if it was sequential code.</p>
+<h3 id="standard-library-functions"><a class="header" href="#standard-library-functions">Standard library functions</a></h3>
+<p>Kani <a href="./overrides.html">overrides</a> a few common functions
+(e.g., print macros) to provide a more verification friendly implementation.</p>
+<h3 id="advanced-features"><a class="header" href="#advanced-features">Advanced features</a></h3>
+<p>The semantics around some advanced features (traits, types, etc.) from Rust are
+not formally defined which makes it harder to ensure that we can properly model
+all their use cases.</p>
+<p>In particular, there are some outstanding issues to note here:</p>
+<ul>
+<li>Sanity check <code>Variant</code> type in projections
+<a href="https://github.com/model-checking/kani/issues/448">#448</a>.</li>
+<li>Unexpected fat pointer results in
+<a href="https://github.com/model-checking/kani/issues/277">#277</a>,
+<a href="https://github.com/model-checking/kani/issues/327">#327</a> and
+<a href="https://github.com/model-checking/kani/issues/676">#676</a>.</li>
+</ul>
+<p>We are particularly interested in bug reports concerning
+these features, so please <a href="https://github.com/model-checking/kani/issues/new?assignees=&amp;labels=bug&amp;template=bug_report.md">file a bug
+report</a>
+if you're aware of one.</p>
+<h3 id="panic-strategies"><a class="header" href="#panic-strategies">Panic strategies</a></h3>
+<p>Rust has two different strategies when a panic occurs:</p>
+<ol>
+<li>Stack unwinding (default): Walks back the stack cleaning up the data from
+each function it encounters.</li>
+<li>Abortion: Immediately ends the program without cleaning up.</li>
+</ol>
+<p>Currently, Kani does not support stack unwinding. This has some implications
+regarding memory safety since programs sometimes rely on the unwinding logic to
+ensure there is no resource leak or persistent data inconsistency. Check out
+<a href="https://github.com/model-checking/kani/issues/692">this issue</a> for updates on
+stack unwinding support.</p>
+<h3 id="uninitialized-memory"><a class="header" href="#uninitialized-memory">Uninitialized memory</a></h3>
+<p>Reading uninitialized memory is
+<a href="https://doc.rust-lang.org/reference/behavior-considered-undefined.html#behavior-considered-undefined">considered undefined behavior</a> in Rust.
+At the moment, Kani cannot detect if memory is uninitialized, but in practice
+this is mitigated by the fact that all memory is initialized with
+nondeterministic values.
+Therefore, any code that depends on uninitialized data will exhibit nondeterministic behavior.
+See <a href="https://github.com/model-checking/kani/issues/920">this issue</a> for more details.</p>
+<h3 id="destructors"><a class="header" href="#destructors">Destructors</a></h3>
+<p>At present, we are aware of some issues with destructors, in particular those
+related to <a href="#advanced-features">advanced features</a>.</p>
+<h3 id="intrinsics"><a class="header" href="#intrinsics">Intrinsics</a></h3>
+<p>Please refer to <a href="rust-feature-support/intrinsics.html">Intrinsics</a> for information
+on the current support in Kani for Rust compiler intrinsics.</p>
+<h3 id="floating-point-operations"><a class="header" href="#floating-point-operations">Floating point operations</a></h3>
+<p>Kani supports floating point numbers, but some supported operations on floats are &quot;over-approximated.&quot;
+These are the trigonometric functions like <code>sin</code> and <code>cos</code> and the <code>sqrt</code> function as well.
+This means the verifier can raise errors that cannot actually happen when the code is run normally.
+For instance, (<a href="https://github.com/model-checking/kani/issues/1342">#1342</a>) the <code>sin</code>/<code>cos</code> functions basically return a nondeterministic value between -1 and 1.
+In other words, they largely ignore their input and give very conservative answers.
+This range certainly includes the &quot;real&quot; value, so proof soundness is still preserved, but it means Kani could raise spurious errors that cannot actually happen.
+This makes Kani unsuitable for verifying some kinds of properties (e.g. precision) about numerical algorithms.
+Proofs that fail because of this problem can sometimes be repaired by introducing &quot;stubs&quot; for these functions that return a more acceptable approximation.
+However, note that the actual behavior of these functions can vary by platform/os/architecture/compiler, so introducing an &quot;overly precise&quot; approximation may introduce unsoundness: actual system behavior may produce different values from the stub's approximation.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="undefined-behaviour.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                            <a rel="next" href="rust-feature-support/intrinsics.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="undefined-behaviour.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                    <a rel="next" href="rust-feature-support/intrinsics.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+        <script type="text/javascript">
+            window.playground_copyable = true;
+        </script>
+        <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
+        <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+    </body>
+</html>

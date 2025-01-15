@@ -1,0 +1,309 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Loop unwinding - The Kani Rust Verifier</title>
+        <!-- Custom HTML head -->
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="Documentation for the Kani Rust Verifier">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded "><a href="getting-started.html"><strong aria-hidden="true">1.</strong> Getting started</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="install-guide.html"><strong aria-hidden="true">1.1.</strong> Installation</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="build-from-source.html"><strong aria-hidden="true">1.1.1.</strong> Building from source</a></li><li class="chapter-item expanded "><a href="install-github-ci.html"><strong aria-hidden="true">1.1.2.</strong> GitHub CI Action</a></li></ol></li><li class="chapter-item expanded "><a href="usage.html"><strong aria-hidden="true">1.2.</strong> Using Kani</a></li><li class="chapter-item expanded "><a href="verification-results.html"><strong aria-hidden="true">1.3.</strong> Verification results</a></li></ol></li><li class="chapter-item expanded "><a href="crates/index.html"><strong aria-hidden="true">2.</strong> Crates Documentation</a></li><li class="chapter-item expanded "><a href="kani-tutorial.html"><strong aria-hidden="true">3.</strong> Tutorial</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="tutorial-first-steps.html"><strong aria-hidden="true">3.1.</strong> First steps</a></li><li class="chapter-item expanded "><a href="tutorial-kinds-of-failure.html"><strong aria-hidden="true">3.2.</strong> Failures that Kani can spot</a></li><li class="chapter-item expanded "><a href="tutorial-loop-unwinding.html" class="active"><strong aria-hidden="true">3.3.</strong> Loop unwinding</a></li><li class="chapter-item expanded "><a href="tutorial-nondeterministic-variables.html"><strong aria-hidden="true">3.4.</strong> Nondeterministic variables</a></li></ol></li><li class="chapter-item expanded "><a href="reference.html"><strong aria-hidden="true">4.</strong> Reference</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="reference/attributes.html"><strong aria-hidden="true">4.1.</strong> Attributes</a></li><li class="chapter-item expanded "><a href="reference/experimental/experimental-features.html"><strong aria-hidden="true">4.2.</strong> Experimental features</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="reference/experimental/coverage.html"><strong aria-hidden="true">4.2.1.</strong> Coverage</a></li><li class="chapter-item expanded "><a href="reference/experimental/stubbing.html"><strong aria-hidden="true">4.2.2.</strong> Stubbing</a></li><li class="chapter-item expanded "><a href="reference/experimental/contracts.html"><strong aria-hidden="true">4.2.3.</strong> Contracts</a></li><li class="chapter-item expanded "><a href="reference/experimental/concrete-playback.html"><strong aria-hidden="true">4.2.4.</strong> Concrete Playback</a></li></ol></li></ol></li><li class="chapter-item expanded "><a href="application.html"><strong aria-hidden="true">5.</strong> Application</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="tool-comparison.html"><strong aria-hidden="true">5.1.</strong> Comparison with other tools</a></li><li class="chapter-item expanded "><a href="tutorial-real-code.html"><strong aria-hidden="true">5.2.</strong> Where to start on real code</a></li></ol></li><li class="chapter-item expanded "><a href="dev-documentation.html"><strong aria-hidden="true">6.</strong> Developer documentation</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="conventions.html"><strong aria-hidden="true">6.1.</strong> Coding conventions</a></li><li class="chapter-item expanded "><a href="cbmc-hacks.html"><strong aria-hidden="true">6.2.</strong> Working with CBMC</a></li><li class="chapter-item expanded "><a href="rustc-hacks.html"><strong aria-hidden="true">6.3.</strong> Working with rustc</a></li><li class="chapter-item expanded "><a href="stable-mir.html"><strong aria-hidden="true">6.4.</strong> Migrating to StableMIR</a></li><li class="chapter-item expanded "><a href="cheat-sheets.html"><strong aria-hidden="true">6.5.</strong> Command cheat sheets</a></li><li class="chapter-item expanded "><a href="dev-assess.html"><strong aria-hidden="true">6.6.</strong> cargo kani assess</a></li><li class="chapter-item expanded "><a href="testing.html"><strong aria-hidden="true">6.7.</strong> Testing</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="regression-testing.html"><strong aria-hidden="true">6.7.1.</strong> Regression testing</a></li><li class="chapter-item expanded "><a href="repo-crawl.html"><strong aria-hidden="true">6.7.2.</strong> (Experimental) Testing with a Large Number of Repositories</a></li></ol></li><li class="chapter-item expanded "><a href="performance-comparisons.html"><strong aria-hidden="true">6.8.</strong> Performance comparisons</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="benchcomp-cli.html"><strong aria-hidden="true">6.8.1.</strong> benchcomp command line</a></li><li class="chapter-item expanded "><a href="benchcomp-conf.html"><strong aria-hidden="true">6.8.2.</strong> benchcomp configuration file</a></li><li class="chapter-item expanded "><a href="benchcomp-parse.html"><strong aria-hidden="true">6.8.3.</strong> Custom parsers</a></li></ol></li></ol></li><li class="chapter-item expanded "><a href="limitations.html"><strong aria-hidden="true">7.</strong> Limitations</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="undefined-behaviour.html"><strong aria-hidden="true">7.1.</strong> Undefined behaviour</a></li><li class="chapter-item expanded "><a href="rust-feature-support.html"><strong aria-hidden="true">7.2.</strong> Rust feature support</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="rust-feature-support/intrinsics.html"><strong aria-hidden="true">7.2.1.</strong> Intrinsics</a></li><li class="chapter-item expanded "><a href="rust-feature-support/unstable.html"><strong aria-hidden="true">7.2.2.</strong> Unstable features</a></li></ol></li><li class="chapter-item expanded "><a href="overrides.html"><strong aria-hidden="true">7.3.</strong> Overrides</a></li><li class="spacer"></li></ol></li><li class="chapter-item expanded "><a href="faq.html"><strong aria-hidden="true">8.</strong> FAQ</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">The Kani Rust Verifier</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/model-checking/kani" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+                        <a href="https://github.com/model-checking/kani/edit/main/docs/src/tutorial-loop-unwinding.md" title="Suggest an edit" aria-label="Suggest an edit">
+                            <i id="git-edit-button" class="fa fa-edit"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="loops-unwinding-and-bounds"><a class="header" href="#loops-unwinding-and-bounds">Loops, unwinding, and bounds</a></h1>
+<p>Consider code like this (available <a href="https://github.com/model-checking/kani/blob/main/docs/src/tutorial/loops-unwinding/src/lib.rs">here</a>):</p>
+<pre><code class="language-rust">fn initialize_prefix(length: usize, buffer: &amp;mut [u8]) {
+    // Let's just ignore invalid calls
+    if length &gt; buffer.len() {
+        return;
+    }
+
+    for i in 0..=length {
+        buffer[i] = 0;
+    }
+}
+</code></pre>
+<p>This code has an off-by-one error that only occurs on the last iteration of the loop (when called with an input that will trigger it).
+We can try to find this bug with a proof harness like this:</p>
+<pre><code class="language-rust">#[cfg(kani)]
+#[kani::proof]
+#[kani::unwind(1)] // deliberately too low
+fn check_initialize_prefix() {
+    const LIMIT: usize = 10;
+    let mut buffer: [u8; LIMIT] = [1; LIMIT];
+
+    let length = kani::any();
+    kani::assume(length &lt;= LIMIT);
+
+    initialize_prefix(length, &amp;mut buffer);
+}
+</code></pre>
+<p>But we've just used a <a href="reference/attributes.html#kaniunwindnumber">new attribute</a> (<code>#[kani::unwind(1)]</code>) that requires some explanation.
+When we run <code>cargo kani</code> on this code as we have written it, we see an odd verification failure:</p>
+<pre><code>SUMMARY:
+ ** 1 of 67 failed (66 undetermined)
+Failed Checks: unwinding assertion loop 0
+
+VERIFICATION:- FAILED
+</code></pre>
+<p>If we try removing this &quot;unwind&quot; annotation and re-running Kani, the result is worse: non-termination.
+Kani simply doesn't produce a result.</p>
+<p>The problem we're struggling with is the technique Kani uses to verify code.
+We're not able to handle code with &quot;unbounded&quot; loops, and what &quot;bounded&quot; means can be quite subtle.
+It has to have a constant number of iterations that's <em>&quot;obviously constant&quot;</em> enough for the verifier to actually figure this out.
+In practice, very few loops are like this.</p>
+<p>To verify programs like this with Kani as it exists today, we need to do two things:</p>
+<ol>
+<li>Set an upper bound on the size of the problem.
+We've actually already done part of this: our proof harness above seems to be trying to set an upper <code>LIMIT</code> of 10.</li>
+<li>Tell Kani about this limit if (or when) it's not able to figure it out on its own.
+This is the purpose of the <code>kani::unwind</code> annotation.</li>
+</ol>
+<p>Bounding proofs like this means we may no longer be proving as much as we originally hoped.
+Who's to say, if we prove everything works up to size 10, that there isn't a novel bug lurking, reachable only with problems of size 11+?
+Perhaps!
+But, let's get back to the issue at hand.</p>
+<p>By putting <code>#[kani::unwind(1)]</code> on the proof harness, we've placed an upper bound of 1 loop iteration.
+The &quot;unwinding assertion&quot; failure that Kani reports is because this bound is not high enough.
+The code tries to execute more than 1 loop iteration.
+(And, because the unwinding isn't high enough, many of the other properties Kani is verifying become &quot;undetermined&quot;: we don't really know if they're true or false, because we can't get far enough.)</p>
+<p><strong>Exercise</strong>: Try increasing the bound. Where might you start? How high do you need to go to get rid of the &quot;unwinding assertion&quot; failure?</p>
+<details>
+<summary>Click to see explanation for the exercise</summary>
+<p>Since the proof harness is trying to limit the array to size 10, an initial unwind value of 10 seems like the obvious place to start.
+But that's not large enough for Kani, and we still see the &quot;unwinding assertion&quot; failure.</p>
+<p>At size 11, the &quot;unwinding assertion&quot; goes away, and now we can see the actual failure we're trying to find too.
+We'll explain why we see this behavior in a moment.</p>
+</details>
+<p>Once we have increased the unwinding limit high enough, we're left with these failures:</p>
+<pre><code>SUMMARY:
+ ** 1 of 68 failed
+Failed Checks: index out of bounds: the length is less than or equal to the given index
+ File: &quot;./src/lib.rs&quot;, line 12, in initialize_prefix
+
+VERIFICATION:- FAILED
+</code></pre>
+<p><strong>Exercise</strong>: Fix the off-by-one error, and get the (bounded) proof to go through.</p>
+<p>We now return to the question: why is 11 the unwinding bound?</p>
+<p>Kani needs the unwinding bound to be &quot;one more than&quot; the number of loop iterations.
+We previously had an off-by-one error that tried to do 11 iterations on an array of size 10.
+So... the unwinding bound needed to be 11, then.</p>
+<blockquote>
+<p><strong>NOTE</strong>: Presently, there are some situations where &quot;number of iterations of a loop&quot; can be less obvious than it seems.
+This can be easily triggered with use of <code>break</code> or <code>continue</code> within loops.
+Often this manifests itself as needing &quot;two more&quot; or &quot;three more&quot; iterations in the unwind bound than seems like it would actually run.
+In those situations, we might still need a bound like <code>kani::unwind(13)</code>, despite looking like a loop bounded to 10 iterations.</p>
+</blockquote>
+<p>The approach we've taken here is a general method for getting a bounded proof to go through:</p>
+<ol>
+<li>Put an actual upper bound on the problem itself.
+Here that's accomplished via <code>LIMIT</code> in our proof harness.
+We don't create a slice any bigger than that, and that's what we loop over.</li>
+<li>Start at a reasonable guess for a <code>kani::unwind</code> bound, and increase until the unwinding assertion failure goes away.</li>
+<li>Or, if that starts to take too long to verify, decrease your problem's bound, to accommodate the verifier's performance.</li>
+</ol>
+<h2 id="unwinding-value-specification"><a class="header" href="#unwinding-value-specification">Unwinding value specification</a></h2>
+<p>The best approach to supplying Kani with unwind bounds is using the annotation <code>kani::unwind</code>, as we show above.</p>
+<p>You might want to supply one via command line when experimenting, however.
+In that case you can either use <code>--default-unwind x</code> to set an unwind bound for every proof harness that <strong>does not</strong> have an explicit bound.</p>
+<p>Or you can <em>override</em> a harness's bound, but only when running a specific harness:</p>
+<pre><code>cargo kani --harness check_initialize_prefix --unwind 11
+</code></pre>
+<p>Finally, you might be interested in defaulting the unwind bound to 1, to force termination (and force supplying a bound) on all your proof harnesses.
+You can do this by putting this into your <code>Cargo.toml</code> file:</p>
+<pre><code class="language-toml">[workspace.metadata.kani.flags]
+default-unwind = 1
+</code></pre>
+<h2 id="bounded-proof"><a class="header" href="#bounded-proof">Bounded proof</a></h2>
+<p>Before we finish, it's worth revisiting the implications of what we've done here.
+Kani frequently needs to do &quot;bounded proof&quot;, which contrasts with unbounded or full verification.</p>
+<p>We've written a proof harness that shows <code>initialize_prefix</code> has no errors on input slices of size 10, but no higher.
+The particular size we choose is usually determined by balancing the level of assurance we want, versus runtime of Kani.
+It's often not worth running proofs for large numbers of iterations, unless either very high assurance is necessary, or there's reason to suspect larger problems will contain novel failure modes.</p>
+<p><strong>Exercise</strong>: Try increasing the problem size (both the unwind and the <code>LIMIT</code> constant). When does it start to take more than a few seconds?</p>
+<details>
+<summary>Click to see explanation for the exercise</summary>
+<p>On your friendly neighborhood author's machine, a <code>LIMIT</code> of 100 takes about 3.8 seconds end-to-end.
+This is a relatively simple bit of code, though, and it's not uncommon for some proofs to scale poorly even to 5 iterations.</p>
+</details>
+<p>One consequence of this, however, is that Kani often scales poorly to &quot;big string problems&quot; like parsing.
+Often a parser will need to consume inputs larger than 10-20 characters to exhibit strange behaviors.</p>
+<h2 id="summary"><a class="header" href="#summary">Summary</a></h2>
+<p>In this section:</p>
+<ol>
+<li>We saw Kani fail to terminate.</li>
+<li>We saw how <code>#[kani::unwind(1)]</code> can help force Kani to terminate (with a verification failure).</li>
+<li>We saw &quot;unwinding assertions&quot; verify that we've set the unwinding limit high enough.</li>
+<li>We saw how to put a practical bound on problem size in our proof harness.</li>
+<li>We saw how to pick an unwinding size large enough to successfully verify that bounded proof.</li>
+</ol>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="tutorial-kinds-of-failure.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                            <a rel="next" href="tutorial-nondeterministic-variables.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="tutorial-kinds-of-failure.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                    <a rel="next" href="tutorial-nondeterministic-variables.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+        <script type="text/javascript">
+            window.playground_copyable = true;
+        </script>
+        <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
+        <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+    </body>
+</html>

@@ -1,0 +1,609 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>0002-function-stubbing - Kani RFC Book</title>
+        <!-- Custom HTML head -->
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="Design documents for Kani Rust Verifier">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="../intro.html">Introduction</a></li><li class="chapter-item expanded affix "><a href="../template.html">RFC Template</a></li><li class="chapter-item expanded affix "><li class="part-title">Kani RFCs</li><li class="chapter-item expanded "><a href="../rfcs/0001-mir-linker.html">0001-mir-linker</a></li><li class="chapter-item expanded "><a href="../rfcs/0002-function-stubbing.html" class="active">0002-function-stubbing</a></li><li class="chapter-item expanded "><a href="../rfcs/0003-cover-statement.html">0003-cover-statement</a></li><li class="chapter-item expanded "><a href="../rfcs/0004-loop-contract-synthesis.html">0004-loop-contract-synthesis</a></li><li class="chapter-item expanded "><a href="../rfcs/0005-should-panic-attr.html">0005-should-panic-attr</a></li><li class="chapter-item expanded "><a href="../rfcs/0006-unstable-api.html">0006-unstable-api</a></li><li class="chapter-item expanded "><a href="../rfcs/0007-global-conditions.html">0007-global-conditions</a></li><li class="chapter-item expanded "><a href="../rfcs/0008-line-coverage.html">0008-line-coverage</a></li><li class="chapter-item expanded "><a href="../rfcs/0009-function-contracts.html">0009-function-contracts</a></li><li class="chapter-item expanded "><a href="../rfcs/0010-quantifiers.html">0010-quantifiers</a></li><li class="chapter-item expanded "><a href="../rfcs/0011-source-coverage.html">0011-source-coverage</a></li><li class="chapter-item expanded "><a href="../rfcs/0012-loop-contracts.html">0012-loop-contracts</a></li><li class="chapter-item expanded "><a href="../rfcs/0013-list.html">0013-list</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Kani RFC Book</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/model-checking/kani" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+                        <a href="https://github.com/model-checking/kani/edit/main/rfc/src/rfcs/0002-function-stubbing.md" title="Suggest an edit" aria-label="Suggest an edit">
+                            <i id="git-edit-button" class="fa fa-edit"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <ul>
+<li><strong>Feature Name:</strong> Function and method stubbing (<code>function-stubbing</code>)</li>
+<li><strong>Feature Request Issue:</strong> <a href="https://github.com/model-checking/kani/issues/1695">https://github.com/model-checking/kani/issues/1695</a></li>
+<li><strong>RFC PR:</strong> <a href="https://github.com/model-checking/kani/pull/1723">https://github.com/model-checking/kani/pull/1723</a> </li>
+<li><strong>Status:</strong> Unstable</li>
+<li><strong>Version:</strong> 1</li>
+<li><strong>Proof-of-concept:</strong> <a href="https://github.com/aaronbembenek-aws/kani/tree/mir_transform">https://github.com/aaronbembenek-aws/kani/tree/mir_transform</a></li>
+</ul>
+<hr />
+<h2 id="summary"><a class="header" href="#summary">Summary</a></h2>
+<p>Allow users to specify that certain functions and methods should be replaced with mock functions (stubs) during verification.</p>
+<h3 id="scope"><a class="header" href="#scope">Scope</a></h3>
+<p>In scope:</p>
+<ul>
+<li>Replacing function bodies</li>
+<li>Replacing method bodies (which means that the new method body will be executed, whether the method is invoked directly or through a vtable)</li>
+</ul>
+<p>Out of scope:</p>
+<ul>
+<li>Replacing type definitions</li>
+<li>Replacing macro definitions</li>
+<li>Mocking traits</li>
+<li>Mocking intrinsics</li>
+</ul>
+<h2 id="user-impact"><a class="header" href="#user-impact">User impact</a></h2>
+<p>We anticipate that function/method stubbing will have a substantial positive impact on the usability of Kani:</p>
+<ol>
+<li>Users might need to stub functions/methods containing features that Kani does not support, such as inline assembly.</li>
+<li>Users might need to stub functions/methods containing code that Kani supports in principle, but which in practice leads to bad verification performance (for example, if it contains deserialization code).</li>
+<li>Users could use stubbing to perform compositional reasoning: prove the behavior of a function/method <code>f</code>, and then in other proofs---that call <code>f</code> indirectly---use a stub of <code>f</code> that mocks that behavior but is less complex.</li>
+</ol>
+<p>In all cases, stubbing would enable users to verify code that cannot currently be verified by Kani (or at least not within a reasonable resource bound).
+Even without stubbing types, the ability to stub functions/methods can help provide verification-friendly abstractions for standard data structures.
+For example, <a href="https://github.com/model-checking/kani/issues/1673">Issue 1673</a> suggests that some Kani proofs run more quickly if <code>Vec::new</code> is replaced with <code>Vec::with_capacity</code>; function stubbing would allow us to make this substitution everywhere in a codebase (and not just in the proof harness).</p>
+<p>In what follows, we give an example of stubbing external code, using the annotations we propose in this RFC.
+We are able to run this example on a modified version of Kani using a proof-of-concept MIR-to-MIR transformation implementing stubbing (the prototype does not support stub-related annotations; instead, it reads the stub mapping from a file).
+This example stubs out a function that returns a random number.
+This is the type of function that is commonly stubbed in other verification and program analysis projects, along with system calls, timer functions, logging calls, and deserialization methods---all of which we should be able to handle.
+See the appendix at the end of this RFC for an extended example involving stubbing out a deserialization method.</p>
+<h3 id="mocking-randomization"><a class="header" href="#mocking-randomization">Mocking randomization</a></h3>
+<p>The crate <a href="https://crates.io/crates/rand"><code>rand</code></a> is widely used (150M downloads).
+However, Kani cannot currently handle code that uses it (Kani users have run into this; see <a href="https://github.com/model-checking/kani/issues/1727">Issue 1727</a>.
+Consider this example:</p>
+<pre><code class="language-rust">#[cfg(kani)]
+#[kani::proof]
+fn random_cannot_be_zero() {
+    assert_ne!(rand::random::&lt;u32&gt;(), 0);
+}
+</code></pre>
+<p>For unwind values less than 2, Kani encounters an unwinding assertion error (there is a loop used to seed the random number generator); if we set an unwind value of 2, Kani fails to terminate within 5 minutes.</p>
+<p>Using stubbing, we can specify that the function <code>rand::random</code> should be replaced with a mocked version:</p>
+<pre><code class="language-rust">#[cfg(kani)]
+fn mock_random&lt;T: kani::Arbitrary&gt;() -&gt; T {
+    kani::any()
+}
+
+#[cfg(kani)]
+#[kani::proof]
+#[kani::stub(rand::random, mock_random)]
+fn random_cannot_be_zero() {
+    assert_ne!(rand::random::&lt;u32&gt;(), 0);
+}
+</code></pre>
+<p>Under this substitution, Kani has a single check, which proves that the assertion can fail. Verification time is 0.02 seconds.</p>
+<h2 id="user-experience"><a class="header" href="#user-experience">User experience</a></h2>
+<p>This feature is currently limited to stubbing functions and methods.
+We anticipate that the annotations we propose here could also be used for stubbing types, although the underlying technical approach might have to change.</p>
+<p>Stubs will be specified per harness; that is, different harnesses can use different stubs.
+This is one of the main design points.
+Users might want to mock the behavior of a function within one proof harness, and then mock it a different way for another harness, or even use the original function definition.
+It would be overly restrictive to impose the same stub definitions across all proof harnesses.
+A good example of this is compositional reasoning: in some harnesses, we want to prove properties of a particular function (and so want to use its actual implementation), and in other harnesses we want to assume that that function has those properties.</p>
+<p>Users will specify stubs by attaching the <code>#[kani::stub(&lt;original&gt;, &lt;replacement&gt;)]</code> attribute to each harness function.
+The arguments <code>original</code> and <code>replacement</code> give the names of functions/methods.
+They will be resolved using Rust's standard name resolution rules; this includes supporting imports like <code>use foo::bar as baz</code>, as well as imports of multiple versions of the same crate (in which case a name would resolve to a function/method in a particular version).
+The attribute may be specified multiple times per harness, so that multiple (non-conflicting) stub pairings are supported.</p>
+<p>For example, this code specifies that the function <code>mock_random</code> should be used in place of the function <code>rand::random</code> and the function <code>my_mod::bar</code> should be used in place of the function <code>my_mod::foo</code> for the harness <code>my_mod::my_harness</code>:</p>
+<pre><code class="language-rust">#[cfg(kani)]
+fn mock_random&lt;T: kani::Arbitrary&gt;() -&gt; T {
+    kani::any()
+}
+
+mod my_mod {
+
+    fn foo(x: u32) -&gt; u32 { ... }
+
+    fn bar(x: u32) -&gt; u32 { ... }
+
+    #[cfg(kani)]
+    #[kani::proof]
+    #[kani::stub(rand::random, super::mock_random)]
+    #[kani::stub(foo, bar)]
+    fn my_harness() { ... }
+
+}
+</code></pre>
+<p>We will support the stubbing of private functions and methods.
+While this provides flexibility that we believe will be necessary in practice, it can also lead to brittle proofs: private functions/methods can change or disappear in even minor version upgrades (thanks to refactoring), and so proofs that depend on them might have a high maintenance burden.
+In the documentation, we will discourage stubbing private functions/methods except if absolutely necessary.</p>
+<h3 id="stub-sets"><a class="header" href="#stub-sets">Stub sets</a></h3>
+<p>As a convenience, we will provide a macro <code>kani::stub_set</code> that allows users to specify sets of stubs that can be applied to multiple harnesses:</p>
+<pre><code class="language-rust">kani::stub_set!(my_io_stubs(
+    stub(std::fs::read, my_read),
+    stub(std::fs::write, my_write),
+));
+</code></pre>
+<p>When declaring a harness, users can use the <code>#[kani::use_stub_set(&lt;stub_set_name&gt;)]</code> attribute to apply the stub set:</p>
+<pre><code class="language-rust">#[cfg(kani)]
+#[kani::proof]
+#[kani::use_stub_set(my_io_stubs)]
+fn my_harness() { ... }
+</code></pre>
+<p>The name of the stub set will be resolved through the module path (i.e., they are not global symbols), using Rust's standard name resolution rules.</p>
+<p>A similar mechanism can be used to aggregate stub sets:</p>
+<pre><code class="language-rust">kani::stub_set!(all_my_stubs(
+    use_stub_set(my_io_stubs),
+    use_stub_set(my_other_stubs),
+));
+</code></pre>
+<h3 id="error-conditions"><a class="header" href="#error-conditions">Error conditions</a></h3>
+<p>Given a set of <code>original</code>-<code>replacement</code> pairs, Kani will exit with an error if</p>
+<ol>
+<li>a specified <code>original</code> function/method does not exist;</li>
+<li>a specified <code>replacement</code> stub does not exist;</li>
+<li>the user specifies conflicting stubs for the same harness (e.g., if the same <code>original</code> function is mapped to multiple <code>replacement</code> functions); or</li>
+<li>the signature of the <code>replacement</code> stub is not compatible with the signature of the <code>original</code> function/method (see next section).</li>
+</ol>
+<h3 id="stub-compatibility-and-validation"><a class="header" href="#stub-compatibility-and-validation">Stub compatibility and validation</a></h3>
+<p>When considering whether a function/method can be replaced with some given stub, we want to allow some measure of flexibility, while also ensuring that we can provide the user with useful feedback if stubbing results in misformed code.
+We consider a stub and a function/method to be compatible if all the following conditions are met:</p>
+<ul>
+<li>They have the same number of parameters.</li>
+<li>They have the same return type.</li>
+<li>Each parameter in the stub has the same type as the corresponding parameter in the original function/method.</li>
+<li>The stub must have the same number of generic parameters as the original function/method.
+However, a generic parameter in the stub is allowed to have a different name than the corresponding parameter in the original function/method.
+For example, the stub <code>bar&lt;A, B&gt;(x: A, y: B) -&gt; B</code> is considered to have a type compatible with the function <code>foo&lt;S, T&gt;(x: S, y: T) -&gt; T</code>.</li>
+<li>The bounds for each type parameter don't need to match; however, all calls to the original function must also satisfy the bounds of the stub.</li>
+</ul>
+<p>The final point is the most subtle.
+We do not require that a type parameter in the signature of the stub implements the same traits as the corresponding type parameter in the signature of the original function/method.
+However, Kani will reject a stub if a trait mismatch leads to a situation where a statically dispatched call to a trait method cannot be resolved during monomorphization.
+For example, this restriction rules out the following harness:</p>
+<pre><code class="language-rust">fn foo&lt;T&gt;(_x: T) -&gt; bool {
+    false
+}
+
+trait DoIt {
+    fn do_it(&amp;self) -&gt; bool;
+}
+
+fn bar&lt;T: DoIt&gt;(x: T) -&gt; bool {
+    x.do_it()
+}
+
+#[kani::proof]
+#[kani::stub(foo, bar)]
+fn harness() {
+    assert!(foo(&quot;hello&quot;));
+}
+</code></pre>
+<p>The call to the trait method <code>DoIt::do_it</code> is unresolvable in the stub <code>bar</code> when the type parameter <code>T</code> is instantiated with the type <code>&amp;str</code>.
+On the other hand, our approach provides some flexibility, such as allowing our earlier example of mocking randomization: both <code>rand::random</code> and <code>my_random</code> have the type <code>() -&gt; T</code>, but in the first case <code>T</code> is restricted such that the type <code>Standard</code> implements <code>Distribution&lt;T&gt;</code>, whereas in the latter case <code>T</code> has to implement <code>kani::Arbitrary</code>.
+This trait mismatch is allowed because at this call site <code>T</code> is instantiated with <code>u32</code>, which implements <code>kani::Arbitrary</code>.</p>
+<h3 id="pedagogy"><a class="header" href="#pedagogy">Pedagogy</a></h3>
+<p>To teach this feature, we will update the documentation with a section on function and method stubbing, including simple examples showing how stubbing can help Kani handle code that currently cannot be verified, as well as a guide to best practices for stubbing.</p>
+<h2 id="detailed-design"><a class="header" href="#detailed-design">Detailed design</a></h2>
+<p>We expect that this feature will require changes primarily to <code>kani-compiler</code>, with some less invasive changes to <code>kani-driver</code>.
+We will modify <code>kani-compiler</code> to collects stub mapping information (from the harness attributes) before code generation.
+Since stubs are specified on a per-harness basis, we need to generate multiple versions of code if all harnesses do not agree on their stub mappings; accordingly, we will update <code>kani-compiler</code> to generate multiple versions of code as appropriate. 
+To do the stubbing, we will plug in a new MIR-to-MIR transformation that replaces the bodies of specified functions with their replacements.
+This can be achieved via <code>rustc</code>'s query mechanism: if the user wants to replace <code>foo</code> with <code>bar</code>, then when the compiler requests the MIR for <code>foo</code>, we instead return the MIR for <code>bar</code>.
+<code>kani-compiler</code> will also be responsible for checking for the error conditions previously enumerated.</p>
+<p>We will also need to update the metadata that <code>kani-compiler</code> generates, so that it maps each harness to the generated code that has the right stub mapping for that harness (since there will be multiple versions of generated code).
+The metadata will also list the stubs applied in each harness.
+<code>kani-driver</code> will need to be updated to process this new type of metadata and invoke the correct generated code for each harness.
+We can also update the results report to include the stubs that were used.</p>
+<p>We anticipate that this design will evolve and be iterated upon.</p>
+<h2 id="rationale-and-alternatives-user-experience"><a class="header" href="#rationale-and-alternatives-user-experience">Rationale and alternatives: user experience</a></h2>
+<p>Stubbing is a <em>de facto</em> necessity for verification tools, and the lack of stubbing has a negative impact on the usability of Kani.</p>
+<h3 id="benefits"><a class="header" href="#benefits">Benefits</a></h3>
+<ul>
+<li>Because stubs are specified by annotating the harness, the user is able to specify stubs for functions they do not have source access to (like library functions).
+This contrasts with annotating the function to be replaced (such as with function contracts).</li>
+<li>The current design provides the user with flexibility, as they can specify different sets of stubs to use for different harnesses.
+This is important if users are trying to perform compositional reasoning using stubbing, since in some harnesses a function/method should be fully verified, in in other harnesses its behavior should be mocked.</li>
+<li>The stub selections are located adjacent to the harness, which makes it easy to understand which replacements are going to happen for each harness.</li>
+</ul>
+<h3 id="risks"><a class="header" href="#risks">Risks</a></h3>
+<ul>
+<li>Users can always write stubs that do not correctly correspond to program behavior, and so a successful verification does not actually mean the program is bug-free.
+This is similar to other specification bugs.
+All the stubbing code will be available, so it is possible to inspect the assumptions it makes.</li>
+</ul>
+<h3 id="comparison-to-function-contracts"><a class="header" href="#comparison-to-function-contracts">Comparison to function contracts</a></h3>
+<ul>
+<li>In many cases, stubs are more user-friendly than contracts.
+With contracts, it is sometimes necessary to explicitly provide information that is automatically captured in Rust (such as which memory is written).
+Furthermore, contract predicates constitute a DSL of their own that needs to be learned; using stubbing, we can stick to using just Rust.</li>
+<li>Function contracts sometimes come with a mechanism for verifying that a function satisfies its contract (for example, <a href="http://www.cprover.org/cprover-manual/contracts/functions/">CBMC provides this</a>).
+While we do not plan to provide such a feature, it is possible to emulate this by writing proof harnesses comparing the behavior of the original function and the stub.
+Furthermore, our approach provides additional flexibility, as it is not always actually desirable for a stub to be an overapproximation of the function (e.g., we might want the stub to exhibit a certain behavior within a particular harness) or to have a consistent behavior across all harnesses.</li>
+<li>The <a href="https://github.com/model-checking/kani/tree/features/function-contracts">currently proposed function contract mechanism</a> does not provide a way to specify contracts on external functions.
+In principle, it would be possible to extend it to do so.
+Doing so would require some additional UX design decisions (e.g., &quot;How do users specify this?&quot;); with stubbing there does not need to be a distinction between local and external functions.</li>
+</ul>
+<h3 id="alternative-1-annotate-stubbed-functions"><a class="header" href="#alternative-1-annotate-stubbed-functions">Alternative #1: Annotate stubbed functions</a></h3>
+<p>In this alternative, users add an attribute <code>#[kani::stub_by(&lt;replacement&gt;)]</code> to the function that should be replaced.
+This approach is similar to annotating a function with a contract specifying its behavior (the stub acts like a programmatic contract).
+The major downside with this approach is that it would not be possible to stub external code. We see this as a likely use case that needs to be supported: users will want to replace <code>std</code> library functions or functions from arbitrary external crates.</p>
+<h3 id="alternative-2-annotate-stubs"><a class="header" href="#alternative-2-annotate-stubs">Alternative #2: Annotate stubs</a></h3>
+<p>In this alternative, users add an attribute <code>#[kani::stub_of(&lt;original&gt;)]</code> to the stub function itself, saying which function it replaces:</p>
+<pre><code class="language-rust">#[cfg(kani)]
+#[kani::stub_of(rand::random)]
+fn mock_random&lt;T: kani::Arbitrary&gt;() -&gt; T { ... }
+</code></pre>
+<p>The downside is that this stub must be uniformly applied across all harnesses and the stub specifications might be spread out across multiple files.
+It would also require an extra layer of indirection to use a function as a stub if the user does not have source code access to it.</p>
+<h3 id="alternative-3-annotate-harnesses-and-stubs"><a class="header" href="#alternative-3-annotate-harnesses-and-stubs">Alternative #3: Annotate harnesses and stubs</a></h3>
+<p>This alternative combines the proposed solution and Alternative #2.
+Users annotate the stub (as in Alternative #2) and specify for each harness which stubs to use using an annotation <code>#[kani::use_stubs(&lt;stub&gt;+)]</code> placed above the harness.</p>
+<p>This could be combined with modules, so that a module can be used to group stubs together, and then harnesses could pull in all the stubs in the module:</p>
+<pre><code class="language-rust">#[cfg(kani)]
+mod my_stubs {
+
+  #[kani::stub_of(foo)]
+  fn stub1() { ... }
+
+  #[kani::stub_of(bar)]
+  fn stub2() { ... }
+
+}
+
+#[cfg(kani)]
+#[kani::proof]
+#[kani::use_stubs(my_stubs)]
+fn my_harness() { ... }
+</code></pre>
+<p>The benefit is that stubs are specified per harness, and (using modules) it might be possible to group stubs together.
+The downside is that multiple annotations are required and the stub mappings themselves are remote from the harness (at the harness you would know what stub is being used, but not what it is replacing).
+There are also several issues that would need to be resolved:</p>
+<ul>
+<li>How do you mock multiple functions with the same stub?
+(Say harness A wants to use <code>stub1</code> to mock <code>foo</code>, and harness B wants to use <code>stub1</code> to mock <code>bar</code>.)</li>
+<li>How do you combine stub sets defined via modules? Would you use the module hierarchy?</li>
+<li>If you use modules to define stub sets, are these modules regular modules or not?
+In particular, given that modules can contain other constructs than functions, how should we interpret the extra stuff?</li>
+</ul>
+<h3 id="alternative-4-specify-stubs-in-a-file"><a class="header" href="#alternative-4-specify-stubs-in-a-file">Alternative #4: Specify stubs in a file</a></h3>
+<p>One alternative would be to specify stubs in a file that is passed to <code>kani-driver</code> via a command line option.
+Users would specify per-harness stub pairings in the file; JSON would be a possible format.
+Using a file would eliminate the need for <code>kani-compiler</code> to do an extra pass to extract harness information from the Rust source code before doing code generation; the rest of the implementation would stay the same.
+It would also allow the same harness to be run with different stub selections (by supplying a different file).
+The disadvantage is that the stub selection is remote from the harness itself.</p>
+<h2 id="rationale-and-alternatives-stubbing-mechanism"><a class="header" href="#rationale-and-alternatives-stubbing-mechanism">Rationale and alternatives: stubbing mechanism</a></h2>
+<p>Our approach is based on a MIR-to-MIR transformation.
+Some advantages are that it operates over a relatively simple intermediate representation and <code>rustc</code> has good support for plugging in MIR-to-MIR transformations, so it would not require any changes to <code>rustc</code> itself.
+At this stage of the compiler, names have been fully resolved, and there is no problem with swapping in the body of a function defined in one crate for a function defined in another.
+Another benefit is that it should be possible to extend the compiler to integrate <code>--concrete-playback</code> with the abstractions (although doing so is out of scope for the current proposal).</p>
+<p>The major downside with the MIR-to-MIR transformation is that it does not appear to be possible to stub types at that stage (there is no way to change the definition of a type through the MIR).
+Thus, our proposed approach will not be a fully general stubbing solution.
+However, it is technically feasible and relatively clean, and provides benefits over having no stubbing at all (as can be seen in the examples in the first part of this document).</p>
+<p>Furthermore, it could be used as part of a portfolio of stubbing approaches, where users stub local types using conditional compilation (see Alternative #1), and Kani provides a modified version of the standard library with verification-friendly versions of types like <code>std::vec::Vec</code>.</p>
+<h3 id="alternative-1-conditional-compilation"><a class="header" href="#alternative-1-conditional-compilation">Alternative #1: Conditional compilation</a></h3>
+<p>In this baseline alternative, we do not provide any stubbing mechanism at all.
+Instead, users can effectively stub local code (functions, methods, and types) using conditional compilation.
+For example, they could specify using <code>#[cfg(kani)]</code> to turn off the original definition and turn on the replacement definition when Kani is running, similarly to the ghost state approach taken in the <a href="https://model-checking.github.io/kani-verifier-blog/2022/08/17/using-the-kani-rust-verifier-on-tokio-bytes.html">Tokio Bytes proof</a>.</p>
+<p>The disadvantage with this approach is that it does not provide any way to stub external code, which is one of the main motivations of our proposed approach.</p>
+<h3 id="alternative-2-source-to-source-transformation"><a class="header" href="#alternative-2-source-to-source-transformation">Alternative #2: Source-to-source transformation</a></h3>
+<p>In this alternative, we rewrite the source code before it even gets to the compiler.
+The advantage with this approach is that it is very flexible, allowing us to stub functions, methods, and types, either by directly replacing them, or appending their replacements and injecting appropriate conditional compilation guards.</p>
+<p>This approach entails less user effort than Alternative #1, but it has the same downside that it requires all source code to be available.
+It also might be difficult to inject code in a way that names are correctly resolved (e.g., if the replacement code comes from a different crate).
+Also, source code is difficult to work with (e.g., unexpanded macros).</p>
+<p>On the last two points, we might be able to take advantage of an existing source analysis platform like <code>rust-analyzer</code> (which has facilities like structural search replace), but this would add more (potentially fragile) dependencies to Kani.</p>
+<h3 id="alternative-3-ast-to-ast-or-hir-to-hir-transformation"><a class="header" href="#alternative-3-ast-to-ast-or-hir-to-hir-transformation">Alternative #3: AST-to-AST or HIR-to-HIR transformation</a></h3>
+<p>In this alternative, we implement stubbing by rewriting the <a href="https://rustc-dev-guide.rust-lang.org/syntax-intro.html">AST</a> or <a href="https://rustc-dev-guide.rust-lang.org/hir.html">High-Level IR (HIR)</a> of the program.
+The HIR is a more compiler-friendly version of the AST; it is what is used for type checking.
+To swap out a function, method, or type at this level, it looks like it would be necessary to add another pass to <code>rustc</code> that takes the initial AST/HIR and produces a new AST/HIR with the appropriate replacements.</p>
+<p>The advantage with this approach is, like source transformations, it would be very flexible.
+The downside is that it would require modifying <code>rustc</code> (as far as we know, there is not an API for plugging in a new AST/HIR pass), and would also require performing the transformations at a very syntactic level: although the AST/HIR would likely be easier to work with than source code directly, it is still very close to the source code and not very abstract.
+Furthermore, provided we supported stubbing across crate boundaries, it seems like we would run into a sequencing issue: if we were trying to stub a function in a dependency, we might not know until after we have compiled that dependency that we need to modify its AST/HIR; furthermore, even if we were aware of this, the replacement AST/HIR code would not be available at that time (the AST/HIR is usually just constructed for the crate currently being compiled).</p>
+<h2 id="open-questions"><a class="header" href="#open-questions">Open questions</a></h2>
+<ul>
+<li>Would there ever be the need to stub a particular monomorphization of a function, as opposed to the polymorphic function?</li>
+<li>How can the user verify that the stub is an abstraction of the original function/method?
+Sometimes it might be important that a stub is an overapproximation or underapproximation of the replaced code. 
+One possibility would be writing proofs about stubs (possibly relating their behavior to that of the code they are replacing).</li>
+</ul>
+<h2 id="limitations"><a class="header" href="#limitations">Limitations</a></h2>
+<ul>
+<li>Our proposed approach will not work with <code>--concrete-playback</code> (for now).</li>
+<li>We are only able to apply abstractions to some dependencies if the user enables the MIR linker.</li>
+</ul>
+<h2 id="future-possibilities"><a class="header" href="#future-possibilities">Future possibilities</a></h2>
+<ul>
+<li>
+<p>It would increase the utility of stubbing if we supported stubs for types.
+The source code annotations could likely stay the same, although the underlying technical approach performing these substitutions might be significantly more complex.</p>
+</li>
+<li>
+<p>It would probably make sense to provide a library of common stubs for users, since many applications might want to stub the same functions and mock the same behaviors (e.g., <code>rand::random</code> can be replaced with a function returning <code>kani::any</code>).</p>
+</li>
+<li>
+<p>We could provide special classes of stubs that are likely to come up in practice:</p>
+<ul>
+<li><code>unreachable</code>: assert the function is unreachable.</li>
+<li><code>havoc_locals</code>: return nondeterministic values and assign nondeterministic values to all mutable arguments.</li>
+<li><code>havoc</code>: similar to <code>havoc_locals</code> but also assign nondeterministic values to all mutable global variables.</li>
+<li><code>uninterpret</code>: treat function as an uninterpreted function.</li>
+</ul>
+</li>
+<li>
+<p>How can we provide a good user experience for accessing private fields of <code>self</code> in methods?
+It is possible to do so using <code>std::mem::transmute</code> (see below); this is clunky and error-prone, and it would be good to provide better support for users.</p>
+<pre><code class="language-rust">struct Foo {
+    x: u32,
+}
+
+impl Foo {
+    pub fn m(&amp;self) -&gt; u32 {
+        0
+    }
+}
+
+struct MockFoo {
+    pub x: u32,
+}
+
+fn mock_m(foo: &amp;Foo) {
+    let mock: &amp;MockFoo = unsafe { std::mem::transmute(foo) };
+    return mock.x;
+}
+
+#[cfg(kani)]
+#[kani::proof]
+#[kani::stub(Foo::m, mock_m)]
+fn my_harness() { ... }
+</code></pre>
+</li>
+</ul>
+<h2 id="appendix-an-extended-example"><a class="header" href="#appendix-an-extended-example">Appendix: an extended example</a></h2>
+<p>In this example, we mock a <a href="https://crates.io/crates/serde_json">serde_json</a> (96M downloads) deserialization method so that we can prove a property about the following <a href="https://github.com/firecracker-microvm/firecracker/blob/01eba51ded2f5439da91a2d73280f579651b067c/src/api_server/src/request/vsock.rs#L11">Firecracker function</a> that parses a configuration from some raw data:</p>
+<pre><code class="language-rust">fn parse_put_vsock(body: &amp;Body) -&gt; Result&lt;ParsedRequest, Error&gt; {
+    METRICS.put_api_requests.vsock_count.inc();
+    let vsock_cfg = serde_json::from_slice::&lt;VsockDeviceConfig&gt;(body.raw()).map_err(|err| {
+        METRICS.put_api_requests.vsock_fails.inc();
+        err
+    })?;
+
+    // Check for the presence of deprecated `vsock_id` field.
+    let mut deprecation_message = None;
+    if vsock_cfg.vsock_id.is_some() {
+        // vsock_id field in request is deprecated.
+        METRICS.deprecated_api.deprecated_http_api_calls.inc();
+        deprecation_message = Some(&quot;PUT /vsock: vsock_id field is deprecated.&quot;);
+    }
+
+    // Construct the `ParsedRequest` object.
+    let mut parsed_req = ParsedRequest::new_sync(VmmAction::SetVsockDevice(vsock_cfg));
+    // If `vsock_id` was present, set the deprecation message in `parsing_info`.
+    if let Some(msg) = deprecation_message {
+        parsed_req.parsing_info().append_deprecation_message(msg);
+    }
+
+    Ok(parsed_req)
+}
+</code></pre>
+<p>We manually mocked some of the Firecracker types with simpler versions to reduce the number of dependencies we had to pull in (e.g., we removed some enum variants, unused struct fields).
+With these changes, we were able to prove that the configuration data has a vsock ID if and only if the parsing metadata includes a deprecation message: </p>
+<pre><code class="language-rust">#[cfg(kani)]
+fn get_vsock_device_config(action: RequestAction) -&gt; Option&lt;VsockDeviceConfig&gt; {
+    match action {
+        RequestAction::Sync(vmm_action) =&gt; match *vmm_action {
+            VmmAction::SetVsockDevice(dev) =&gt; Some(dev),
+            _ =&gt; None,
+        },
+        _ =&gt; None,
+    }
+}
+
+#[cfg(kani)]
+#[kani::proof]
+#[kani::unwind(2)]
+#[kani::stub(serde_json::deserialize_slice, mock_deserialize)]
+fn test_deprecation_vsock_id_consistent() {
+    // We are going to mock the parsing of this body, so might as well use an empty one.
+    let body: Vec&lt;u8&gt; = Vec::new();
+    if let Ok(res) = parse_put_vsock(&amp;Body::new(body)) {
+        let (action, mut parsing_info) = res.into_parts();
+        let config = get_vsock_device_config(action).unwrap();
+        assert_eq!(
+            config.vsock_id.is_some(),
+            parsing_info.take_deprecation_message().is_some()
+        );
+    }
+}
+</code></pre>
+<p>Crucially, we did this by stubbing out <code>serde_json::from_slice</code> and replacing it with our mock version below, which ignores its input and creates a &quot;symbolic&quot; configuration struct:</p>
+<pre><code class="language-rust">#[cfg(kani)]
+fn symbolic_string(len: usize) -&gt; String {
+    let mut v: Vec&lt;u8&gt; = Vec::with_capacity(len);
+    for _ in 0..len {
+        v.push(kani::any());
+    }
+    unsafe { String::from_utf8_unchecked(v) }
+}
+
+#[cfg(kani)]
+fn mock_deserialize(_data: &amp;[u8]) -&gt; serde_json::Result&lt;VsockDeviceConfig&gt; {
+    const STR_LEN: usize = 1;
+    let vsock_id = if kani::any() {
+        None
+    } else {
+        Some(symbolic_string(STR_LEN))
+    };
+    let guest_cid = kani::any();
+    let uds_path = symbolic_string(STR_LEN);
+    let config = VsockDeviceConfig {
+        vsock_id,
+        guest_cid,
+        uds_path,
+    };
+    Ok(config)
+}
+</code></pre>
+<p>The proof takes 170 seconds to complete (using Kissat as the backend SAT solver for CBMC).</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../rfcs/0001-mir-linker.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                            <a rel="next" href="../rfcs/0003-cover-statement.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../rfcs/0001-mir-linker.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                    <a rel="next" href="../rfcs/0003-cover-statement.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+        <script type="text/javascript">
+            window.playground_copyable = true;
+        </script>
+        <script src="../elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../searcher.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+    </body>
+</html>

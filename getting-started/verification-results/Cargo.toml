@@ -1,0 +1,14 @@
+# Copyright Kani Contributors
+# SPDX-License-Identifier: Apache-2.0 OR MIT
+
+[package]
+name = "result-types"
+version = "0.1.0"
+edition = "2018"
+
+[dependencies]
+
+[workspace]
+
+[package.metadata.kani]
+flags = {output-format = "regular"}

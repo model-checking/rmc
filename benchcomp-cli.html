@@ -1,0 +1,260 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>benchcomp command line - The Kani Rust Verifier</title>
+        <!-- Custom HTML head -->
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="Documentation for the Kani Rust Verifier">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded "><a href="getting-started.html"><strong aria-hidden="true">1.</strong> Getting started</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="install-guide.html"><strong aria-hidden="true">1.1.</strong> Installation</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="build-from-source.html"><strong aria-hidden="true">1.1.1.</strong> Building from source</a></li><li class="chapter-item expanded "><a href="install-github-ci.html"><strong aria-hidden="true">1.1.2.</strong> GitHub CI Action</a></li></ol></li><li class="chapter-item expanded "><a href="usage.html"><strong aria-hidden="true">1.2.</strong> Using Kani</a></li><li class="chapter-item expanded "><a href="verification-results.html"><strong aria-hidden="true">1.3.</strong> Verification results</a></li></ol></li><li class="chapter-item expanded "><a href="crates/index.html"><strong aria-hidden="true">2.</strong> Crates Documentation</a></li><li class="chapter-item expanded "><a href="kani-tutorial.html"><strong aria-hidden="true">3.</strong> Tutorial</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="tutorial-first-steps.html"><strong aria-hidden="true">3.1.</strong> First steps</a></li><li class="chapter-item expanded "><a href="tutorial-kinds-of-failure.html"><strong aria-hidden="true">3.2.</strong> Failures that Kani can spot</a></li><li class="chapter-item expanded "><a href="tutorial-loop-unwinding.html"><strong aria-hidden="true">3.3.</strong> Loop unwinding</a></li><li class="chapter-item expanded "><a href="tutorial-nondeterministic-variables.html"><strong aria-hidden="true">3.4.</strong> Nondeterministic variables</a></li></ol></li><li class="chapter-item expanded "><a href="reference.html"><strong aria-hidden="true">4.</strong> Reference</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="reference/attributes.html"><strong aria-hidden="true">4.1.</strong> Attributes</a></li><li class="chapter-item expanded "><a href="reference/experimental/experimental-features.html"><strong aria-hidden="true">4.2.</strong> Experimental features</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="reference/experimental/coverage.html"><strong aria-hidden="true">4.2.1.</strong> Coverage</a></li><li class="chapter-item expanded "><a href="reference/experimental/stubbing.html"><strong aria-hidden="true">4.2.2.</strong> Stubbing</a></li><li class="chapter-item expanded "><a href="reference/experimental/contracts.html"><strong aria-hidden="true">4.2.3.</strong> Contracts</a></li><li class="chapter-item expanded "><a href="reference/experimental/concrete-playback.html"><strong aria-hidden="true">4.2.4.</strong> Concrete Playback</a></li></ol></li></ol></li><li class="chapter-item expanded "><a href="application.html"><strong aria-hidden="true">5.</strong> Application</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="tool-comparison.html"><strong aria-hidden="true">5.1.</strong> Comparison with other tools</a></li><li class="chapter-item expanded "><a href="tutorial-real-code.html"><strong aria-hidden="true">5.2.</strong> Where to start on real code</a></li></ol></li><li class="chapter-item expanded "><a href="dev-documentation.html"><strong aria-hidden="true">6.</strong> Developer documentation</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="conventions.html"><strong aria-hidden="true">6.1.</strong> Coding conventions</a></li><li class="chapter-item expanded "><a href="cbmc-hacks.html"><strong aria-hidden="true">6.2.</strong> Working with CBMC</a></li><li class="chapter-item expanded "><a href="rustc-hacks.html"><strong aria-hidden="true">6.3.</strong> Working with rustc</a></li><li class="chapter-item expanded "><a href="stable-mir.html"><strong aria-hidden="true">6.4.</strong> Migrating to StableMIR</a></li><li class="chapter-item expanded "><a href="cheat-sheets.html"><strong aria-hidden="true">6.5.</strong> Command cheat sheets</a></li><li class="chapter-item expanded "><a href="dev-assess.html"><strong aria-hidden="true">6.6.</strong> cargo kani assess</a></li><li class="chapter-item expanded "><a href="testing.html"><strong aria-hidden="true">6.7.</strong> Testing</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="regression-testing.html"><strong aria-hidden="true">6.7.1.</strong> Regression testing</a></li><li class="chapter-item expanded "><a href="repo-crawl.html"><strong aria-hidden="true">6.7.2.</strong> (Experimental) Testing with a Large Number of Repositories</a></li></ol></li><li class="chapter-item expanded "><a href="performance-comparisons.html"><strong aria-hidden="true">6.8.</strong> Performance comparisons</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="benchcomp-cli.html" class="active"><strong aria-hidden="true">6.8.1.</strong> benchcomp command line</a></li><li class="chapter-item expanded "><a href="benchcomp-conf.html"><strong aria-hidden="true">6.8.2.</strong> benchcomp configuration file</a></li><li class="chapter-item expanded "><a href="benchcomp-parse.html"><strong aria-hidden="true">6.8.3.</strong> Custom parsers</a></li></ol></li></ol></li><li class="chapter-item expanded "><a href="limitations.html"><strong aria-hidden="true">7.</strong> Limitations</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="undefined-behaviour.html"><strong aria-hidden="true">7.1.</strong> Undefined behaviour</a></li><li class="chapter-item expanded "><a href="rust-feature-support.html"><strong aria-hidden="true">7.2.</strong> Rust feature support</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="rust-feature-support/intrinsics.html"><strong aria-hidden="true">7.2.1.</strong> Intrinsics</a></li><li class="chapter-item expanded "><a href="rust-feature-support/unstable.html"><strong aria-hidden="true">7.2.2.</strong> Unstable features</a></li></ol></li><li class="chapter-item expanded "><a href="overrides.html"><strong aria-hidden="true">7.3.</strong> Overrides</a></li><li class="spacer"></li></ol></li><li class="chapter-item expanded "><a href="faq.html"><strong aria-hidden="true">8.</strong> FAQ</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">The Kani Rust Verifier</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/model-checking/kani" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+                        <a href="https://github.com/model-checking/kani/edit/main/docs/src/benchcomp-cli.md" title="Suggest an edit" aria-label="Suggest an edit">
+                            <i id="git-edit-button" class="fa fa-edit"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="benchcomp-command-line"><a class="header" href="#benchcomp-command-line"><code>benchcomp</code> command line</a></h1>
+<p><code>benchcomp</code> is a single command that runs benchmarks, parses their results, combines these results, and emits visualizations.
+<code>benchcomp</code> also provides <em>subcommands</em> to run these steps individually.
+Most users will want to invoke <code>benchcomp</code> in one of two ways:</p>
+<ul>
+<li><code>benchcomp</code> without any subcommands, which runs the entire performance comparison process as depicted below</li>
+<li><code>benchcomp visualize</code>, which runs the visualization step on the results of a previous benchmark run without actually re-running the benchmarks.
+This is useful when tweaking the parameters of a visualization, for example changing the threshold of what is considered to be a regression.</li>
+</ul>
+<p>The subcommands <code>run</code> and <code>collate</code> are also available.
+The diagram below depicts <code>benchcomp</code>'s order of operation.<div class="mdbook-graphviz-output"><!-- Generated by graphviz version 2.43.0 (0) --><!-- Title: G Pages: 1 --><svg width="627pt" height="478pt" viewBox="0.00 0.00 627.00 478.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 474)"><title>G</title><polygon fill="white" stroke="transparent" points="-4,4 -4,-474 623,-474 623,4 -4,4"/><g id="clust1" class="cluster"><title>cluster_run</title><polygon fill="none" stroke="black" points="8,-196 8,-462 611,-462 611,-196 8,-196"/><text text-anchor="middle" x="309.5" y="-446.8" font-family="Times,serif" font-size="14.00">benchcomp run</text></g><g id="clust2" class="cluster"><title>cluster_collate</title><polygon fill="none" stroke="black" points="200,-102 200,-177 349,-177 349,-102 200,-102"/><text text-anchor="middle" x="274.5" y="-161.8" font-family="Times,serif" font-size="14.00">benchcomp collate</text></g><g id="clust3" class="cluster"><title>cluster_vizualize</title><polygon fill="none" stroke="black" points="106,-8 106,-83 430,-83 430,-8 106,-8"/><text text-anchor="middle" x="268" y="-67.8" font-family="Times,serif" font-size="14.00">benchcomp visualize</text></g><!-- suite_1a --><g id="node1" class="node"><title>suite_1a</title><ellipse fill="none" stroke="black" cx="60" cy="-413" rx="44.39" ry="18"/><text text-anchor="middle" x="60" y="-409.3" font-family="Times,serif" font-size="14.00">suite_1</text></g><!-- out_1a --><g id="node2" class="node"><title>out_1a</title><polygon fill="none" stroke="black" points="86,-329 22,-329 22,-291 86,-291 86,-329"/><text text-anchor="middle" x="54" y="-313.8" font-family="Times,serif" font-size="14.00">output</text><text text-anchor="middle" x="54" y="-298.8" font-family="Times,serif" font-size="14.00">files</text></g><!-- suite_1a&#45;&gt;out_1a --><g id="edge1" class="edge"><title>suite_1a-&gt;out_1a</title><path fill="none" stroke="black" d="M58.98,-394.87C58.08,-379.69 56.75,-357.25 55.69,-339.4"/><polygon fill="black" stroke="black" points="59.17,-339.02 55.08,-329.24 52.18,-339.43 59.17,-339.02"/><text text-anchor="middle" x="90" y="-365.8" font-family="Times,serif" font-size="14.00">run with</text><text text-anchor="middle" x="90" y="-350.8" font-family="Times,serif" font-size="14.00">variant a</text></g><!-- suite_1a_yaml --><g id="node3" class="node"><title>suite_1a_yaml</title><polygon fill="none" stroke="black" points="131.5,-240 16.5,-240 16.5,-204 131.5,-204 131.5,-240"/><text text-anchor="middle" x="74" y="-218.3" font-family="Times,serif" font-size="14.00">suite_1a.yaml</text></g><!-- out_1a&#45;&gt;suite_1a_yaml --><g id="edge2" class="edge"><title>out_1a-&gt;suite_1a_yaml</title><path fill="none" stroke="black" d="M40.25,-290.84C34.53,-281 30.23,-268.7 35,-258 36.66,-254.27 38.94,-250.78 41.56,-247.55"/><polygon fill="black" stroke="black" points="44.3,-249.75 48.65,-240.09 39.23,-244.93 44.3,-249.75"/><text text-anchor="middle" x="97.5" y="-261.8" font-family="Times,serif" font-size="14.00">suite_1_parser.py</text></g><!-- result_yaml --><g id="node13" class="node"><title>result_yaml</title><polygon fill="none" stroke="black" points="323,-146 225,-146 225,-110 323,-110 323,-146"/><text text-anchor="middle" x="274" y="-124.3" font-family="Times,serif" font-size="14.00">result.yaml</text></g><!-- suite_1a_yaml&#45;&gt;result_yaml --><g id="edge12" class="edge"><title>suite_1a_yaml-&gt;result_yaml</title><path fill="none" stroke="black" d="M111.15,-203.91C144.02,-188.79 192.13,-166.66 227.54,-150.37"/><polygon fill="black" stroke="black" points="229.09,-153.51 236.71,-146.15 226.16,-147.15 229.09,-153.51"/></g><!-- suite_1b --><g id="node4" class="node"><title>suite_1b</title><ellipse fill="none" stroke="black" cx="182" cy="-413" rx="44.39" ry="18"/><text text-anchor="middle" x="182" y="-409.3" font-family="Times,serif" font-size="14.00">suite_1</text></g><!-- out_1b --><g id="node5" class="node"><title>out_1b</title><polygon fill="none" stroke="black" points="214,-329 150,-329 150,-291 214,-291 214,-329"/><text text-anchor="middle" x="182" y="-313.8" font-family="Times,serif" font-size="14.00">output</text><text text-anchor="middle" x="182" y="-298.8" font-family="Times,serif" font-size="14.00">files</text></g><!-- suite_1b&#45;&gt;out_1b --><g id="edge3" class="edge"><title>suite_1b-&gt;out_1b</title><path fill="none" stroke="black" d="M182,-394.87C182,-379.69 182,-357.25 182,-339.4"/><polygon fill="black" stroke="black" points="185.5,-339.24 182,-329.24 178.5,-339.24 185.5,-339.24"/><text text-anchor="middle" x="214.5" y="-365.8" font-family="Times,serif" font-size="14.00">run with</text><text text-anchor="middle" x="214.5" y="-350.8" font-family="Times,serif" font-size="14.00">variant b</text></g><!-- suite_1b_yaml --><g id="node6" class="node"><title>suite_1b_yaml</title><polygon fill="none" stroke="black" points="266,-240 150,-240 150,-204 266,-204 266,-240"/><text text-anchor="middle" x="208" y="-218.3" font-family="Times,serif" font-size="14.00">suite_1b.yaml</text></g><!-- out_1b&#45;&gt;suite_1b_yaml --><g id="edge4" class="edge"><title>out_1b-&gt;suite_1b_yaml</title><path fill="none" stroke="black" d="M187.51,-290.76C191.13,-278.82 195.91,-263.01 199.94,-249.66"/><polygon fill="black" stroke="black" points="203.3,-250.63 202.85,-240.04 196.6,-248.6 203.3,-250.63"/><text text-anchor="middle" x="259.5" y="-261.8" font-family="Times,serif" font-size="14.00">suite_1_parser.py</text></g><!-- suite_1b_yaml&#45;&gt;result_yaml --><g id="edge11" class="edge"><title>suite_1b_yaml-&gt;result_yaml</title><path fill="none" stroke="black" d="M220.41,-203.7C230.37,-189.82 244.49,-170.14 255.73,-154.46"/><polygon fill="black" stroke="black" points="258.66,-156.39 261.64,-146.23 252.97,-152.31 258.66,-156.39"/></g><!-- suite_2c --><g id="node7" class="node"><title>suite_2c</title><ellipse fill="none" stroke="black" cx="330" cy="-413" rx="44.39" ry="18"/><text text-anchor="middle" x="330" y="-409.3" font-family="Times,serif" font-size="14.00">suite_2</text></g><!-- out_2c --><g id="node8" class="node"><title>out_2c</title><polygon fill="none" stroke="black" points="362,-329 298,-329 298,-291 362,-291 362,-329"/><text text-anchor="middle" x="330" y="-313.8" font-family="Times,serif" font-size="14.00">output</text><text text-anchor="middle" x="330" y="-298.8" font-family="Times,serif" font-size="14.00">files</text></g><!-- suite_2c&#45;&gt;out_2c --><g id="edge5" class="edge"><title>suite_2c-&gt;out_2c</title><path fill="none" stroke="black" d="M330,-394.87C330,-379.69 330,-357.25 330,-339.4"/><polygon fill="black" stroke="black" points="333.5,-339.24 330,-329.24 326.5,-339.24 333.5,-339.24"/><text text-anchor="middle" x="362" y="-365.8" font-family="Times,serif" font-size="14.00">run with</text><text text-anchor="middle" x="362" y="-350.8" font-family="Times,serif" font-size="14.00">variant a</text></g><!-- suite_2c_yaml --><g id="node9" class="node"><title>suite_2c_yaml</title><polygon fill="none" stroke="black" points="398,-240 284,-240 284,-204 398,-204 398,-240"/><text text-anchor="middle" x="341" y="-218.3" font-family="Times,serif" font-size="14.00">suite_2c.yaml</text></g><!-- out_2c&#45;&gt;suite_2c_yaml --><g id="edge6" class="edge"><title>out_2c-&gt;suite_2c_yaml</title><path fill="none" stroke="black" d="M332.33,-290.76C333.85,-278.93 335.84,-263.32 337.54,-250.05"/><polygon fill="black" stroke="black" points="341.02,-250.41 338.82,-240.04 334.08,-249.52 341.02,-250.41"/><text text-anchor="middle" x="398.5" y="-261.8" font-family="Times,serif" font-size="14.00">suite_2_parser.py</text></g><!-- suite_2c_yaml&#45;&gt;result_yaml --><g id="edge10" class="edge"><title>suite_2c_yaml-&gt;result_yaml</title><path fill="none" stroke="black" d="M328.4,-203.7C318.29,-189.82 303.96,-170.14 292.54,-154.46"/><polygon fill="black" stroke="black" points="295.26,-152.25 286.55,-146.23 289.6,-156.37 295.26,-152.25"/></g><!-- suite_2d --><g id="node10" class="node"><title>suite_2d</title><ellipse fill="none" stroke="black" cx="478" cy="-413" rx="44.39" ry="18"/><text text-anchor="middle" x="478" y="-409.3" font-family="Times,serif" font-size="14.00">suite_2</text></g><!-- out_2d --><g id="node11" class="node"><title>out_2d</title><polygon fill="none" stroke="black" points="510,-329 446,-329 446,-291 510,-291 510,-329"/><text text-anchor="middle" x="478" y="-313.8" font-family="Times,serif" font-size="14.00">output</text><text text-anchor="middle" x="478" y="-298.8" font-family="Times,serif" font-size="14.00">files</text></g><!-- suite_2d&#45;&gt;out_2d --><g id="edge7" class="edge"><title>suite_2d-&gt;out_2d</title><path fill="none" stroke="black" d="M478,-394.87C478,-379.69 478,-357.25 478,-339.4"/><polygon fill="black" stroke="black" points="481.5,-339.24 478,-329.24 474.5,-339.24 481.5,-339.24"/><text text-anchor="middle" x="510.5" y="-365.8" font-family="Times,serif" font-size="14.00">run with</text><text text-anchor="middle" x="510.5" y="-350.8" font-family="Times,serif" font-size="14.00">variant b</text></g><!-- suite_2d_yaml --><g id="node12" class="node"><title>suite_2d_yaml</title><polygon fill="none" stroke="black" points="534,-240 418,-240 418,-204 534,-204 534,-240"/><text text-anchor="middle" x="476" y="-218.3" font-family="Times,serif" font-size="14.00">suite_2d.yaml</text></g><!-- out_2d&#45;&gt;suite_2d_yaml --><g id="edge8" class="edge"><title>out_2d-&gt;suite_2d_yaml</title><path fill="none" stroke="black" d="M477.58,-290.76C477.3,-278.93 476.94,-263.32 476.63,-250.05"/><polygon fill="black" stroke="black" points="480.13,-249.96 476.4,-240.04 473.13,-250.12 480.13,-249.96"/><text text-anchor="middle" x="539.5" y="-261.8" font-family="Times,serif" font-size="14.00">suite_2_parser.py</text></g><!-- suite_2d_yaml&#45;&gt;result_yaml --><g id="edge9" class="edge"><title>suite_2d_yaml-&gt;result_yaml</title><path fill="none" stroke="black" d="M438.48,-203.91C405.28,-188.79 356.69,-166.66 320.92,-150.37"/><polygon fill="black" stroke="black" points="322.21,-147.11 311.66,-146.15 319.31,-153.48 322.21,-147.11"/></g><!-- viz_1 --><g id="node14" class="node"><title>viz_1</title><polygon fill="none" stroke="black" points="202,-52 114,-52 114,-16 202,-16 202,-52"/><text text-anchor="middle" x="158" y="-30.3" font-family="Times,serif" font-size="14.00">graph.svg</text></g><!-- result_yaml&#45;&gt;viz_1 --><g id="edge13" class="edge"><title>result_yaml-&gt;viz_1</title><path fill="none" stroke="black" d="M248.02,-109.94C236.45,-102.07 222.79,-92.39 211,-83 201.63,-75.54 191.8,-66.88 183.18,-58.99"/><polygon fill="black" stroke="black" points="185.37,-56.25 175.66,-52.02 180.61,-61.39 185.37,-56.25"/></g><!-- viz_2 --><g id="node15" class="node"><title>viz_2</title><polygon fill="none" stroke="black" points="328,-52 220,-52 220,-16 328,-16 328,-52"/><text text-anchor="middle" x="274" y="-30.3" font-family="Times,serif" font-size="14.00">summary.md</text></g><!-- result_yaml&#45;&gt;viz_2 --><g id="edge14" class="edge"><title>result_yaml-&gt;viz_2</title><path fill="none" stroke="black" d="M274,-109.7C274,-96.46 274,-77.95 274,-62.66"/><polygon fill="black" stroke="black" points="277.5,-62.23 274,-52.23 270.5,-62.23 277.5,-62.23"/></g><!-- viz_3 --><g id="node16" class="node"><title>viz_3</title><text text-anchor="middle" x="384" y="-37.8" font-family="Times,serif" font-size="14.00">exit 1 on</text><text text-anchor="middle" x="384" y="-22.8" font-family="Times,serif" font-size="14.00">regression</text></g><!-- result_yaml&#45;&gt;viz_3 --><g id="edge15" class="edge"><title>result_yaml-&gt;viz_3</title><path fill="none" stroke="black" d="M300.86,-109.85C312.36,-102.11 325.7,-92.57 337,-83 346.54,-74.92 356.33,-65.19 364.49,-56.61"/><polygon fill="black" stroke="black" points="367.2,-58.83 371.47,-49.13 362.09,-54.06 367.2,-58.83"/></g></g></svg></div></p>
+<p>Running <code>benchcomp</code> invokes <code>run</code>, <code>collate</code>, and <code>visualize</code> behind the scenes.
+If you have previously run <code>benchcomp</code>, then running <code>benchcomp visualize</code> will emit the visualizations in the config file using the previous <code>result.yaml</code>.</p>
+<p>In the diagram above, two different suites (1 and 2) are both run using two <em>variants</em>---combinations of command, working directory, and environment variables.
+Benchmark suite 2 requires a totally different command line to suite 1---for example, <code>suite_1</code> might contain Kani harnesses invoked through <code>cargo kani</code>, while <code>suite_2</code> might contain CBMC harnesses invoked through <code>run_cbmc_proofs.py</code>.
+Users would therefore define different variants (<code>c</code> and <code>d</code>) for invoking <code>suite_2</code>, and also specify a different parser to parse the results.
+No matter how different the benchmark suites are, the <code>collate</code> stage combines their results so that they can later be compared.</p>
+<h2 id="example-config-file"><a class="header" href="#example-config-file">Example config file</a></h2>
+<p>Users must specify the actual suites to run, the parsers used to collect their results, and the visualizations to emit in a file called <code>benchcomp.yaml</code> or a file passed to the <code>-c/--config</code> flag.
+The <a href="./benchcomp-conf.html">next section</a> describes the schema for this configuration file.
+A run similar to the diagram above might be achieved using the following configuration file:</p>
+<pre><code class="language-yaml"># Compare a range of Kani and CBMC benchmarks when
+# using Cadical versus the default SAT solver
+
+variants:
+  variant_a:
+    config:
+      directory: kani_benchmarks
+      command_line: scripts/kani-perf.sh
+      env: {}
+
+  variant_b:
+    config:
+      directory: kani_benchmarks
+      command_line: scripts/kani-perf.sh
+      # This variant uses a hypothetical environment variable that
+      # forces Kani to use the cadical SAT solver
+      env:
+        KANI_SOLVER: cadical
+
+  variant_c:
+    config:
+      directory: cbmc_benchmarks
+      command_line: run_cbmc_proofs.py
+      env: {}
+
+  variant_d:
+    config:
+      directory: cbmc_benchmarks
+      command_line: run_cbmc_proofs.py
+      env:
+        EXTERNAL_SAT_SOLVER: cadical
+
+run:
+  suites:
+    suite_1:
+      parser:
+        module: kani_perf
+      variants: [variant_a, variant_b]
+
+    suite_2:
+      parser:
+        module: cbmc_litani_parser
+      variants: [variant_c, variant_d]
+
+visualize:
+  - type: dump_graph
+    out_file: graph.svg
+
+  - type: dump_markdown_results_table
+    out_file: summary.md
+    extra_columns: []
+
+  - type: error_on_regression
+    variant_pairs:
+    - [variant_a, variant_b]
+    - [variant_c, variant_d]
+</code></pre>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="performance-comparisons.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                            <a rel="next" href="benchcomp-conf.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="performance-comparisons.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                    <a rel="next" href="benchcomp-conf.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+        <script type="text/javascript">
+            window.playground_copyable = true;
+        </script>
+        <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
+        <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+    </body>
+</html>

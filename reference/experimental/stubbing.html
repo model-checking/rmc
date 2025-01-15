@@ -1,0 +1,353 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Stubbing - The Kani Rust Verifier</title>
+        <!-- Custom HTML head -->
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="Documentation for the Kani Rust Verifier">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="icon" href="../../favicon.svg">
+        <link rel="shortcut icon" href="../../favicon.png">
+        <link rel="stylesheet" href="../../css/variables.css">
+        <link rel="stylesheet" href="../../css/general.css">
+        <link rel="stylesheet" href="../../css/chrome.css">
+        <link rel="stylesheet" href="../../css/print.css" media="print">
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../fonts/fonts.css">
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../../highlight.css">
+        <link rel="stylesheet" href="../../tomorrow-night.css">
+        <link rel="stylesheet" href="../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "../../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded "><a href="../../getting-started.html"><strong aria-hidden="true">1.</strong> Getting started</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../install-guide.html"><strong aria-hidden="true">1.1.</strong> Installation</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../build-from-source.html"><strong aria-hidden="true">1.1.1.</strong> Building from source</a></li><li class="chapter-item expanded "><a href="../../install-github-ci.html"><strong aria-hidden="true">1.1.2.</strong> GitHub CI Action</a></li></ol></li><li class="chapter-item expanded "><a href="../../usage.html"><strong aria-hidden="true">1.2.</strong> Using Kani</a></li><li class="chapter-item expanded "><a href="../../verification-results.html"><strong aria-hidden="true">1.3.</strong> Verification results</a></li></ol></li><li class="chapter-item expanded "><a href="../../crates/index.html"><strong aria-hidden="true">2.</strong> Crates Documentation</a></li><li class="chapter-item expanded "><a href="../../kani-tutorial.html"><strong aria-hidden="true">3.</strong> Tutorial</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../tutorial-first-steps.html"><strong aria-hidden="true">3.1.</strong> First steps</a></li><li class="chapter-item expanded "><a href="../../tutorial-kinds-of-failure.html"><strong aria-hidden="true">3.2.</strong> Failures that Kani can spot</a></li><li class="chapter-item expanded "><a href="../../tutorial-loop-unwinding.html"><strong aria-hidden="true">3.3.</strong> Loop unwinding</a></li><li class="chapter-item expanded "><a href="../../tutorial-nondeterministic-variables.html"><strong aria-hidden="true">3.4.</strong> Nondeterministic variables</a></li></ol></li><li class="chapter-item expanded "><a href="../../reference.html"><strong aria-hidden="true">4.</strong> Reference</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../reference/attributes.html"><strong aria-hidden="true">4.1.</strong> Attributes</a></li><li class="chapter-item expanded "><a href="../../reference/experimental/experimental-features.html"><strong aria-hidden="true">4.2.</strong> Experimental features</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../reference/experimental/coverage.html"><strong aria-hidden="true">4.2.1.</strong> Coverage</a></li><li class="chapter-item expanded "><a href="../../reference/experimental/stubbing.html" class="active"><strong aria-hidden="true">4.2.2.</strong> Stubbing</a></li><li class="chapter-item expanded "><a href="../../reference/experimental/contracts.html"><strong aria-hidden="true">4.2.3.</strong> Contracts</a></li><li class="chapter-item expanded "><a href="../../reference/experimental/concrete-playback.html"><strong aria-hidden="true">4.2.4.</strong> Concrete Playback</a></li></ol></li></ol></li><li class="chapter-item expanded "><a href="../../application.html"><strong aria-hidden="true">5.</strong> Application</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../tool-comparison.html"><strong aria-hidden="true">5.1.</strong> Comparison with other tools</a></li><li class="chapter-item expanded "><a href="../../tutorial-real-code.html"><strong aria-hidden="true">5.2.</strong> Where to start on real code</a></li></ol></li><li class="chapter-item expanded "><a href="../../dev-documentation.html"><strong aria-hidden="true">6.</strong> Developer documentation</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../conventions.html"><strong aria-hidden="true">6.1.</strong> Coding conventions</a></li><li class="chapter-item expanded "><a href="../../cbmc-hacks.html"><strong aria-hidden="true">6.2.</strong> Working with CBMC</a></li><li class="chapter-item expanded "><a href="../../rustc-hacks.html"><strong aria-hidden="true">6.3.</strong> Working with rustc</a></li><li class="chapter-item expanded "><a href="../../stable-mir.html"><strong aria-hidden="true">6.4.</strong> Migrating to StableMIR</a></li><li class="chapter-item expanded "><a href="../../cheat-sheets.html"><strong aria-hidden="true">6.5.</strong> Command cheat sheets</a></li><li class="chapter-item expanded "><a href="../../dev-assess.html"><strong aria-hidden="true">6.6.</strong> cargo kani assess</a></li><li class="chapter-item expanded "><a href="../../testing.html"><strong aria-hidden="true">6.7.</strong> Testing</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../regression-testing.html"><strong aria-hidden="true">6.7.1.</strong> Regression testing</a></li><li class="chapter-item expanded "><a href="../../repo-crawl.html"><strong aria-hidden="true">6.7.2.</strong> (Experimental) Testing with a Large Number of Repositories</a></li></ol></li><li class="chapter-item expanded "><a href="../../performance-comparisons.html"><strong aria-hidden="true">6.8.</strong> Performance comparisons</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../benchcomp-cli.html"><strong aria-hidden="true">6.8.1.</strong> benchcomp command line</a></li><li class="chapter-item expanded "><a href="../../benchcomp-conf.html"><strong aria-hidden="true">6.8.2.</strong> benchcomp configuration file</a></li><li class="chapter-item expanded "><a href="../../benchcomp-parse.html"><strong aria-hidden="true">6.8.3.</strong> Custom parsers</a></li></ol></li></ol></li><li class="chapter-item expanded "><a href="../../limitations.html"><strong aria-hidden="true">7.</strong> Limitations</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../undefined-behaviour.html"><strong aria-hidden="true">7.1.</strong> Undefined behaviour</a></li><li class="chapter-item expanded "><a href="../../rust-feature-support.html"><strong aria-hidden="true">7.2.</strong> Rust feature support</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../rust-feature-support/intrinsics.html"><strong aria-hidden="true">7.2.1.</strong> Intrinsics</a></li><li class="chapter-item expanded "><a href="../../rust-feature-support/unstable.html"><strong aria-hidden="true">7.2.2.</strong> Unstable features</a></li></ol></li><li class="chapter-item expanded "><a href="../../overrides.html"><strong aria-hidden="true">7.3.</strong> Overrides</a></li><li class="spacer"></li></ol></li><li class="chapter-item expanded "><a href="../../faq.html"><strong aria-hidden="true">8.</strong> FAQ</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">The Kani Rust Verifier</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/model-checking/kani" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+                        <a href="https://github.com/model-checking/kani/edit/main/docs/src/reference/experimental/stubbing.md" title="Suggest an edit" aria-label="Suggest an edit">
+                            <i id="git-edit-button" class="fa fa-edit"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="stubbing"><a class="header" href="#stubbing">Stubbing</a></h1>
+<p>Stubbing (or mocking) is an unstable feature which allows users to specify that certain items should be replaced with stubs (mocks) of those items during verification.
+At present, the only items where stubbing can be applied are functions and methods (see <a href="#limitations">limitations</a> for more details).</p>
+<h2 id="when-to-consider-stubbing"><a class="header" href="#when-to-consider-stubbing">When to consider stubbing</a></h2>
+<p>In general, we have identified three reasons where users may consider stubbing:</p>
+<ul>
+<li><strong>Unsupported features:</strong> The code under verification contains features that Kani does not support, such as inline assembly.</li>
+<li><strong>Bad performance:</strong> The code under verification contains features that Kani supports, but it leads to bad verification performance (for example, deserialization code).</li>
+<li><strong>Compositional reasoning:</strong> The code under verification contains code that has been verified separately.
+Stubbing the code that has already been verified with a less complex version that mimics its behavior can result in reduced verification workloads.</li>
+</ul>
+<p>In most cases, stubbing enables users to verify code that otherwise would be impractical to verify.
+Although definitions for <em>mocking</em> (normally used in testing) and <em>stubbing</em> may slightly differ depending on who you ask, we often use both terms interchangeably.</p>
+<h2 id="components"><a class="header" href="#components">Components</a></h2>
+<p>The stubbing feature can be enabled by using the <code>--enable-stubbing</code> option when calling Kani.
+Since it's an unstable feature, it requires passing the <code>--enable-unstable</code> option in addition to <code>--enable-stubbing</code>.</p>
+<p>At present, the only component of the stubbing feature is <a href="#the-kanistub-attribute">the <code>#[kani::stub(&lt;original&gt;, &lt;replacement&gt;)]</code> attribute</a>,
+which allows you to specify the pair of functions/methods that must be stubbed in a harness.</p>
+<!--
+the other components expected to be here in the future are: the `stub_set(...)!` macro, off-the-shelf verification-friendly implementations, and automated
+stubbing suggestions)
+-->
+<h2 id="the-kanistub-attribute"><a class="header" href="#the-kanistub-attribute">The <code>#[kani::stub(...)]</code> attribute</a></h2>
+<p>The stub attribute <code>#[kani::stub(&lt;original&gt;, &lt;replacement&gt;)]</code>  is the main tool of the stubbing feature.</p>
+<p>It indicates to Kani that the function/method with name <code>&lt;original&gt;</code> should be replaced with the function/method with name <code>&lt;replacement&gt;</code> during the compilation step.
+The names of these functions/methods are <strong>resolved using Rust's standard name resolution rules</strong>.
+This includes support for imports like <code>use foo::bar as baz</code>, as well as imports of multiple versions of the same crate.</p>
+<p><strong>This attribute must be specified on a per-harness basis</strong>. This provides a high degree of flexibility for users, since they are given the option to stub the same item with different replacements (or not use stubbing at all) depending on the proof harness. In addition, <strong>the attribute can be specified multiple times per harness</strong>, so that multiple (non-conflicting) stub pairings are supported.</p>
+<h3 id="an-example-stubbing-random"><a class="header" href="#an-example-stubbing-random">An example: stubbing <code>random</code></a></h3>
+<p>Let's see a simple example where we use the <a href="https://docs.rs/rand/latest/rand/fn.random.html"><code>rand::random</code></a> function
+to generate an encryption key.</p>
+<pre><code class="language-rust">#[cfg(kani)]
+#[kani::proof]
+fn encrypt_then_decrypt_is_identity() {
+    let data: u32 = kani::any();
+    let encryption_key: u32 = rand::random();
+    let encrypted_data = data ^ encryption_key;
+    let decrypted_data = encrypted_data ^ encryption_key;
+    assert_eq!(data, decrypted_data);
+}
+
+</code></pre>
+<p>At present, Kani fails to verify this example due to <a href="https://github.com/model-checking/kani/issues/1781">issue #1781</a>.</p>
+<p>However, we can work around this limitation thanks to the stubbing feature:</p>
+<pre><code class="language-rust">#[cfg(kani)]
+fn mock_random&lt;T: kani::Arbitrary&gt;() -&gt; T {
+    kani::any()
+}
+
+#[cfg(kani)]
+#[kani::proof]
+#[kani::stub(rand::random, mock_random)]
+fn encrypt_then_decrypt_is_identity() {
+    let data: u32 = kani::any();
+    let encryption_key: u32 = rand::random();
+    let encrypted_data = data ^ encryption_key;
+    let decrypted_data = encrypted_data ^ encryption_key;
+    assert_eq!(data, decrypted_data);
+}
+</code></pre>
+<p>Here, the <code>#[kani::stub(rand::random, mock_random)]</code> attribute indicates to Kani that it should replace <code>rand::random</code> with the stub <code>mock_random</code>.
+Note that this is a fair assumption to do: <code>rand::random</code> is expected to return any <code>u32</code> value, just like <code>kani::any</code>.</p>
+<p>Now, let's run it through Kani:</p>
+<pre><code class="language-bash">cargo kani --enable-unstable --enable-stubbing --harness encrypt_then_decrypt_is_identity
+</code></pre>
+<p>The verification result is composed of a single check: the assertion corresponding to <code>assert_eq!(data, decrypted_data)</code>.</p>
+<pre><code>RESULTS:
+Check 1: encrypt_then_decrypt_is_identity.assertion.1
+         - Status: SUCCESS
+         - Description: &quot;assertion failed: data == decrypted_data&quot;
+         - Location: src/main.rs:18:5 in function encrypt_then_decrypt_is_identity
+
+
+SUMMARY:
+ ** 0 of 1 failed
+
+VERIFICATION:- SUCCESSFUL
+</code></pre>
+<p>Kani shows that the assertion is successful, avoiding any issues that appear if we attempt to verify the code without stubbing.</p>
+<h2 id="limitations"><a class="header" href="#limitations">Limitations</a></h2>
+<p>In the following, we describe all the limitations of the stubbing feature.</p>
+<h3 id="usage-restrictions"><a class="header" href="#usage-restrictions">Usage restrictions</a></h3>
+<p>The usage of stubbing is limited to the verification of a single harness.
+Therefore, users are <strong>required to pass the <code>--harness</code> option</strong> when using the stubbing feature.</p>
+<p>In addition, this feature <strong>isn't compatible with <a href="./concrete-playback.html">concrete playback</a></strong>.</p>
+<h3 id="support"><a class="header" href="#support">Support</a></h3>
+<p>Support for stubbing is currently <strong>limited to functions and methods</strong>. All other items aren't supported.</p>
+<p>The following are examples of items that could be good candidates for stubbing, but aren't supported:</p>
+<ul>
+<li>Types</li>
+<li>Macros</li>
+<li>Traits</li>
+<li>Intrinsics</li>
+</ul>
+<p>We acknowledge that support for method stubbing isn't as ergonomic as it could be.
+A common problem when attempting to define method stubs is that we don't have access to the private fields of an object (i.e., the fields in <code>self</code>).
+One workaround is to use the unsafe function <code>std::mem::transmute</code>, as in this example:</p>
+<pre><code class="language-rust">struct Foo {
+    x: u32,
+}
+
+impl Foo {
+    pub fn m(&amp;self) -&gt; u32 {
+        0
+    }
+}
+
+struct MockFoo {
+    pub x: u32,
+}
+
+fn mock_m(foo: &amp;Foo) -&gt; u32 {
+    let mock: &amp;MockFoo = unsafe { std::mem::transmute(foo) };
+    return mock.x;
+}
+
+#[cfg(kani)]
+#[kani::proof]
+#[kani::stub(Foo::m, mock_m)]
+fn my_harness() { ... }
+</code></pre>
+<p>However, this isn't recommended since it's unsafe and error-prone.
+In general, we don't recommend stubbing for private functions/methods.
+Doing so can lead to brittle proofs: private functions/methods are subject to change or removal even in version minor upgrades (they aren't part of the APIs).
+Therefore, proofs that rely on stubbing for private functions/methods might incur a high maintenance burden.</p>
+<h2 id="error-conditions"><a class="header" href="#error-conditions">Error conditions</a></h2>
+<p>Given a set of <code>original</code>-<code>replacement</code> pairs, Kani will exit with an error if:</p>
+<ol>
+<li>a specified <code>original</code> function does not exist;</li>
+<li>a specified <code>replacement</code> stub does not exist;</li>
+<li>the user specifies conflicting stubs for the same harness (e.g., if the same <code>original</code> function is mapped to multiple <code>replacement</code> functions); or</li>
+<li>the signature of the <code>replacement</code> stub is not compatible with the signature of the <code>original</code> function/method (see next section).</li>
+</ol>
+<h3 id="stub-compatibility-and-validation"><a class="header" href="#stub-compatibility-and-validation">Stub compatibility and validation</a></h3>
+<p>We consider a stub and a function/method to be compatible if all the following conditions are met:</p>
+<ul>
+<li>They have the same number of parameters.</li>
+<li>They have the same return type.</li>
+<li>Each parameter in the stub has the same type as the corresponding parameter in the original function/method.</li>
+<li>The stub must have the same number of generic parameters as the original function/method.
+However, a generic parameter in the stub is allowed to have a different name than the corresponding parameter in the original function/method.
+For example, the stub <code>bar&lt;A, B&gt;(x: A, y: B) -&gt; B</code> is considered to have a type compatible with the function <code>foo&lt;S, T&gt;(x: S, y: T) -&gt; T</code>.</li>
+<li>The bounds for each type parameter don't need to match; however, all calls to the original function must also satisfy the bounds of the stub.</li>
+</ul>
+<p>The final point is the most subtle.
+We don't require that a type parameter in the signature of the stub implements the same traits as the corresponding type parameter in the signature of the original function/method.
+However, Kani will reject a stub if a trait mismatch leads to a situation where a statically dispatched call to a trait method cannot be resolved during monomorphization.
+For example, this restriction rules out the following harness:</p>
+<pre><code class="language-rust">fn foo&lt;T&gt;(_x: T) -&gt; bool {
+    false
+}
+
+trait DoIt {
+    fn do_it(&amp;self) -&gt; bool;
+}
+
+fn bar&lt;T: DoIt&gt;(x: T) -&gt; bool {
+    x.do_it()
+}
+
+#[kani::proof]
+#[kani::stub(foo, bar)]
+fn harness() {
+    assert!(foo(&quot;hello&quot;));
+}
+</code></pre>
+<p>The call to the trait method <code>DoIt::do_it</code> is unresolvable in the stub <code>bar</code> when the type parameter <code>T</code> is instantiated with the type <code>&amp;str</code>.
+On the other hand, this approach provides some flexibility, such as allowing our earlier example of mocking <code>rand::random</code>:
+both <code>rand::random</code> and <code>my_random</code> have type <code>() -&gt; T</code>, but in the first case <code>T</code> is restricted such that the type <code>Standard</code> implements <code>Distribution&lt;T&gt;</code>,
+whereas in the latter case <code>T</code> has to implement <code>kani::Arbitrary</code>.
+This trait mismatch is allowed because at this call site <code>T</code> is instantiated with <code>u32</code>, which implements <code>kani::Arbitrary</code>.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../reference/experimental/coverage.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                            <a rel="next" href="../../reference/experimental/contracts.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../reference/experimental/coverage.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                    <a rel="next" href="../../reference/experimental/contracts.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+        <script type="text/javascript">
+            window.playground_copyable = true;
+        </script>
+        <script src="../../elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../../mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../../searcher.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../../clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../../highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../../book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+    </body>
+</html>

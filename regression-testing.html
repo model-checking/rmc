@@ -1,0 +1,362 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Regression testing - The Kani Rust Verifier</title>
+        <!-- Custom HTML head -->
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="Documentation for the Kani Rust Verifier">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded "><a href="getting-started.html"><strong aria-hidden="true">1.</strong> Getting started</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="install-guide.html"><strong aria-hidden="true">1.1.</strong> Installation</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="build-from-source.html"><strong aria-hidden="true">1.1.1.</strong> Building from source</a></li><li class="chapter-item expanded "><a href="install-github-ci.html"><strong aria-hidden="true">1.1.2.</strong> GitHub CI Action</a></li></ol></li><li class="chapter-item expanded "><a href="usage.html"><strong aria-hidden="true">1.2.</strong> Using Kani</a></li><li class="chapter-item expanded "><a href="verification-results.html"><strong aria-hidden="true">1.3.</strong> Verification results</a></li></ol></li><li class="chapter-item expanded "><a href="crates/index.html"><strong aria-hidden="true">2.</strong> Crates Documentation</a></li><li class="chapter-item expanded "><a href="kani-tutorial.html"><strong aria-hidden="true">3.</strong> Tutorial</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="tutorial-first-steps.html"><strong aria-hidden="true">3.1.</strong> First steps</a></li><li class="chapter-item expanded "><a href="tutorial-kinds-of-failure.html"><strong aria-hidden="true">3.2.</strong> Failures that Kani can spot</a></li><li class="chapter-item expanded "><a href="tutorial-loop-unwinding.html"><strong aria-hidden="true">3.3.</strong> Loop unwinding</a></li><li class="chapter-item expanded "><a href="tutorial-nondeterministic-variables.html"><strong aria-hidden="true">3.4.</strong> Nondeterministic variables</a></li></ol></li><li class="chapter-item expanded "><a href="reference.html"><strong aria-hidden="true">4.</strong> Reference</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="reference/attributes.html"><strong aria-hidden="true">4.1.</strong> Attributes</a></li><li class="chapter-item expanded "><a href="reference/experimental/experimental-features.html"><strong aria-hidden="true">4.2.</strong> Experimental features</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="reference/experimental/coverage.html"><strong aria-hidden="true">4.2.1.</strong> Coverage</a></li><li class="chapter-item expanded "><a href="reference/experimental/stubbing.html"><strong aria-hidden="true">4.2.2.</strong> Stubbing</a></li><li class="chapter-item expanded "><a href="reference/experimental/contracts.html"><strong aria-hidden="true">4.2.3.</strong> Contracts</a></li><li class="chapter-item expanded "><a href="reference/experimental/concrete-playback.html"><strong aria-hidden="true">4.2.4.</strong> Concrete Playback</a></li></ol></li></ol></li><li class="chapter-item expanded "><a href="application.html"><strong aria-hidden="true">5.</strong> Application</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="tool-comparison.html"><strong aria-hidden="true">5.1.</strong> Comparison with other tools</a></li><li class="chapter-item expanded "><a href="tutorial-real-code.html"><strong aria-hidden="true">5.2.</strong> Where to start on real code</a></li></ol></li><li class="chapter-item expanded "><a href="dev-documentation.html"><strong aria-hidden="true">6.</strong> Developer documentation</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="conventions.html"><strong aria-hidden="true">6.1.</strong> Coding conventions</a></li><li class="chapter-item expanded "><a href="cbmc-hacks.html"><strong aria-hidden="true">6.2.</strong> Working with CBMC</a></li><li class="chapter-item expanded "><a href="rustc-hacks.html"><strong aria-hidden="true">6.3.</strong> Working with rustc</a></li><li class="chapter-item expanded "><a href="stable-mir.html"><strong aria-hidden="true">6.4.</strong> Migrating to StableMIR</a></li><li class="chapter-item expanded "><a href="cheat-sheets.html"><strong aria-hidden="true">6.5.</strong> Command cheat sheets</a></li><li class="chapter-item expanded "><a href="dev-assess.html"><strong aria-hidden="true">6.6.</strong> cargo kani assess</a></li><li class="chapter-item expanded "><a href="testing.html"><strong aria-hidden="true">6.7.</strong> Testing</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="regression-testing.html" class="active"><strong aria-hidden="true">6.7.1.</strong> Regression testing</a></li><li class="chapter-item expanded "><a href="repo-crawl.html"><strong aria-hidden="true">6.7.2.</strong> (Experimental) Testing with a Large Number of Repositories</a></li></ol></li><li class="chapter-item expanded "><a href="performance-comparisons.html"><strong aria-hidden="true">6.8.</strong> Performance comparisons</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="benchcomp-cli.html"><strong aria-hidden="true">6.8.1.</strong> benchcomp command line</a></li><li class="chapter-item expanded "><a href="benchcomp-conf.html"><strong aria-hidden="true">6.8.2.</strong> benchcomp configuration file</a></li><li class="chapter-item expanded "><a href="benchcomp-parse.html"><strong aria-hidden="true">6.8.3.</strong> Custom parsers</a></li></ol></li></ol></li><li class="chapter-item expanded "><a href="limitations.html"><strong aria-hidden="true">7.</strong> Limitations</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="undefined-behaviour.html"><strong aria-hidden="true">7.1.</strong> Undefined behaviour</a></li><li class="chapter-item expanded "><a href="rust-feature-support.html"><strong aria-hidden="true">7.2.</strong> Rust feature support</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="rust-feature-support/intrinsics.html"><strong aria-hidden="true">7.2.1.</strong> Intrinsics</a></li><li class="chapter-item expanded "><a href="rust-feature-support/unstable.html"><strong aria-hidden="true">7.2.2.</strong> Unstable features</a></li></ol></li><li class="chapter-item expanded "><a href="overrides.html"><strong aria-hidden="true">7.3.</strong> Overrides</a></li><li class="spacer"></li></ol></li><li class="chapter-item expanded "><a href="faq.html"><strong aria-hidden="true">8.</strong> FAQ</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">The Kani Rust Verifier</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/model-checking/kani" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+                        <a href="https://github.com/model-checking/kani/edit/main/docs/src/regression-testing.md" title="Suggest an edit" aria-label="Suggest an edit">
+                            <i id="git-edit-button" class="fa fa-edit"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="regression-testing"><a class="header" href="#regression-testing">Regression testing</a></h1>
+<p>Kani relies on a quite extensive range of tests to perform regression testing.
+Regression testing can be executed by running the command:</p>
+<pre><code class="language-bash">./scripts/kani-regression.sh
+</code></pre>
+<p>The <code>kani-regression.sh</code> script executes different testing commands, which we classify into:</p>
+<ul>
+<li><a href="#kani-testing-suites">Kani testing suites</a></li>
+<li><a href="#rust-unit-tests">Rust unit tests</a></li>
+<li><a href="#python-unit-tests">Python unit tests</a></li>
+<li><a href="#script-based-tests">Script-based tests</a></li>
+</ul>
+<p>See below for a description of each one.</p>
+<p>Note that regression testing is run whenever a Pull Request is opened, updated or merged
+into the main branch. Therefore, it's a good idea to run regression testing locally before
+submitting a Pull Request for Kani.</p>
+<h2 id="kani-testing-suites"><a class="header" href="#kani-testing-suites">Kani testing suites</a></h2>
+<p>The Kani testing suites are the main testing resource for Kani. In most cases, the
+tests contained in the Kani testing suites are single Rust files that are run
+using the following command:</p>
+<pre><code class="language-bash">kani file.rs &lt;options&gt;
+</code></pre>
+<p>Command-line options can be passed to the test by adding a special
+comment to the file. See <a href="#testing-options">testing options</a> for more details.</p>
+<p>In particular, the Kani testing suites are composed of:</p>
+<ul>
+<li><code>kani</code>: The main testing suite for Kani. The test is a single Rust file that's
+run through Kani. In general, the test passes if verification with Kani
+is successful, otherwise it fails.</li>
+<li><code>firecracker</code>: Works like <code>kani</code> but contains tests inspired by
+<a href="https://github.com/firecracker-microvm/firecracker">Firecracker</a> code.</li>
+<li><code>prusti</code>: Works like <code>kani</code> but contains tests from the
+<a href="https://github.com/viperproject/prusti-dev">Prusti</a> tool.</li>
+<li><code>smack</code>: Works like <code>kani</code> but contains tests from the
+<a href="https://github.com/smackers/smack">SMACK</a> tool.</li>
+<li><code>kani-fixme</code>: Similar to <code>kani</code>, but runs ignored tests from the <code>kani</code> testing
+suite (i.e., tests with <code>fixme</code> or <code>ignore</code> in their name).
+Allows us to detect when a previously not supported test becomes
+supported. More details in <a href="#fixme-tests">&quot;Fixme&quot; tests</a>.</li>
+<li><code>expected</code>: Similar to <code>kani</code> but with an additional check which ensures that
+lines appearing in <code>*.expected</code> files appear in the output
+generated by <code>kani</code>.</li>
+<li><code>ui</code>: Works like <code>expected</code>, but focuses on the user interface (e.g.,
+warnings) instead of the verification output.</li>
+<li><code>cargo-kani</code>: This suite is designed to test the <code>cargo-kani</code> command. As such,
+this suite works with packages instead of single Rust files.
+Arguments can be specified in the <code>Cargo.toml</code> configuration file.
+Similar to the <code>expected</code> suite, we look for <code>*.expected</code> files
+for each harness in the package.</li>
+<li><code>cargo-ui</code>: Similar to <code>cargo-kani</code>, but focuses on the user interface like the <code>ui</code> test suite.</li>
+<li><code>script-based-pre</code>: This suite is useful to execute script-based tests, and
+also allows checking expected output and exit codes after
+running them. The suite uses the <code>exec</code> mode, described in
+more detail <a href="#the-exec-mode">here</a>.</li>
+</ul>
+<p>We've extended
+<a href="https://rustc-dev-guide.rust-lang.org/tests/intro.html"><code>compiletest</code></a> (the
+Rust compiler testing framework) to work with these suites. That way, we take
+advantage of all <code>compiletest</code> features (e.g., parallel execution).</p>
+<h3 id="testing-stages"><a class="header" href="#testing-stages">Testing stages</a></h3>
+<p>The process of running single-file tests is split into three stages:</p>
+<ul>
+<li><code>check</code>: This stage uses the Rust front-end to detect if the example is valid
+Rust code.</li>
+<li><code>codegen</code>: This stage uses the Kani back-end to determine if we can generate
+GotoC code.</li>
+<li><code>verify</code>: This stage uses CBMC to obtain a verification result.</li>
+</ul>
+<p>If a test fails, the error message will include the stage where it failed:</p>
+<pre><code>error: test failed: expected check success, got failure
+</code></pre>
+<p>When working on a test that's expected to fail, there are two options to
+indicate an expected failure. The first one is to add a comment</p>
+<pre><code class="language-rust">// kani-&lt;stage&gt;-fail
+</code></pre>
+<p>at the top of the test file, where <code>&lt;stage&gt;</code> is the stage where the test is
+expected to fail.</p>
+<p>The other option is to use the predicate <code>kani::expect_fail(cond, message)</code>
+included in the Kani library. The <code>cond</code> in <code>kani::expect_fail</code> is a condition
+that you expect not to hold during verification. The testing framework expects
+one <code>EXPECTED FAIL</code> message in the verification output for each use of the
+predicate.</p>
+<blockquote>
+<p><strong>NOTE</strong>: <code>kani::expect_fail</code> is only useful to indicate failure in the
+<code>verify</code> stage, errors in other stages will be considered testing failures.</p>
+</blockquote>
+<h3 id="testing-options"><a class="header" href="#testing-options">Testing options</a></h3>
+<p>Many tests will require passing command-line options to Kani. These options can
+be specified in single Rust files by adding a comment at the top of the file:</p>
+<pre><code class="language-rust">// kani-flags: &lt;options&gt;
+</code></pre>
+<p>For example, to use an unwinding value of 4 in a test, we can write:</p>
+<pre><code class="language-rust">// kani-flags: --default-unwind 4
+</code></pre>
+<p>For <code>cargo-kani</code> tests, the preferred way to pass command-line options is adding
+them to <code>Cargo.toml</code>. See <a href="./usage.html#usage-on-a-package"><code>Usage on a package</code></a> for more details.</p>
+<h3 id="fixme-tests"><a class="header" href="#fixme-tests">&quot;Fixme&quot; tests</a></h3>
+<p>Any test containing <code>fixme</code> or <code>ignore</code> in its name is considered a test not
+supported for some reason (i.e., they return an unexpected verification result).</p>
+<p>However, &quot;fixme&quot; tests included in the <code>kani</code> folder are run via the <code>kani-fixme</code>
+testing suite. <code>kani-fixme</code> works on test files from <code>kani</code> but:</p>
+<ol>
+<li>Only runs tests whose name contains <code>fixme</code> or <code>ignore</code> (ignoring the rest).</li>
+<li>The expected outcome is failure. In other words, a test is successful if it
+fails.</li>
+</ol>
+<p>We welcome contributions with &quot;fixme&quot; tests which demonstrate a bug or
+unsupported feature in Kani. Ideally, the test should include some comments
+regarding:</p>
+<ul>
+<li>The expected result of the test.</li>
+<li>The actual result of the test (e.g., interesting parts of the output).</li>
+<li>Links to related issues.</li>
+</ul>
+<p>To include a new &quot;fixme&quot; test in <code>kani</code> you only need to ensure its name contains
+<code>fixme</code> or <code>ignore</code>. If your changes to Kani cause a &quot;fixme&quot; test to become
+supported, you only need to rename it so the name does not contain <code>fixme</code> nor
+<code>ignore</code>.</p>
+<h2 id="rust-unit-tests"><a class="header" href="#rust-unit-tests">Rust unit tests</a></h2>
+<p>These tests follow the
+<a href="https://doc.rust-lang.org/rust-by-example/testing/unit_testing.html">Rust unit testing</a>
+style.</p>
+<p>At present, Kani runs unit tests from the following packages:</p>
+<ul>
+<li><code>cprover_bindings</code></li>
+<li><code>kani-compiler</code></li>
+<li><code>cargo-kani</code></li>
+</ul>
+<h2 id="python-unit-tests"><a class="header" href="#python-unit-tests">Python unit tests</a></h2>
+<p>We use the Python <a href="https://docs.python.org/3/library/unittest.html">unit testing framework</a> to
+test the CBMC JSON parser.</p>
+<h2 id="script-based-tests"><a class="header" href="#script-based-tests">Script-based tests</a></h2>
+<p>These are tests which are run using scripts. Scripting gives us the ability to
+perform ad-hoc checks that cannot be done otherwise. They are currently used
+for:</p>
+<ul>
+<li>Standard library codegen</li>
+<li>Firecracker virtio codegen</li>
+<li>Diamond dependency</li>
+</ul>
+<p>In fact, most of them are equivalent to running <code>cargo kani</code> and performing
+checks on the output. The downside to scripting is that these tests will always
+be run, even if there have not been any changes since the last time the
+regression was run.</p>
+<blockquote>
+<p><strong>NOTE</strong>: With the addition of the <code>exec</code> mode for <code>compiletest</code> (described
+below), we'll be migrating these script-based tests to other suites using the
+<code>exec</code> mode. The <code>exec</code> mode allows us to take advantage of <code>compiletest</code>
+features while executing script-based tests (e.g., parallel execution).</p>
+</blockquote>
+<h3 id="the-exec-mode"><a class="header" href="#the-exec-mode">The <code>exec</code> mode</a></h3>
+<p>The <code>exec</code> mode in <code>compiletest</code> allows us to execute script-based tests, in
+addition to checking expected output and exit codes after running them.</p>
+<p>In particular, tests are expected to be placed directly under the test directory
+(e.g., <code>script-based-pre</code>) in a directory with a <code>config.yml</code> file, which
+should contain:</p>
+<ul>
+<li><code>script</code>: The path to the script to be executed.</li>
+<li><code>expected</code> (optional): The path to the <code>.expected</code> file to
+use for output comparison.</li>
+<li><code>exit_code</code> (optional): The exit code to be returned by executing
+the script (a zero exit code is expected if not specified).</li>
+</ul>
+<p>For example, let's say want to test the script <code>exit-one.sh</code>:</p>
+<pre><code class="language-bash">echo &quot;Exiting with code 1!&quot;
+exit 1
+</code></pre>
+<p>In this case, we'll create a folder that contains the <code>config.yml</code> file:</p>
+<pre><code class="language-yml">script: exit-one.sh
+expected: exit-one.expected
+exit_code: 1
+</code></pre>
+<p>where <code>exit-one.expected</code> is simply a text file such as:</p>
+<pre><code class="language-text">Exiting with code 1!
+</code></pre>
+<p>If <code>expected</code> isn't specified, the output won't be checked. If <code>exit_code</code> isn't
+specified, the <code>exec</code> mode will check the exit code was zero.</p>
+<p>Note that all paths specified in the <code>config.yml</code> file are local to the test
+directory, which is the working directory assumed when executing the test. This
+is meant to avoid problems when executing the test manually.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="testing.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                            <a rel="next" href="repo-crawl.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="testing.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                    <a rel="next" href="repo-crawl.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+        <script type="text/javascript">
+            window.playground_copyable = true;
+        </script>
+        <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
+        <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+    </body>
+</html>

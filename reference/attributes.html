@@ -1,0 +1,365 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Attributes - The Kani Rust Verifier</title>
+        <!-- Custom HTML head -->
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="Documentation for the Kani Rust Verifier">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded "><a href="../getting-started.html"><strong aria-hidden="true">1.</strong> Getting started</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../install-guide.html"><strong aria-hidden="true">1.1.</strong> Installation</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../build-from-source.html"><strong aria-hidden="true">1.1.1.</strong> Building from source</a></li><li class="chapter-item expanded "><a href="../install-github-ci.html"><strong aria-hidden="true">1.1.2.</strong> GitHub CI Action</a></li></ol></li><li class="chapter-item expanded "><a href="../usage.html"><strong aria-hidden="true">1.2.</strong> Using Kani</a></li><li class="chapter-item expanded "><a href="../verification-results.html"><strong aria-hidden="true">1.3.</strong> Verification results</a></li></ol></li><li class="chapter-item expanded "><a href="../crates/index.html"><strong aria-hidden="true">2.</strong> Crates Documentation</a></li><li class="chapter-item expanded "><a href="../kani-tutorial.html"><strong aria-hidden="true">3.</strong> Tutorial</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../tutorial-first-steps.html"><strong aria-hidden="true">3.1.</strong> First steps</a></li><li class="chapter-item expanded "><a href="../tutorial-kinds-of-failure.html"><strong aria-hidden="true">3.2.</strong> Failures that Kani can spot</a></li><li class="chapter-item expanded "><a href="../tutorial-loop-unwinding.html"><strong aria-hidden="true">3.3.</strong> Loop unwinding</a></li><li class="chapter-item expanded "><a href="../tutorial-nondeterministic-variables.html"><strong aria-hidden="true">3.4.</strong> Nondeterministic variables</a></li></ol></li><li class="chapter-item expanded "><a href="../reference.html"><strong aria-hidden="true">4.</strong> Reference</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../reference/attributes.html" class="active"><strong aria-hidden="true">4.1.</strong> Attributes</a></li><li class="chapter-item expanded "><a href="../reference/experimental/experimental-features.html"><strong aria-hidden="true">4.2.</strong> Experimental features</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../reference/experimental/coverage.html"><strong aria-hidden="true">4.2.1.</strong> Coverage</a></li><li class="chapter-item expanded "><a href="../reference/experimental/stubbing.html"><strong aria-hidden="true">4.2.2.</strong> Stubbing</a></li><li class="chapter-item expanded "><a href="../reference/experimental/contracts.html"><strong aria-hidden="true">4.2.3.</strong> Contracts</a></li><li class="chapter-item expanded "><a href="../reference/experimental/concrete-playback.html"><strong aria-hidden="true">4.2.4.</strong> Concrete Playback</a></li></ol></li></ol></li><li class="chapter-item expanded "><a href="../application.html"><strong aria-hidden="true">5.</strong> Application</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../tool-comparison.html"><strong aria-hidden="true">5.1.</strong> Comparison with other tools</a></li><li class="chapter-item expanded "><a href="../tutorial-real-code.html"><strong aria-hidden="true">5.2.</strong> Where to start on real code</a></li></ol></li><li class="chapter-item expanded "><a href="../dev-documentation.html"><strong aria-hidden="true">6.</strong> Developer documentation</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../conventions.html"><strong aria-hidden="true">6.1.</strong> Coding conventions</a></li><li class="chapter-item expanded "><a href="../cbmc-hacks.html"><strong aria-hidden="true">6.2.</strong> Working with CBMC</a></li><li class="chapter-item expanded "><a href="../rustc-hacks.html"><strong aria-hidden="true">6.3.</strong> Working with rustc</a></li><li class="chapter-item expanded "><a href="../stable-mir.html"><strong aria-hidden="true">6.4.</strong> Migrating to StableMIR</a></li><li class="chapter-item expanded "><a href="../cheat-sheets.html"><strong aria-hidden="true">6.5.</strong> Command cheat sheets</a></li><li class="chapter-item expanded "><a href="../dev-assess.html"><strong aria-hidden="true">6.6.</strong> cargo kani assess</a></li><li class="chapter-item expanded "><a href="../testing.html"><strong aria-hidden="true">6.7.</strong> Testing</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../regression-testing.html"><strong aria-hidden="true">6.7.1.</strong> Regression testing</a></li><li class="chapter-item expanded "><a href="../repo-crawl.html"><strong aria-hidden="true">6.7.2.</strong> (Experimental) Testing with a Large Number of Repositories</a></li></ol></li><li class="chapter-item expanded "><a href="../performance-comparisons.html"><strong aria-hidden="true">6.8.</strong> Performance comparisons</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../benchcomp-cli.html"><strong aria-hidden="true">6.8.1.</strong> benchcomp command line</a></li><li class="chapter-item expanded "><a href="../benchcomp-conf.html"><strong aria-hidden="true">6.8.2.</strong> benchcomp configuration file</a></li><li class="chapter-item expanded "><a href="../benchcomp-parse.html"><strong aria-hidden="true">6.8.3.</strong> Custom parsers</a></li></ol></li></ol></li><li class="chapter-item expanded "><a href="../limitations.html"><strong aria-hidden="true">7.</strong> Limitations</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../undefined-behaviour.html"><strong aria-hidden="true">7.1.</strong> Undefined behaviour</a></li><li class="chapter-item expanded "><a href="../rust-feature-support.html"><strong aria-hidden="true">7.2.</strong> Rust feature support</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../rust-feature-support/intrinsics.html"><strong aria-hidden="true">7.2.1.</strong> Intrinsics</a></li><li class="chapter-item expanded "><a href="../rust-feature-support/unstable.html"><strong aria-hidden="true">7.2.2.</strong> Unstable features</a></li></ol></li><li class="chapter-item expanded "><a href="../overrides.html"><strong aria-hidden="true">7.3.</strong> Overrides</a></li><li class="spacer"></li></ol></li><li class="chapter-item expanded "><a href="../faq.html"><strong aria-hidden="true">8.</strong> FAQ</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">The Kani Rust Verifier</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/model-checking/kani" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+                        <a href="https://github.com/model-checking/kani/edit/main/docs/src/reference/attributes.md" title="Suggest an edit" aria-label="Suggest an edit">
+                            <i id="git-edit-button" class="fa fa-edit"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="attributes"><a class="header" href="#attributes">Attributes</a></h1>
+<p>In Kani, attributes are used to mark functions as harnesses and control their execution.
+This section explains the attributes available in Kani and how they affect the verification process.</p>
+<p>At present, the available Kani attributes are the following:</p>
+<ul>
+<li><a href="#kaniproof"><code>#[kani::proof]</code></a></li>
+<li><a href="#kanishould_panic"><code>#[kani::should_panic]</code></a></li>
+<li><a href="#kaniunwindnumber"><code>#[kani::unwind(&lt;number&gt;)]</code></a></li>
+<li><a href="#kanisolversolver"><code>#[kani::solver(&lt;solver&gt;)]</code></a></li>
+<li><a href="#kanistuboriginal-replacement"><code>#[kani::stub(&lt;original&gt;, &lt;replacement&gt;)]</code></a></li>
+</ul>
+<h2 id="kaniproof"><a class="header" href="#kaniproof"><code>#[kani::proof]</code></a></h2>
+<p><strong>The <code>#[kani::proof]</code> attribute specifies that a <a href="https://doc.rust-lang.org/reference/items/functions.html">function</a> is a proof harness.</strong></p>
+<p>Proof harnesses are similar to test harnesses, especially property-based test harnesses,
+and they may use functions from the Kani API (e.g., <code>kani::any()</code>).
+A proof harness is the smallest verification unit in Kani.</p>
+<p>When Kani is run, either through <code>kani</code> or <code>cargo kani</code>, it'll first collect all proof harnesses
+(i.e., functions with the attribute <code>#[kani::proof]</code>) and then attempt to verify them.</p>
+<h3 id="example"><a class="header" href="#example">Example</a></h3>
+<p>If we run Kani on this example:</p>
+<pre><code class="language-rust">#[kani::proof]
+fn my_harness() {
+    assert!(1 + 1 == 2);
+}
+</code></pre>
+<p>We should see a line in the output that says <code>Checking harness my_harness...</code> (assuming <code>my_harness</code> is the only harness in our code).
+This will be followed by multiple messages that come from CBMC (the verification engine used by Kani) and the <a href="../verification-results.html">verification results</a>.</p>
+<p>Using any other Kani attribute without <code>#[kani::proof]</code> will result in compilation errors.</p>
+<h3 id="limitations"><a class="header" href="#limitations">Limitations</a></h3>
+<p>The <code>#[kani::proof]</code> attribute can only be added to functions without parameters.</p>
+<h2 id="kanishould_panic"><a class="header" href="#kanishould_panic"><code>#[kani::should_panic]</code></a></h2>
+<p><strong>The <code>#[kani::should_panic]</code> attribute specifies that a proof harness is expected to panic.</strong></p>
+<p>This attribute allows users to exercise <em>negative verification</em>.
+It's analogous to how <a href="https://doc.rust-lang.org/rust-by-example/testing/unit_testing.html#testing-panics"><code>#[should_panic]</code></a> allows users to exercise <a href="https://en.wikipedia.org/wiki/Negative_testing">negative testing</a> for Rust unit tests.</p>
+<p>This attribute <strong>only affects the overall verification result</strong>.
+In particular, using the <code>#[kani::should_panic]</code> attribute will return one of the following results:</p>
+<ul>
+<li><code>VERIFICATION:- FAILED (encountered no panics, but at least one was expected)</code> if there were no failed checks.</li>
+<li><code>VERIFICATION:- FAILED (encountered failures other than panics, which were unexpected)</code> if there were failed checks but not all them were related to panics.</li>
+<li><code>VERIFICATION:- SUCCESSFUL (encountered one or more panics as expected)</code> otherwise.</li>
+</ul>
+<p>At the moment, to determine if a check is related to a panic, we check if its class is <code>assertion</code>.
+The class is the second member in the property name, the triple that's printed after <code>Check X: </code>: <code>&lt;function&gt;.&lt;class&gt;.&lt;number&gt;</code>.
+For example, the class in <code>Check 1: my_harness.assertion.1</code> is <code>assertion</code>, so this check is considered to be related to a panic.</p>
+<blockquote>
+<p><strong>NOTE</strong>: The <code>#[kani::should_panic]</code> is only recommended for writing
+harnesses which complement existing harnesses that don't use the same
+attribute. In other words, it's only recommended to write <em>negative harnesses</em>
+after having written <em>positive</em> harnesses that successfully verify interesting
+properties about the function under verification.</p>
+</blockquote>
+<h3 id="limitations-1"><a class="header" href="#limitations-1">Limitations</a></h3>
+<p>The <code>#[kani::should_panic]</code> attribute verifies that there are one or more failed checks related to panics.
+At the moment, it's not possible to pin it down to specific panics.
+Therefore, <strong>it's possible that the panics detected with <code>#[kani::should_panic]</code> aren't the ones that were originally expected</strong> after a change in the code under verification.</p>
+<h3 id="example-1"><a class="header" href="#example-1">Example</a></h3>
+<p>Let's assume we're using the <code>Device</code> from this example:</p>
+<pre><code class="language-rust">struct Device {
+    is_init: bool,
+}
+
+impl Device {
+    fn new() -&gt; Self {
+        Device { is_init: false }
+    }
+
+    fn init(&amp;mut self) {
+        assert!(!self.is_init);
+        self.is_init = true;
+    }
+}
+</code></pre>
+<p>We may want to verify that calling <code>device.init()</code> more than once should result in a panic.
+We can do so with the following harness:</p>
+<pre><code class="language-rust">#[kani::proof]
+#[kani::should_panic]
+fn cannot_init_device_twice() {
+    let mut device = Device::new();
+    device.init();
+    device.init();
+}
+</code></pre>
+<p>Running Kani on it will produce the result <code>VERIFICATION:- SUCCESSFUL (encountered one or more panics as expected)</code></p>
+<h2 id="kaniunwindnumber"><a class="header" href="#kaniunwindnumber"><code>#[kani::unwind(&lt;number&gt;)]</code></a></h2>
+<p><strong>The <code>#[kani::unwind(&lt;number&gt;)]</code> attribute specifies that all loops must be unwound up to <code>&lt;number&gt;</code> times.</strong></p>
+<p>By default, Kani attempts to unwind all loops automatically.
+However, this unwinding process doesn't always terminate.
+The <code>#[kani::unwind(&lt;number&gt;)]</code> attribute will:</p>
+<ol>
+<li>Disable automatic unwinding.</li>
+<li>Unwind all loops up to <code>&lt;number&gt;</code> times.</li>
+</ol>
+<p>After the unwinding stage, Kani will attempt to verify the harness.
+If the <code>#[kani::unwind(&lt;number&gt;)]</code> attribute was specified, there's a chance that one or more loops weren't unwound enough times.
+In that case, there will be at least one failed unwinding assertion (there's one unwinding assertion for each loop), causing verification to fail.</p>
+<p>Check the <a href="../tutorial-loop-unwinding.html"><em>Loops, unwinding and bounds</em> section</a> for more information about unwinding.</p>
+<h3 id="example-2"><a class="header" href="#example-2">Example</a></h3>
+<p>Let's assume we've written this code which contains a loop:</p>
+<pre><code class="language-rust">fn my_sum(vec: &amp;Vec&lt;u32&gt;) -&gt; u32 {
+    let mut sum = 0;
+    for elem in vec {
+        sum += elem;
+    }
+    sum
+}
+
+#[kani::proof]
+fn my_harness() {
+    let vec = vec![1, 2, 3];
+    let sum = my_sum(&amp;vec);
+    assert!(sum == 6);
+}
+</code></pre>
+<p>Running this example on Kani will produce a successful verification result.
+In this case, Kani automatically finds the required unwinding value (i.e., the number of times it needs to unwind all loops).
+This means that the <code>#[kani::unwind(&lt;number&gt;)]</code> attribute isn't needed, as we'll see soon.
+In general, the required unwinding value is equal to the maximum number of iterations for all loops, plus one.
+The required unwinding value in this example is 4: the 3 iterations in the <code>for elem in vec</code> loop, plus 1.</p>
+<p>Let's see what happens if we force a lower unwinding value with <code>#[kani::unwind(3)]</code>:</p>
+<pre><code class="language-rust">#[kani::proof]
+#[kani::unwind(3)]
+fn my_harness() {
+    let vec = vec![1, 2, 3];
+    let sum = my_sum(&amp;vec);
+    assert!(sum == 6);
+}
+</code></pre>
+<p>As we mentioned, trying to verify this harness causes an unwinding failure:</p>
+<pre><code>SUMMARY:
+ ** 1 of 187 failed (186 undetermined)
+Failed Checks: unwinding assertion loop 0
+ File: &quot;/home/ubuntu/devices/src/main.rs&quot;, line 32, in my_sum
+
+VERIFICATION:- FAILED
+[Kani] info: Verification output shows one or more unwinding failures.
+[Kani] tip: Consider increasing the unwinding value or disabling `--unwinding-assertions`.
+</code></pre>
+<p>Kani cannot verify the harness because there is at least one unwinding assertion failure.
+But, if we use <code>#[kani::unwind(4)]</code>, which is the right unwinding value we computed earlier:</p>
+<pre><code class="language-rust">#[kani::proof]
+#[kani::unwind(4)]
+fn my_harness() {
+    let vec = vec![1, 2, 3];
+    let sum = my_sum(&amp;vec);
+    assert!(sum == 6);
+}
+</code></pre>
+<p>We'll get a successful result again:</p>
+<pre><code>SUMMARY:
+ ** 0 of 186 failed
+
+VERIFICATION:- SUCCESSFUL
+</code></pre>
+<h2 id="kanisolversolver"><a class="header" href="#kanisolversolver"><code>#[kani::solver(&lt;solver&gt;)]</code></a></h2>
+<p><strong>Changes the solver to be used by Kani's verification engine (CBMC).</strong></p>
+<p>This may change the verification time required to verify a harness.</p>
+<p>At present, <code>&lt;solver&gt;</code> can be one of:</p>
+<ul>
+<li><code>minisat</code>: <a href="http://minisat.se/">MiniSat</a>.</li>
+<li><code>cadical</code> (default): <a href="https://github.com/arminbiere/cadical">CaDiCaL</a>.</li>
+<li><code>kissat</code>: <a href="https://github.com/arminbiere/kissat">kissat</a>.</li>
+<li><code>bin=&quot;&lt;SAT_SOLVER_BINARY&gt;&quot;</code>: A custom solver binary, <code>&quot;&lt;SAT_SOLVER_BINARY&gt;&quot;</code>, that must be in path.</li>
+</ul>
+<h3 id="example-3"><a class="header" href="#example-3">Example</a></h3>
+<p>Kani will use the CaDiCaL solver in the following example:</p>
+<pre><code class="language-rust">#[kani::proof]
+#[kani::solver(cadical)]
+fn check() {
+    let mut a = [2, 3, 1];
+    a.sort();
+    assert_eq!(a[0], 1);
+    assert_eq!(a[1], 2);
+    assert_eq!(a[2], 3);
+}
+</code></pre>
+<p>Changing the solver may result in different verification times depending on the harness.</p>
+<p>Note that the default solver may vary depending on Kani's version.
+We highly recommend users to annotate their harnesses if the choice of solver
+has a major impact on performance, even if the solver used is the current
+default one.</p>
+<h2 id="kanistuboriginal-replacement"><a class="header" href="#kanistuboriginal-replacement"><code>#[kani::stub(&lt;original&gt;, &lt;replacement&gt;)]</code></a></h2>
+<p><strong>Replaces the function/method with name <original> with the function/method with name <replacement> during compilation</strong></p>
+<p>Check the <a href="../reference/stubbing.html"><em>Stubbing</em> section</a> for more information about stubbing.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../reference.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                            <a rel="next" href="../reference/experimental/experimental-features.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../reference.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                    <a rel="next" href="../reference/experimental/experimental-features.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+        <script type="text/javascript">
+            window.playground_copyable = true;
+        </script>
+        <script src="../elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../searcher.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+    </body>
+</html>

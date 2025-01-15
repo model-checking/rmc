@@ -1,0 +1,362 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>0010-quantifiers - Kani RFC Book</title>
+        <!-- Custom HTML head -->
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="Design documents for Kani Rust Verifier">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="../intro.html">Introduction</a></li><li class="chapter-item expanded affix "><a href="../template.html">RFC Template</a></li><li class="chapter-item expanded affix "><li class="part-title">Kani RFCs</li><li class="chapter-item expanded "><a href="../rfcs/0001-mir-linker.html">0001-mir-linker</a></li><li class="chapter-item expanded "><a href="../rfcs/0002-function-stubbing.html">0002-function-stubbing</a></li><li class="chapter-item expanded "><a href="../rfcs/0003-cover-statement.html">0003-cover-statement</a></li><li class="chapter-item expanded "><a href="../rfcs/0004-loop-contract-synthesis.html">0004-loop-contract-synthesis</a></li><li class="chapter-item expanded "><a href="../rfcs/0005-should-panic-attr.html">0005-should-panic-attr</a></li><li class="chapter-item expanded "><a href="../rfcs/0006-unstable-api.html">0006-unstable-api</a></li><li class="chapter-item expanded "><a href="../rfcs/0007-global-conditions.html">0007-global-conditions</a></li><li class="chapter-item expanded "><a href="../rfcs/0008-line-coverage.html">0008-line-coverage</a></li><li class="chapter-item expanded "><a href="../rfcs/0009-function-contracts.html">0009-function-contracts</a></li><li class="chapter-item expanded "><a href="../rfcs/0010-quantifiers.html" class="active">0010-quantifiers</a></li><li class="chapter-item expanded "><a href="../rfcs/0011-source-coverage.html">0011-source-coverage</a></li><li class="chapter-item expanded "><a href="../rfcs/0012-loop-contracts.html">0012-loop-contracts</a></li><li class="chapter-item expanded "><a href="../rfcs/0013-list.html">0013-list</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Kani RFC Book</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/model-checking/kani" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+                        <a href="https://github.com/model-checking/kani/edit/main/rfc/src/rfcs/0010-quantifiers.md" title="Suggest an edit" aria-label="Suggest an edit">
+                            <i id="git-edit-button" class="fa fa-edit"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <ul>
+<li><strong>Feature Name:</strong> Quantifiers</li>
+<li><strong>Feature Request Issue:</strong> <a href="https://github.com/model-checking/kani/issues/2546">#2546</a> and <a href="https://github.com/model-checking/kani/issues/836">#836</a></li>
+<li><strong>RFC PR:</strong> <a href="https://github.com/model-checking/kani/pull/">#</a></li>
+<li><strong>Status:</strong> Unstable</li>
+<li><strong>Version:</strong> 1.0</li>
+</ul>
+<hr />
+<h2 id="summary"><a class="header" href="#summary">Summary</a></h2>
+<p>Quantifiers are logical operators that allow users to express that a property or condition applies to some or all objects within a given domain.</p>
+<h2 id="user-impact"><a class="header" href="#user-impact">User Impact</a></h2>
+<p>There are two primary quantifiers: the existential quantifier (∃) and the universal quantifier (∀).</p>
+<ol>
+<li>
+<p>The existential quantifier (∃): represents the statement &quot;there exists.&quot; We use to express that there is at least one object in the domain that satisfies a given condition. For example, &quot;∃x P(x)&quot; means &quot;there exists a value x such that P(x) is true.&quot;</p>
+</li>
+<li>
+<p>The universal quantifier (∀): represents the statement &quot;for all&quot; or &quot;for every.&quot; We use it to express that a given condition is true for every object in the domain. For example, &quot;∀x P(x)&quot; means &quot;for every value x, P(x) is true.&quot;</p>
+</li>
+</ol>
+<p>Rather than exhaustively listing all elements in a domain, quantifiers enable users to make statements about the entire domain at once. This compact representation is crucial when dealing with large or unbounded inputs. Quantifiers also facilitate abstraction and generalization of properties. Instead of specifying properties for specific instances, quantified properties can capture general patterns and behaviors that hold across different objects in a domain. Additionally, by replacing loops in the specification with quantifiers, Kani can encode the properties more efficiently within the specified bounds, making the verification process more manageable and computationally feasible.</p>
+<p>This new feature doesn't introduce any breaking changes to users. It will only allow them to write properites using the existential (∃) and universal (∀) quantifiers.</p>
+<h2 id="user-experience"><a class="header" href="#user-experience">User Experience</a></h2>
+<p>We propose a syntax inspired by <a href="https://github.com/rust-lang/rust/pull/120131">&quot;Pattern Types&quot;</a>. The syntax of existential (i.e., <code>kani::exists</code>) and universal (i.e., <code>kani::forall</code>) quantifiers are:</p>
+<pre><code class="language-rust">kani::exists(|&lt;var&gt;: &lt;type&gt; [is &lt;range-expr&gt;] | &lt;boolean-expression&gt;)
+kani::forall(|&lt;var&gt;: &lt;type&gt; [is &lt;range-expr&gt;] | &lt;boolean-expression&gt;)
+</code></pre>
+<p>If <code>&lt;range-expr&gt;</code> is not provided, we assume <code>&lt;var&gt;</code> can range over all possible values of the given <code>&lt;type&gt;</code> (i.e., syntactic sugar for full range <code>|&lt;var&gt;: &lt;type&gt; as .. |</code>). CBMC's SAT backend only supports bounded quantification under <strong>constant</strong> lower and upper bounds (for more details, see the <a href="https://diffblue.github.io/cbmc/contracts-quantifiers.html">documentation for quantifiers in CBMC</a>). The SMT backend, on the other hand, supports arbitrary Boolean expressions. In any case, <code>&lt;boolean-expression&gt;</code> should not have side effects, as the purpose of quantifiers is to assert a condition over a domain of objects without altering the state.</p>
+<p>Consider the following example adapted from the documentation for the <a href="https://doc.rust-lang.org/std/vec/struct.Vec.html#method.from_raw_parts">from_raw_parts</a> function:</p>
+<pre><code class="language-rust">use std::ptr;
+use std::mem;
+
+#[kani::proof]
+fn main() {
+    let v = vec![kani::any::&lt;usize&gt;(); 100];
+
+    // Prevent running `v`'s destructor so we are in complete control
+    // of the allocation.
+    let mut v = mem::ManuallyDrop::new(v);
+
+    // Pull out the various important pieces of information about `v`
+    let p = v.as_mut_ptr();
+    let len = v.len();
+    let cap = v.capacity();
+
+    unsafe {
+        // Overwrite memory
+        for i in 0..len {
+            *p.add(i) += 1;
+        }
+
+        // Put everything back together into a Vec
+        let rebuilt = Vec::from_raw_parts(p, len, cap);
+    }
+}
+</code></pre>
+<p>Given the <code>v</code> vector has non-deterministic values, there are potential arithmetic overflows that might happen in the for loop. So we need to constrain all values of the array. We may also want to check all values of <code>rebuilt</code> after the operation. Without quantifiers, we might be tempted to use loops as follows:</p>
+<pre><code class="language-rust">use std::ptr;
+use std::mem;
+
+#[kani::proof]
+fn main() {
+    let original_v = vec![kani::any::&lt;usize&gt;(); 100];
+    let v = original_v.clone();
+    for i in 0..v.len() {
+        kani::assume(v[i] &lt; 5);
+    }
+
+    // Prevent running `v`'s destructor so we are in complete control
+    // of the allocation.
+    let mut v = mem::ManuallyDrop::new(v);
+
+    // Pull out the various important pieces of information about `v`
+    let p = v.as_mut_ptr();
+    let len = v.len();
+    let cap = v.capacity();
+
+    unsafe {
+        // Overwrite memory
+        for i in 0..len {
+            *p.add(i) += 1;
+        }
+
+        // Put everything back together into a Vec
+        let rebuilt = Vec::from_raw_parts(p, len, cap);
+        for i in 0..len {
+            assert_eq!(rebuilt[i], original_v[i]+1);
+        }
+    }
+}
+</code></pre>
+<p>This, however, might unnecessary increase the complexity of the verication process. We can achieve the same effect using quantifiers as shown below.</p>
+<pre><code class="language-rust">use std::ptr;
+use std::mem;
+
+#[kani::proof]
+fn main() {
+    let original_v = vec![kani::any::&lt;usize&gt;(); 3];
+    let v = original_v.clone();
+    kani::assume(kani::forall(|i: usize is ..v.len() | v[i] &lt; 5));
+
+    // Prevent running `v`'s destructor so we are in complete control
+    // of the allocation.
+    let mut v = mem::ManuallyDrop::new(v);
+
+    // Pull out the various important pieces of information about `v`
+    let p = v.as_mut_ptr();
+    let len = v.len();
+    let cap = v.capacity();
+
+    unsafe {
+        // Overwrite memory
+        for i in 0..len {
+            *p.add(i) += 1;
+        }
+
+        // Put everything back together into a Vec
+        let rebuilt = Vec::from_raw_parts(p, len, cap);
+        assert!(kani::forall(|i: usize is ..len | rebuilt[i] == original_v[i]+1));
+    }
+}
+</code></pre>
+<p>The same principle applies if we want to use the existential quantifier.</p>
+<pre><code class="language-rust">use std::ptr;
+use std::mem;
+
+#[kani::proof]
+fn main() {
+    let original_v = vec![kani::any::&lt;usize&gt;(); 3];
+    let v = original_v.clone();
+    kani::assume(kani::forall(|i: usize is ..v.len() | v[i] &lt; 5));
+
+    // Prevent running `v`'s destructor so we are in complete control
+    // of the allocation.
+    let mut v = mem::ManuallyDrop::new(v);
+
+    // Pull out the various important pieces of information about `v`
+    let p = v.as_mut_ptr();
+    let len = v.len();
+    let cap = v.capacity();
+
+    unsafe {
+        // Overwrite memory
+        for i in 0..len {
+            *p.add(i) += 1;
+            if i == 1 {
+              *p.add(i) = 0;
+            }
+        }
+
+        // Put everything back together into a Vec
+        let rebuilt = Vec::from_raw_parts(p, len, cap);
+        assert!(kani::exists(|i: usize is ..len | rebuilt[i] == 0));
+    }
+}
+</code></pre>
+<p>The usage of quantifiers should be valid in any part of the Rust code analysed by Kani.</p>
+<h2 id="detailed-design"><a class="header" href="#detailed-design">Detailed Design</a></h2>
+<!-- For the implementors or the hackers -->
+<p>Kani should have the same support that CBMC has for quantifiers. For more details, see <a href="https://github.com/diffblue/cbmc/blob/0a69a64e4481473d62496f9975730d24f194884a/doc/cprover-manual/contracts-quantifiers.md">Quantifiers</a>.</p>
+<h2 id="open-questions"><a class="header" href="#open-questions">Open questions</a></h2>
+<!-- For Developers -->
+<ul>
+<li><strong>Function Contracts RFC</strong> - CBMC has support for both <code>exists</code> and <code>forall</code>, but the
+code generation is difficult. The most ergonomic and easy way to implement
+quantifiers on the Rust side is as higher-order functions taking <code>Fn(T) -&gt; bool</code>, where <code>T</code> is some arbitrary type that can be quantified over. This
+interface is familiar to developers, but the code generation is tricky, as
+CBMC level quantifiers only allow certain kinds of expressions. This
+necessitates a rewrite of the <code>Fn</code> closure to a compliant expression.
+<ul>
+<li>Which kind of expressions should be accepted as a &quot;compliant expression&quot;? </li>
+</ul>
+</li>
+</ul>
+<h2 id="future-possibilities"><a class="header" href="#future-possibilities">Future possibilities</a></h2>
+<!-- For Developers -->
+<ul>
+<li>CBMC has an SMT backend which allows the use of quantifiers with arbitrary Boolean expressions. Kani must include an option for users to experiment with this backend.</li>
+</ul>
+<hr />
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../rfcs/0009-function-contracts.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                            <a rel="next" href="../rfcs/0011-source-coverage.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../rfcs/0009-function-contracts.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                    <a rel="next" href="../rfcs/0011-source-coverage.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+        <script type="text/javascript">
+            window.playground_copyable = true;
+        </script>
+        <script src="../elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../searcher.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+    </body>
+</html>

@@ -1,0 +1,271 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>0006-unstable-api - Kani RFC Book</title>
+        <!-- Custom HTML head -->
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="Design documents for Kani Rust Verifier">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="../intro.html">Introduction</a></li><li class="chapter-item expanded affix "><a href="../template.html">RFC Template</a></li><li class="chapter-item expanded affix "><li class="part-title">Kani RFCs</li><li class="chapter-item expanded "><a href="../rfcs/0001-mir-linker.html">0001-mir-linker</a></li><li class="chapter-item expanded "><a href="../rfcs/0002-function-stubbing.html">0002-function-stubbing</a></li><li class="chapter-item expanded "><a href="../rfcs/0003-cover-statement.html">0003-cover-statement</a></li><li class="chapter-item expanded "><a href="../rfcs/0004-loop-contract-synthesis.html">0004-loop-contract-synthesis</a></li><li class="chapter-item expanded "><a href="../rfcs/0005-should-panic-attr.html">0005-should-panic-attr</a></li><li class="chapter-item expanded "><a href="../rfcs/0006-unstable-api.html" class="active">0006-unstable-api</a></li><li class="chapter-item expanded "><a href="../rfcs/0007-global-conditions.html">0007-global-conditions</a></li><li class="chapter-item expanded "><a href="../rfcs/0008-line-coverage.html">0008-line-coverage</a></li><li class="chapter-item expanded "><a href="../rfcs/0009-function-contracts.html">0009-function-contracts</a></li><li class="chapter-item expanded "><a href="../rfcs/0010-quantifiers.html">0010-quantifiers</a></li><li class="chapter-item expanded "><a href="../rfcs/0011-source-coverage.html">0011-source-coverage</a></li><li class="chapter-item expanded "><a href="../rfcs/0012-loop-contracts.html">0012-loop-contracts</a></li><li class="chapter-item expanded "><a href="../rfcs/0013-list.html">0013-list</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Kani RFC Book</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/model-checking/kani" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+                        <a href="https://github.com/model-checking/kani/edit/main/rfc/src/rfcs/0006-unstable-api.md" title="Suggest an edit" aria-label="Suggest an edit">
+                            <i id="git-edit-button" class="fa fa-edit"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <ul>
+<li><strong>Feature Name:</strong> Unstable APIs (<code>unstable-api</code>)</li>
+<li><strong>RFC Tracking Issue</strong>: <a href="https://github.com/model-checking/kani/issues/2279">https://github.com/model-checking/kani/issues/2279</a></li>
+<li><strong>RFC PR:</strong> <a href="https://github.com/model-checking/kani/pull/2281">https://github.com/model-checking/kani/pull/2281</a></li>
+<li><strong>Status:</strong> Unstable</li>
+<li><strong>Version:</strong> 0</li>
+</ul>
+<hr />
+<h2 id="summary"><a class="header" href="#summary">Summary</a></h2>
+<p>Provide a standard option for users to enable experimental APIs and features in Kani,
+and ensure that those APIs are off by default.</p>
+<h2 id="user-impact"><a class="header" href="#user-impact">User Impact</a></h2>
+<p>Add an opt-in model for users to try experimental APIs.
+The goal is to enable users to try features that aren't stable yet,
+which allow us to get valuable feedback during the development of new features and APIs.</p>
+<p>The opt-in model empowers the users to control when some instability is acceptable,
+which makes Kani UX more consistent and safe.</p>
+<p>Currently, each new unstable feature will introduce a new switch, some of them will look like <code>--enable-&lt;feature&gt;</code>,
+while others will be a plain switch which allows further feature configuration <code>--&lt;feature-config&gt;=[value]</code>.
+For example, we today have the following unstable switches <code>--enable-stubbing</code>, <code>--concrete-playback</code>, <code>--gen-c</code>.
+In all cases, users are still required to provide the additional <code>--enable-unstable</code> option.
+Some unstable features are included in the <code>--help</code> section, and only a few mention the requirement
+to include <code>--enable-unstable</code>. There is no way to list all unstable features.
+The transition to stable switches is also ad-hoc.</p>
+<p>In order to reduce friction, we will also standardize how users opt-in to any Kani unstable feature.
+We will use similar syntax to the one used by the Rust compiler and Cargo.
+As part of this work, we will also deprecate and remove <code>--enable-unstable</code> option.</p>
+<p>Note that although Kani is still on v0, which means that everything is somewhat unstable,
+this allow us to set different bars when it comes to what kind of changes is expected,
+as well as what kind of support we will provide for a feature.</p>
+<h2 id="user-experience"><a class="header" href="#user-experience">User Experience</a></h2>
+<p>Users will have to invoke Kani with:</p>
+<pre><code>-Z &lt;feature_identifier&gt;
+</code></pre>
+<p>in order to enable any unstable feature in Kani, including unstable APIs in the Kani library.
+For unstable command line options, we will add <code>-Z unstable-options</code>, similar to the Rust compiler.
+E.g.:</p>
+<pre><code>-Z unstable-options --concrete-playback=print
+</code></pre>
+<p>Users will also be able to enable unstable features in their <code>Cargo.toml</code> in the <code>unstable</code> table
+under <code>kani</code> table. E.g:</p>
+<pre><code class="language-toml">[package.metadata.kani.unstable]
+unstable-options = true
+
+[workspace.metadata.kani]
+flags = { concrete-playback = true }
+unstable = { unstable-options = true }
+</code></pre>
+<p>In order to mark an API as unstable, we will add the following attribute to the APIs marked as unstable:</p>
+<pre><code class="language-rust">#[kani::unstable(feature=&quot;&lt;IDENTIFIER&gt;&quot;, issue=&quot;&lt;TRACKING_ISSUE_NUMBER&gt;&quot;, reason=&quot;&lt;DESCRIPTION&gt;&quot;)]
+pub fn unstable_api() {}
+</code></pre>
+<p>This is similar to the interface used by <a href="https://rustc-dev-guide.rust-lang.org/stability.html#unstable">the standard library</a>.</p>
+<p>If the user tries to use an unstable feature in Kani without explicitly enabling it,
+Kani will trigger an error. For unstable APIs, the error will be triggered during the crate
+compilation.</p>
+<h2 id="detailed-design"><a class="header" href="#detailed-design">Detailed Design</a></h2>
+<p>We will add the <code>-Z</code> option to both <code>kani-driver</code> and <code>kani-compiler</code>.
+Kani driver will pass the information to the compiler.</p>
+<p>For unstable APIs, the compiler will check if any reachable function uses an unstable feature that was not enabled.
+If that is the case, the compiler will trigger a compilation error.</p>
+<p>We will also change the compiler to only generate code for harnesses that match the harness filter.
+The filter is already passed to the compiler, but it is currently only used for stubbing.</p>
+<h3 id="api-stabilization"><a class="header" href="#api-stabilization">API Stabilization</a></h3>
+<p>Once an API has been stabilized, we will remove the <code>unstable</code> attributes from the given API.
+If the user tries to enable a feature that was already stabilized,
+Kani will print a warning stating that the feature has been stabilized.</p>
+<h3 id="api-removal"><a class="header" href="#api-removal">API Removal</a></h3>
+<p>If we decide to remove an API that is marked as unstable, we should follow a regular deprecation
+path (using <code>#[deprecated]</code> attribute), and keep the <code>unstable</code> flag + attributes, until we are
+ready to remove the feature completely.</p>
+<h2 id="rational-and-alternatives"><a class="header" href="#rational-and-alternatives">Rational and Alternatives</a></h2>
+<p>For this RFC, the suggestion is to only enable experimental features globally for simplicity of use and implementation.</p>
+<p>For now, we will trigger a compilation error if an unstable API is reachable from a user crate
+unless if the user opts in for the unstable feature.</p>
+<p>We could allow users to specify experimental features on a per-harness basis,
+but it could be tricky to make it clear to the user which harness may be affected by which feature.
+The extra granularity would also be painful when we decide a feature is no longer experimental,
+whether it is stabilized or removed.
+In those cases, users would have to edit each harness that enables the affected feature.</p>
+<h2 id="open-questions"><a class="header" href="#open-questions">Open questions</a></h2>
+<ul>
+<li>Should we also add a <code>stable</code> attribute that documents when an API was stabilized?</li>
+</ul>
+<h2 id="future-possibilities"><a class="header" href="#future-possibilities">Future possibilities</a></h2>
+<ul>
+<li>Delay the error due to the usage of a unstable API, and only fail at runtime if the API is reachable.</li>
+<li>Allow users to enable unstable features on a per-harness basis.</li>
+</ul>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../rfcs/0005-should-panic-attr.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                            <a rel="next" href="../rfcs/0007-global-conditions.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../rfcs/0005-should-panic-attr.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                    <a rel="next" href="../rfcs/0007-global-conditions.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+        <script type="text/javascript">
+            window.playground_copyable = true;
+        </script>
+        <script src="../elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../searcher.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+    </body>
+</html>
