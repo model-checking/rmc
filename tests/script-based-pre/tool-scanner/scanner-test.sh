@@ -17,4 +17,4 @@ cargo run -p scanner test.rs --crate-type lib
 wc -l *csv
 
 popd
-rm -rf ${OUT_DIR}
+#rm -rf ${OUT_DIR}
