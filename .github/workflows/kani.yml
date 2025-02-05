@@ -18,7 +18,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-13, ubuntu-20.04, ubuntu-22.04, ubuntu-24.04, macos-14]
+        os: [macos-13, ubuntu-20.04, ubuntu-22.04, ubuntu-24.04, macos-14, ubuntu-24.04-arm]
     steps:
       - name: Checkout Kani
         uses: actions/checkout@v4
