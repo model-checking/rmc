@@ -1,0 +1,388 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>0012-loop-contracts - Kani RFC Book</title>
+        <!-- Custom HTML head -->
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="Design documents for Kani Rust Verifier">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="../intro.html">Introduction</a></li><li class="chapter-item expanded affix "><a href="../template.html">RFC Template</a></li><li class="chapter-item expanded affix "><li class="part-title">Kani RFCs</li><li class="chapter-item expanded "><a href="../rfcs/0001-mir-linker.html">0001-mir-linker</a></li><li class="chapter-item expanded "><a href="../rfcs/0002-function-stubbing.html">0002-function-stubbing</a></li><li class="chapter-item expanded "><a href="../rfcs/0003-cover-statement.html">0003-cover-statement</a></li><li class="chapter-item expanded "><a href="../rfcs/0004-loop-contract-synthesis.html">0004-loop-contract-synthesis</a></li><li class="chapter-item expanded "><a href="../rfcs/0005-should-panic-attr.html">0005-should-panic-attr</a></li><li class="chapter-item expanded "><a href="../rfcs/0006-unstable-api.html">0006-unstable-api</a></li><li class="chapter-item expanded "><a href="../rfcs/0007-global-conditions.html">0007-global-conditions</a></li><li class="chapter-item expanded "><a href="../rfcs/0008-line-coverage.html">0008-line-coverage</a></li><li class="chapter-item expanded "><a href="../rfcs/0009-function-contracts.html">0009-function-contracts</a></li><li class="chapter-item expanded "><a href="../rfcs/0010-quantifiers.html">0010-quantifiers</a></li><li class="chapter-item expanded "><a href="../rfcs/0011-source-coverage.html">0011-source-coverage</a></li><li class="chapter-item expanded "><a href="../rfcs/0012-loop-contracts.html" class="active">0012-loop-contracts</a></li><li class="chapter-item expanded "><a href="../rfcs/0013-list.html">0013-list</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Kani RFC Book</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/model-checking/kani" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+                        <a href="https://github.com/model-checking/kani/edit/main/rfc/src/rfcs/0012-loop-contracts.md" title="Suggest an edit" aria-label="Suggest an edit">
+                            <i id="git-edit-button" class="fa fa-edit"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <ul>
+<li><strong>Feature Name:</strong> Loop Contracts</li>
+<li><strong>Feature Request Issue:</strong> <a href="https://github.com/model-checking/kani/issues/3168">#3168</a></li>
+<li><strong>RFC PR:</strong> <a href="https://github.com/model-checking/kani/pull/3167">#3167</a></li>
+<li><strong>Status:</strong> Under Review</li>
+<li><strong>Version:</strong> 1</li>
+<li><strong>Proof-of-concept:</strong> </li>
+</ul>
+<hr />
+<h2 id="summary"><a class="header" href="#summary">Summary</a></h2>
+<p>Loop contracts provide way to safely abstract loops of a program, typically
+in order to accelerate the verification process, and remove the loop unwinding
+bounds. The key idea is to over-approximate the possible set of program states,
+while still being precise enough to be able to prove the desired property.</p>
+<h2 id="user-impact"><a class="header" href="#user-impact">User Impact</a></h2>
+<p>Loop contracts provide an interface for a verified, sound abstraction.
+The goal for specifying loop contracts in the source code is two fold:</p>
+<ul>
+<li>Unbounded verification: Currently, proving correctness
+(i.e. assertions never fail) on programs with unbounded control flow (e.g. 
+loops with dynamic bounds) Kani requires unwinding loops for a large number of
+times, which is not always feasible. Loop contracts provide a way to abstract
+out loops, and hence remove the need for unwinding loops.</li>
+<li>Faster CI runs: In most cases, the provided contracts would also significantly
+improve Kani's verification time since all loops would be unrolled only to
+a single iteration.</li>
+</ul>
+<p>Loop contracts are completely optional with no user impact if unused. This
+RFC proposes the addition of new attributes, and functions, that shouldn't
+interfere with existing functionalities.</p>
+<h2 id="user-experience"><a class="header" href="#user-experience">User Experience</a></h2>
+<p>A loop contract specifies the behavior of a loop as a boolean predicate
+(loop invariants clauses) with certain frames conditions (loop modifies clauses)
+that can be checked against the loop implementation, and used to abstract out
+the loop in the verification process.</p>
+<p>We illustrate the usage of loop contracts with an example.
+Consider the following program:</p>
+<pre><code class="language-rs">fn simple_loop() {
+    let mut x: u64 = kani::any_where(|i| *i &gt;= 1);
+
+    while x &gt; 1{
+        x = x - 1;
+    };
+
+    assert!(x == 1);
+}
+</code></pre>
+<p>The loop in the <code>simple_loop</code> function keep subtracting 1 from <code>x</code> until <code>x</code> is 1.
+However, Kani currently needs to unroll the loop for <code>u64::MAX</code> number of times
+to verify the assertion at the end of the program. </p>
+<p>With loop contracts, the user can specify the behavior of the loop as follows:</p>
+<pre><code class="language-rs">fn simple_loop_with_loop_contracts() {
+    let mut x: u64 = kani::any_where(|i| *i &gt;= 1);
+
+    #[kani::loop_invariant(x &gt;= 1)]
+    while x &gt; 1{
+        x = x - 1;
+    };
+
+    assert!(x == 1);
+}
+</code></pre>
+<p>The loop invariant clause <code>#[kani::loop_invariant(x &gt;= 1)]</code> specifies the loop
+invariants that must hold at the beginning of each iteration of the loop right before
+checking the loop guard.</p>
+<p>In this case, Kani verifies that the loop invariant <code>x &gt;= 1</code> is inductive, i.e.,
+<code>x</code> is always greater than or equal to 1 at each iteration before checking <code>x &gt; 1</code>.</p>
+<p>Also, once Kani proved that the loop invariant is inductive, it can safely use the loop
+invariants to abstract the loop out of the verification process.
+The idea is, instead of exploring all possible branches of the loop, Kani only needs to
+prove those branches reached from an arbitrary program state that satisfies the loop contracts,
+after the execution of one iteration of the loop.</p>
+<p>So, for loops without break statements, we can assume all post-states of the loop satisfying
+<code>inv &amp;&amp; !loop_guard</code> for proving post-loops properties.
+The requirement of satisfying the negation of the loop guard comes from the fact that a path
+exits loops without break statements must fail the loop guard.</p>
+<p>For example, applying loop contracts in <code>simple_loop</code> function is equivalent to the following:</p>
+<pre><code class="language-rs">fn simple_loop_transformed() {
+    let mut x: u64 = kani::any_where(|i| *i &gt;= 1);
+
+    x = kani::any(); // Arbitrary program state that
+    kani::assume( !(x &gt; 1) &amp;&amp; x &gt;= 1); // satisfies !`guard` &amp;&amp; `inv` 
+
+    assert!(x == 1);
+}
+</code></pre>
+<p>The assumption above is actually equivalent to <code>x == 1</code>, hence the assertion at the end
+of the program is proved.</p>
+<h3 id="write-sets-and-havocking"><a class="header" href="#write-sets-and-havocking">Write Sets and Havocking</a></h3>
+<p>For those memory locations that are not modified in the loop, loop invariants state
+that they stay unchanged throughout the loop are inductive. In other words, Kani should
+only havoc the memory locations that are modified in the loop. This is achieved by
+specifying the <code>modifies</code> clause for the loop. For example, the following program:</p>
+<pre><code class="language-rs">fn simple_loop_two_vars() {
+    let mut x: u64 = kani::any_where(|i| *i &gt;= 1);
+    let mut y: u64 = 1;
+
+    #[kani::loop_invariant(x &gt;= 1)]
+    #[kani::loop_modifies(x)]
+    while x &gt; 1{
+        x = x - 1;
+    };
+
+    assert!(x == 1);
+    assert!(y == 1);
+}
+</code></pre>
+<p>write to only <code>x</code> in the loop, hence the <code>modifies</code> clause contains only <code>x</code>.
+Then when use the loop contracts to abstract the loop, Kani will only havoc the memory
+location <code>x</code> and keep <code>y</code> unchanged. Note that if the <code>modifies</code> clause contains also
+<code>y</code>, Kani will havoc both <code>x</code> and <code>y</code>, and hence violate the assertion <code>y == 1</code>.</p>
+<p>Kani can employs CBMC's write set inference to infer the write set of the loop.
+So users have to specify the <code>modifies</code> clauses by their self only when the inferred write
+sets are not complete---there exists some target that could be written to in the loop but 
+is not in the inferred write set.</p>
+<h3 id="proof-of-termination"><a class="header" href="#proof-of-termination">Proof of termination</a></h3>
+<p>Loop contracts also provide a way to prove the termination of the loop.
+Without the proof of termination, Kani could report success of some assertions that
+are actually unreachable due to non-terminating loops.
+For example, consider the following program:</p>
+<pre><code class="language-rs">fn simple_loop_non_terminating() {
+    let mut x: u64 = kani::any_where(|i| *i &gt;= 1);
+
+    #[kani::loop_invariant(x &gt;= 1)]
+    while true{
+        x = x;
+    };
+
+    assert!(x &gt;= 1);
+}
+</code></pre>
+<p>After abstracting the loop, the loop will be transformed to no-op, and the assertion
+<code>x &gt;= 1</code> will be proved. However, the loop is actually an infinite loop, and the
+assertion will never be reached.</p>
+<p>For this reason, Kani will also require the user to provide a <code>decreases</code> clause that
+specifies a decreasing expression to prove the termination of the loop. For example, in</p>
+<pre><code class="language-rs">fn simple_loop_terminating() {
+    let mut x: u64 = kani::any_where(|i| *i &gt;= 1);
+
+    #[kani::loop_invariant(x &gt;= 1)]
+    #[kani::loop_decreases(x)]
+    while x &gt; 1{
+        x = x - 1;
+    };
+
+    assert!(x &gt;= 1);
+}
+</code></pre>
+<p>, the <code>decreases</code> clause <code>#[kani::loop_decreases(x)]</code> specifies that the value of <code>x</code>
+decreases at each iteration of the loop, and hence the loop will terminate.</p>
+<h2 id="detailed-design"><a class="header" href="#detailed-design">Detailed Design</a></h2>
+<p>Kani implements the functionality of loop contracts in three places.</p>
+<ol>
+<li>Procedural macros <code>loop_invariant</code>, <code>loop_modifies</code>, and <code>loop_decreases</code>.</li>
+<li>Code generation for builtin functions expanded from the above macros.</li>
+<li>GOTO-level loop contracts using CBMC's contract language generated in
+<code>kani-compiler</code>.</li>
+</ol>
+<h3 id="procedural-macros-loop_invariant-loop_modifies-and-loop_decreases"><a class="header" href="#procedural-macros-loop_invariant-loop_modifies-and-loop_decreases">Procedural macros <code>loop_invariant</code>, <code>loop_modifies</code>, and <code>loop_decreases</code>.</a></h3>
+<p>We will implement the three proc-macros <code>loop_invariant</code>, <code>loop_modifies</code>, and <code>loop_decreases</code> to
+embed the annotation logic as Rust code. Kani will then compile them into MIR-level code.</p>
+<h3 id="code-generation-for-builtin-functions"><a class="header" href="#code-generation-for-builtin-functions">Code Generation for Builtin Functions</a></h3>
+<p>Then in the MIR, we codegen the loop contracts as GOTO-level expressions and annotate them
+into the corresponding loop latches---the jumps back to the loop head.</p>
+<p>The artifact <code>goto-instrument</code> in CBMC will extract the loop contracts from the named-subs
+of the loop latch, and then apply and prove the extracted loop contracts.</p>
+<h3 id="goto-level-havocing"><a class="header" href="#goto-level-havocing">GOTO-Level Havocing</a></h3>
+<p>The ordinary havocing in CBMC is not aware of the type constraints of Rust type.
+Hence, we will use customized havocing functions for modifies targets. In detail,
+Kani will generate code for the definition of corresponding <code>kani::any()</code> functions
+for each modifies target. Then Kani will create a map from the modifies target to the
+the name of its <code>kani::any()</code> function, and add the map to the loop latch too.</p>
+<p>On the CBMC site, <code>goto-instrument</code> will extract the map and instrument the customized
+havocing functions for the modifies targets.</p>
+<h2 id="rationale-and-alternatives"><a class="header" href="#rationale-and-alternatives">Rationale and alternatives</a></h2>
+<h3 id="rust-level-transformation-vs-cbmc"><a class="header" href="#rust-level-transformation-vs-cbmc">Rust-Level Transformation vs CBMC</a></h3>
+<p>Besides transforming the loops in GOTO level using <code>goto-instrument</code>,
+we could also do the transformation in Rust level using procedural macros, or
+in MIR level.</p>
+<p>There are two reasons we prefer the GOTO-level transformation.
+First, <code>goto-instrument</code> is a mature tool that can correctly instrument the frame
+condition checking for the transformed loop, which will save us from reinventing
+the error-prone wheel. Second, the loop contracts synthesis tool we developed and
+are developing are all based on GOTO level. Hence, doing the transformation in
+the GOTO level will make the integration of loop contracts with the synthesis tool
+easier.</p>
+<h2 id="open-questions"><a class="header" href="#open-questions">Open questions</a></h2>
+<ul>
+<li>How do we integrate loop contracts with the synthesis tool? When the user-provided
+loop contracts are not enough prove the harness, we expect the loop-contract synthesizer
+can fix the loop contracts.</li>
+<li>How do we translate back modify targets that inferred by CBMC to Rust level? </li>
+<li>It is not clear how the CBMC loop modifies inference works for Rust code. We need to
+experiment more to decide what would be the best UX of using loop modifies.</li>
+<li>How do we handle havocing in unsafe code where it is fine to break the safety invariant
+of Rust? In that case, we may need havocing function that preserves validity invariant
+but not safety invariant.</li>
+<li>What is the proper mechanism for users to specify the loops that they want to opt-out from applying loop contracts, and (optionally) the unwind numbers for them. Such options should be per-harness.</li>
+</ul>
+<h2 id="future-possibilities"><a class="header" href="#future-possibilities">Future possibilities</a></h2>
+<ul>
+<li>We can employ CBMC's decreases inference to infer the decreases clauses to reduce the
+user burden of specifying the decreases clauses.</li>
+</ul>
+<!-- For Developers -->
+<hr />
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../rfcs/0011-source-coverage.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                            <a rel="next" href="../rfcs/0013-list.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../rfcs/0011-source-coverage.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                    <a rel="next" href="../rfcs/0013-list.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+        <script type="text/javascript">
+            window.playground_copyable = true;
+        </script>
+        <script src="../elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../searcher.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+    </body>
+</html>

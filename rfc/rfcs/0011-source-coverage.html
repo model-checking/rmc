@@ -1,0 +1,748 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>0011-source-coverage - Kani RFC Book</title>
+        <!-- Custom HTML head -->
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="Design documents for Kani Rust Verifier">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="../intro.html">Introduction</a></li><li class="chapter-item expanded affix "><a href="../template.html">RFC Template</a></li><li class="chapter-item expanded affix "><li class="part-title">Kani RFCs</li><li class="chapter-item expanded "><a href="../rfcs/0001-mir-linker.html">0001-mir-linker</a></li><li class="chapter-item expanded "><a href="../rfcs/0002-function-stubbing.html">0002-function-stubbing</a></li><li class="chapter-item expanded "><a href="../rfcs/0003-cover-statement.html">0003-cover-statement</a></li><li class="chapter-item expanded "><a href="../rfcs/0004-loop-contract-synthesis.html">0004-loop-contract-synthesis</a></li><li class="chapter-item expanded "><a href="../rfcs/0005-should-panic-attr.html">0005-should-panic-attr</a></li><li class="chapter-item expanded "><a href="../rfcs/0006-unstable-api.html">0006-unstable-api</a></li><li class="chapter-item expanded "><a href="../rfcs/0007-global-conditions.html">0007-global-conditions</a></li><li class="chapter-item expanded "><a href="../rfcs/0008-line-coverage.html">0008-line-coverage</a></li><li class="chapter-item expanded "><a href="../rfcs/0009-function-contracts.html">0009-function-contracts</a></li><li class="chapter-item expanded "><a href="../rfcs/0010-quantifiers.html">0010-quantifiers</a></li><li class="chapter-item expanded "><a href="../rfcs/0011-source-coverage.html" class="active">0011-source-coverage</a></li><li class="chapter-item expanded "><a href="../rfcs/0012-loop-contracts.html">0012-loop-contracts</a></li><li class="chapter-item expanded "><a href="../rfcs/0013-list.html">0013-list</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Kani RFC Book</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/model-checking/kani" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+                        <a href="https://github.com/model-checking/kani/edit/main/rfc/src/rfcs/0011-source-coverage.md" title="Suggest an edit" aria-label="Suggest an edit">
+                            <i id="git-edit-button" class="fa fa-edit"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <ul>
+<li><strong>Feature Name:</strong> Source-based code coverage (<code>source-coverage</code>)</li>
+<li><strong>Feature Request Issue:</strong> <a href="https://github.com/model-checking/kani/issues/2640">https://github.com/model-checking/kani/issues/2640</a></li>
+<li><strong>RFC PR:</strong> <a href="https://github.com/model-checking/kani/pull/3143">https://github.com/model-checking/kani/pull/3143</a></li>
+<li><strong>Status:</strong> Under Review</li>
+<li><strong>Version:</strong> 1</li>
+<li><strong>Proof-of-concept:</strong> <a href="https://github.com/model-checking/kani/pull/3119">https://github.com/model-checking/kani/pull/3119</a> (Kani) + <a href="https://github.com/model-checking/kani/pull/3121">https://github.com/model-checking/kani/pull/3121</a> (<code>kani-cov</code>)</li>
+</ul>
+<hr />
+<h2 id="summary"><a class="header" href="#summary">Summary</a></h2>
+<p>A source-based code coverage feature for Kani built on top of Rust's coverage instrumentation.</p>
+<h2 id="user-impact"><a class="header" href="#user-impact">User Impact</a></h2>
+<p>In our first attempt to add a coverage feature fully managed by Kani, we introduced and made available a line coverage option
+(see <a href="0008-line-coverage.html">RFC: Line coverage</a> for more details).
+This option has since then allowed us to gather more data around the expectations for a coverage feature in Kani.</p>
+<p>For example, the line coverage output we produced was not easy to interpret
+without knowing some implementation details.
+Aside from that, the feature requested in
+<a href="https://github.com/model-checking/kani/issues/2795">#2795</a> alludes to the need
+of providing coverage-specific tooling in Kani.
+Nevertheless, as captured in
+<a href="https://github.com/model-checking/kani/issues/2640">#2640</a>, source-based
+coverage results provide the clearest and most precise coverage information.</p>
+<p>In this RFC, we propose an integration with <a href="https://doc.rust-lang.org/rustc/instrument-coverage.html">Rust's source-based code coverage
+instrumentation</a>.
+This integration would allow us to report source-based code coverage results from Kani.
+Also, we propose adding a new user-facing, coverage-focused tool called <code>kani-cov</code>.
+The tool would allow users to process coverage results generated by Kani and produce
+coverage artifacts such as summaries and reports according to their preferences.
+In the <a href="#user-experience">next section</a>, we will explain in more detail how we
+expect <code>kani-cov</code> to assist with coverage-related tasks.</p>
+<p>With these changes, we expect our coverage options to become more flexible,
+precise and efficient. These options are expected to replace the previous
+options available through the line coverage feature.
+In the <a href="#future-possibilities">last section</a> of this RFC, we will also discuss
+the requirements for a potential integration of this coverage feature with the
+LLVM toolchain.</p>
+<h2 id="user-experience"><a class="header" href="#user-experience">User Experience</a></h2>
+<p>The proposed experience is partially inspired by that of the most popular
+coverage frameworks.
+First, let us delve into the LLVM coverage workflow, followed by an explanation
+of our proposal.</p>
+<h3 id="the-llvm-code-coverage-workflow"><a class="header" href="#the-llvm-code-coverage-workflow">The LLVM code coverage workflow</a></h3>
+<p>The LLVM project is home to one of the most popular code coverage frameworks.
+The workflow associated to the LLVM framework is described in the documentation for
+<a href="https://clang.llvm.org/docs/SourceBasedCodeCoverage.html">source-based code coverage</a><sup class="footnote-reference"><a href="#note-source">1</a></sup>,
+but we briefly describe it here to better relate it with our proposal.</p>
+<p>In short, the LLVM code coverage workflow follows three steps:</p>
+<ol>
+<li><strong>Compiling with coverage enabled.</strong> This causes the compiler to generate an instrumented program.</li>
+<li><strong>Running the instrumented program.</strong> This generates binary-encoded <code>.profraw</code> files.</li>
+<li><strong>Using tools to aggregate and export coverage information into other formats.</strong></li>
+</ol>
+<p>When working in a <code>cargo</code> project, step 1 can be done through this command:</p>
+<pre><code class="language-sh">RUSTFLAGS='-Cinstrument-coverage' cargo build
+</code></pre>
+<p>The same flag must to be used for step 2:</p>
+<pre><code class="language-sh">RUSTFLAGS='-Cinstrument-coverage' cargo run
+</code></pre>
+<p>This should populate the directory with at least one <code>.profraw</code> file.
+Each <code>.profraw</code> file corresponds to a specific source code file in your project.</p>
+<p>At this point, we will have produced the artifacts that we generally require for
+the LLVM tools:</p>
+<ol>
+<li><strong>The instrumented binary</strong> which, in addition to the instrumented program,
+contains additional information (e.g., the coverage mappings) required to
+interpret the profiling results.</li>
+<li><strong>The <code>.profraw</code> files</strong> which essentially includes the profiling results
+(e.g., counter values) for each function of the corresponding source code file.</li>
+</ol>
+<p>For step 3, the commands will depend on what kind of results we want.
+Most likely we will have to merge the <code>.profraw</code> files and produce a <code>.profdata</code>
+file as follows:</p>
+<pre><code class="language-sh">llvm-profdata merge -sparse *.profraw -o output.profdata
+</code></pre>
+<p>The resulting <code>.profdata</code> file will contain the aggregated coverage results from
+the <code>.profraw</code> files passed to the <code>merge</code> command.</p>
+<p>Then, we can use a command such as</p>
+<pre><code class="language-sh">llvm-cov show target/debug/binary —instr-profile=output.profdata -show-line-counts-or-regions
+</code></pre>
+<p>to visualize the code coverage through the terminal as in the image:</p>
+<p><img src="https://github.com/model-checking/kani/assets/73246657/4f8a973d-8977-4c0b-822d-e73ed6d223aa" alt="Source-based code coverage with llvm-cov" /></p>
+<p>or the command</p>
+<pre><code class="language-sh">llvm-cov report target/debug/binary --instr-profile=output.profdata --show-region-summary
+</code></pre>
+<p>to produce coverage summaries like this:</p>
+<pre><code>Filename                                             Regions    Missed Regions     Cover   Functions  Missed Functions  Executed       Lines      Missed Lines     Cover    Branches   Missed Branches     Cover
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+/long/long/path/to/my/project/binary/src/main.rs           9                 3    66.67%           3                 1    66.67%          14                 4    71.43%           0                 0         -
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+TOTAL                                                      9                 3    66.67%           3                 1    66.67%          14                 4    71.43%           0                 0         -
+</code></pre>
+<div class="footnote-definition" id="note-source"><sup class="footnote-definition-label">1</sup>
+<p>The LLVM project refers to their own coverage feature as
+<em>source-based code coverage</em>. It is not rare to see the term <em>region
+coverage</em> being used instead to refer to the same thing. That is because
+LLVM's source-based code coverage feature can report coverage for code
+regions, but other coverage frameworks do not support the concept of code
+regions.</p>
+</div>
+<h3 id="the-kani-coverage-workflow"><a class="header" href="#the-kani-coverage-workflow">The Kani coverage workflow</a></h3>
+<p>The two main components of the Kani coverage workflow that we propose are the
+following:</p>
+<ol>
+<li>The existing <code>--coverage</code> flag that drives the coverage workflow in Kani,
+emits raw coverage data (as in the <code>.profraw</code> files), and produces basic
+coverage results by default.</li>
+<li>A new subcommand <code>cov</code> that allows users to further process raw coverage
+information emitted by Kani to produce customized coverage results (i.e.,
+different to the ones produced by default with the <code>--coverage</code> option).
+The <code>cov</code> subcommand is an alias for the <code>kani-cov</code> tool.</li>
+</ol>
+<p>In contrast to the LLVM workflow, where human-readable coverage results can
+be produced only after a sequence of LLVM tool commands, we provide some
+coverage results by default.
+This aligns better with our UX philosophy, and removes the need for a wrapper
+around our coverage features like
+<a href="https://github.com/taiki-e/cargo-llvm-cov"><code>cargo-llvm-cov</code></a>.
+Alternatively, the <code>cov</code> subcommand offers the ability of producing more
+specific coverage results if needed.
+We anticipate the <code>cov</code> subcommand being particularly useful in less standard
+project setups, giving the users the flexibility required to produce coverage
+results tailored to their specific needs.</p>
+<p>In the following, we describe each one of these components in more detail.</p>
+<h4 id="the---coverage-option"><a class="header" href="#the---coverage-option">The <code>--coverage</code> option</a></h4>
+<p>The default coverage workflow will be kicked off through the unstable
+<code>--coverage</code> option:</p>
+<pre><code class="language-sh">cargo kani --coverage -Zsource-coverage
+</code></pre>
+<p>The main difference with respect to the regular verification workflow is that,
+at the end of the verification-based coverage run, Kani will generate two coverage
+results:</p>
+<ul>
+<li>A coverage summary corresponding to the coverage achieved by the harnesses
+included in the verification run. This summary will be printed after the
+verification output.</li>
+<li>A coverage report corresponding to the coverage achieved by the harnesses
+included in the verification run. The report will be placed in the same target
+directory where the raw coverage files are put. The path to the report will
+also be printed after the verification output.</li>
+</ul>
+<p>Therefore, a typical <code>--coverage</code> run could look like this:</p>
+<pre><code>VERIFICATION:- SUCCESSFUL
+
+Coverage Results:
+
+| Filename | Regions | Missed Regions | Cover | Functions | Missed Functions | Cover |
+| -------- | ------- | -------------- | ----- | --------- | ---------------- | ----- |
+| main.rs  |       9 |              3 | 66.67 |         3 |                1 | 33.33 |
+| file.rs  |      11 |              5 | 45.45 |         2 |                1 | 50.00 |
+
+Coverage report available in target/kani/x86_64-unknown-linux-gnu/cov/kani_2024-04-26_15-30-00/report/index.html
+</code></pre>
+<h4 id="the-cov-subcommand"><a class="header" href="#the-cov-subcommand">The <code>cov</code> subcommand</a></h4>
+<p>The <code>cov</code> subcommand will be used to process raw coverage information generated
+by Kani and produce coverage outputs as indicated by the user.
+Hence, the <code>cov</code> subcommand corresponds to the set of LLVM tools
+(<code>llvm-profdata</code>, <code>llvm-cov</code>, etc.) that are used to produce coverage outputs
+through the LLVM coverage workflow.</p>
+<p>In contrast to LLVM, we will have a single subcommand for all Kani
+coverage-related needs. The <code>cov</code> subcommand will just call the <code>kani-cov</code> tool,
+which is expected to be shipped along the rest of Kani binaries.</p>
+<p>We suggest that the subcommand initially offers two options:</p>
+<ol>
+<li>An option to merge the coverage results from one or more files and coverage
+mappings<sup class="footnote-reference"><a href="#note-snapshot">2</a></sup> into a single file.</li>
+<li>An option to produce coverage outputs from coverage results, including summaries
+or coverage reports in human-readable formats (e.g., HTML).</li>
+</ol>
+<p>Let's assume that we have run <code>cargo kani --coverage -Zsource-coverage</code> and
+generated coverage files in the <code>my-coverage</code> folder. Then, we would use <code>cargo kani cov</code> as follows to combine the coverage results<sup class="footnote-reference"><a href="#note-exclude">3</a></sup> for all
+harnesses:</p>
+<pre><code class="language-sh">cargo kani cov --merge my-coverage/*.kaniraw -o my-coverage.kanicov
+</code></pre>
+<p>Let's say the user is first interested in reading a coverage summary through the
+terminal.
+They can use the <code>--summary</code> option for that:</p>
+<pre><code class="language-sh">cargo kani cov --summary my-coverage/default.kanimap -instr-profile=my-coverage.kanicov
+</code></pre>
+<p>The command could print a coverage summary like:</p>
+<pre><code>| Filename | Regions | Missed Regions | Cover | Functions | ...
+| -------- | ------- | -------------- | ----- | --------- | ...
+| main.rs  |       9 |              3 | 66.67 |         3 | ...
+[...]
+</code></pre>
+<p>Now, let's say the user wants to produce an HTML report of the coverage results.
+They will have to use the <code>--report</code> option for that:</p>
+<pre><code class="language-sh">cargo kani cov --report my-coverage/default.kanimap -format=html -instr-profile=my-coverage.kanicov -o coverage-report
+</code></pre>
+<p>This time, the command will generate a <code>coverage-report</code> folder including a
+browsable HTML webpage that highlights the regions covered in the source
+according to the coverage results in <code>my-coverage.kanicov</code>.</p>
+<div class="footnote-definition" id="note-export"><sup class="footnote-definition-label">4</sup>
+<p>The <code>llvm-cov</code> tool includes the option
+<a href="https://llvm.org/docs/CommandGuide/llvm-cov.html#llvm-cov-gcov"><code>gcov</code></a> to
+export into GCC's coverage format <a href="https://en.wikipedia.org/wiki/Gcov">Gcov</a>,
+and the option
+<a href="https://llvm.org/docs/CommandGuide/llvm-cov.html#llvm-cov-export"><code>export</code></a>
+to export into the LCOV format. These may be good options to consider for
+<code>kani-cov</code> in the future but we should focus on basic formats for now.</p>
+</div>
+<div class="footnote-definition" id="note-exclude"><sup class="footnote-definition-label">3</sup>
+<p>Options to exclude certain coverage results (e.g, from the
+standard library) will likely be part of this option.</p>
+</div>
+<div class="footnote-definition" id="note-snapshot"><sup class="footnote-definition-label">2</sup>
+<p>Coverage mappings essentially provide a snapshot of the source
+code reports for items that otherwise are unreachable or have been sliced
+away during the compilation process.</p>
+</div>
+<h4 id="integration-with-the-kani-vs-code-extension"><a class="header" href="#integration-with-the-kani-vs-code-extension">Integration with the Kani VS Code Extension</a></h4>
+<p>We will update the coverage feature of the
+<a href="https://github.com/model-checking/kani-vscode-extension">Kani VS Code Extension</a>
+to follow this new coverage workflow.
+In other words, the extension will first run Kani with the <code>--coverage</code> option and
+use <code>kani cov</code> to produce a <code>.kanicov</code> file with the coverage results.
+The extension will consume the source-based code coverage results and
+highlight region coverage in the source code seen from VS Code.</p>
+<p>We could also consider other coverage-related features in order to enhance the
+experience through the Kani VS Code Extension. For example, we could
+automatically show the percentage of covered regions in the status bar by
+additionally extracting a summary of the coverage results.</p>
+<p>Finally, we could also consider an integration with other code coverage tools.
+For example, if we wanted to integrate with the VS Code extensions
+<a href="https://marketplace.visualstudio.com/items?itemName=markis.code-coverage">Code Coverage</a> or
+<a href="https://marketplace.visualstudio.com/items?itemName=ryanluker.vscode-coverage-gutters">Coverage Gutters</a>,
+we would only need to extend <code>kani-cov</code> to export coverage results to the LCOV
+format or integrate Kani with LLVM tools as discussed in <a href="#integration-with-llvm">Integration with LLVM</a>.</p>
+<h2 id="detailed-design"><a class="header" href="#detailed-design">Detailed Design</a></h2>
+<p>In this section, we provide more details on:</p>
+<ul>
+<li>The Rust coverage instrumentation and how it can be integrated into
+Kani to produce source-based code coverage results.</li>
+<li>The proposed coverage workflow to be run by default in Kani when the
+<code>--coverage</code> option is used.</li>
+</ul>
+<p>This information is mostly intended as a reference for Kani contributors.
+Currently, the Rust coverage instrumentation continues to be developed. Because
+of that, Rust toolchain upgrades may result in breaking changes to our own
+coverage feature. This section should help developers to understand the general
+approach and resolve such issues by themselves.</p>
+<h3 id="the-rust-coverage-instrumentation"><a class="header" href="#the-rust-coverage-instrumentation">The Rust coverage instrumentation</a></h3>
+<p>The Rust compiler includes two code coverage implementations:</p>
+<ul>
+<li>A source-based coverage implementation which uses LLVM's coverage
+instrumentation to generate precise coverage data. This implementation can be
+enabled with <code>-C instrument-coverage</code>.</li>
+<li>A Gcov-based coverage implementation that derives coverage data based on
+DebugInfo. This implementation can be enabled with <code>-Z profile</code>.</li>
+</ul>
+<p>The <a href="https://doc.rust-lang.org/rustc/instrument-coverage.html">Instrumentation-based Code Coverage</a>
+chapter from the <code>rustc</code> book describes in detail how to enable and use the LLVM
+instrumentation-based coverage feature. In contrast, the
+<a href="https://rustc-dev-guide.rust-lang.org/llvm-coverage-instrumentation.html">LLVM Source-Based Code Coverage</a>
+chapter from the <code>rustc</code> development guide documents how the LLVM
+coverage instrumentation is performed in the Rust compiler.</p>
+<p>In this section, we will first summarize some information from the
+<a href="https://rustc-dev-guide.rust-lang.org/llvm-coverage-instrumentation.html">LLVM Source-Based Code Coverage</a>
+chapter, limited to details which are relevant to the development of the
+source-based coverage feature in Kani. Then, we will explain how Kani taps into
+the Rust coverage instrumentation to perform its own coverage instrumentation
+and be able to report source-based code coverage results. This will also include
+mentions to current issues with this implementation, which we plan to further
+discuss in <a href="#future-possibilities">Future possibilities</a>.</p>
+<h4 id="understanding-the-rust-coverage-instrumentation"><a class="header" href="#understanding-the-rust-coverage-instrumentation">Understanding the Rust coverage instrumentation</a></h4>
+<p>The LLVM coverage instrumentation is implemented in the Rust compiler as a
+<a href="https://rustc-dev-guide.rust-lang.org/llvm-coverage-instrumentation.html#mir-pass-instrumentcoverage">MIR pass called <code>InstrumentCoverage</code></a>.</p>
+<p>The MIR pass first builds a coverage-specific version of the MIR Control Flow
+Graph (CFG) from the MIR. The initial version of this CFG is based on the MIR's
+<code>BasicBlock</code>s, which then gets refined by combining blocks that can be chained
+from a coverage-relevant point of view. The final version of the coverage CFG is
+then used to determine where to inject the
+<a href="https://doc.rust-lang.org/nightly/nightly-rustc/rustc_middle/mir/enum.StatementKind.html#variant.Coverage"><code>StatementKind::Coverage</code></a>
+statements in order to measure coverage for a single region coverage span.</p>
+<p>The injection of <code>StatementKind::Coverage</code> statements is the main result we are
+interested in for the integration with Kani. Additionally, the instrumentation
+will also attach the
+<a href="https://doc.rust-lang.org/nightly/nightly-rustc/rustc_middle/mir/coverage/struct.FunctionCoverageInfo.html"><code>FunctionCoverageInfo</code></a>
+structure to each function's body.<sup class="footnote-reference"><a href="#note-coverage-info">5</a></sup>
+This result is also needed at the moment because coverage statements do not
+include information on the code region they are supposed to cover.
+However, <code>FunctionCoverageInfo</code> contains the
+<a href="https://doc.rust-lang.org/nightly/nightly-rustc/rustc_middle/mir/coverage/struct.Mapping.html">coverage mappings</a>,
+which represent the relation between
+<a href="https://doc.rust-lang.org/nightly/nightly-rustc/rustc_middle/mir/coverage/enum.CovTerm.html">coverage counters</a>
+and code regions.</p>
+<p>As explained in <a href="https://rustc-dev-guide.rust-lang.org/llvm-coverage-instrumentation.html#mir-pass-instrumentcoverage">MIR Pass:
+<code>InstrumentCoverage</code></a>,
+many coverage statements will not be converted into a physical
+counter<sup class="footnote-reference"><a href="#note-physical-counter">6</a></sup>. Instead, they will be converted into a
+<em>coverage-counter expression</em> that can be calculated based on other coverage
+counters. We highly recommend looking at the example in <a href="https://rustc-dev-guide.rust-lang.org/llvm-coverage-instrumentation.html#mir-pass-instrumentcoverage">MIR Pass:
+<code>InstrumentCoverage</code></a>
+to better understand how this works. This optimization is mainly done for
+performance reasons because incrementing a physical counter causes a
+non-negligible overhead, especially within loops.</p>
+<p>The (<code>StatementKind::</code>)<code>Coverage</code> statements that are injected by the Rust coverage
+instrumentation contain a <a href="https://doc.rust-lang.org/nightly/nightly-rustc/rustc_middle/mir/coverage/enum.CoverageKind.html"><code>CoverageKind</code></a> field indicating the type of coverage counter. The variant
+<a href="https://doc.rust-lang.org/nightly/nightly-rustc/rustc_middle/mir/coverage/enum.CoverageKind.html#variant.CounterIncrement"><code>CounterIncrement</code></a>
+represents physical counters, while
+<a href="https://doc.rust-lang.org/nightly/nightly-rustc/rustc_middle/mir/coverage/enum.CoverageKind.html#variant.ExpressionUsed"><code>ExpressionUsed</code></a>
+represents the counter expressions that we just discussed.
+Other variants such as <code>SpanMarker</code> or <code>BlockMarker</code> are not relevant to this
+work since they should have been erased after the <code>InstrumentCoverage</code> pass.</p>
+<div class="footnote-definition" id="note-coverage-info"><sup class="footnote-definition-label">5</sup>
+<p>It is important to note that the StableMIR interface does
+not include <code>FunctionCoverageInfo</code> in function bodies. Because of that, we
+need to pull it from the internal <code>rustc</code> function bodies.</p>
+</div>
+<div class="footnote-definition" id="note-physical-counter"><sup class="footnote-definition-label">6</sup>
+<p>By <em>physical counter</em>, we refer to a global program
+variable that is initialized to zero and incremented by one each time that
+the execution passes through.</p>
+</div>
+<h4 id="integrating-the-instrumentation-into-kani"><a class="header" href="#integrating-the-instrumentation-into-kani">Integrating the instrumentation into Kani</a></h4>
+<p>Now that we have explained what the Rust coverage instrumentation does at a high
+level, we should be ready to discuss how it can be used from Kani. Here, we will
+follow an approach where, during the codegen stage, we generate a Kani
+reachability check for each code region and, after the verification stage, we
+postprocess the information in those checks to generate the coverage
+information. So this section will essentially be a retelling of the
+implementation in <a href="https://github.com/model-checking/kani/pull/3119">#3119</a>, and
+we will discuss variations/extensions of this approach in the
+<a href="#rationale-and-alternatives">appropriate</a> <a href="#future-possibilities">sections</a>.</p>
+<p>Clearly, the first step is adding <code>-C instrument-coverage</code> to the <code>rustc</code> flags
+we use when calling the compiler to codegen. This flag enables the Rust coverage
+instrumentation that we discussed earlier, resulting in</p>
+<ol>
+<li>the injection of
+<a href="https://doc.rust-lang.org/nightly/nightly-rustc/rustc_middle/mir/enum.StatementKind.html#variant.Coverage"><code>Coverage</code></a>
+statements in the MIR code, and</li>
+<li>the inclusion of <a href="https://doc.rust-lang.org/nightly/nightly-rustc/rustc_middle/mir/coverage/struct.FunctionCoverageInfo.html"><code>FunctionCoverageInfo</code></a> in function bodies.</li>
+</ol>
+<p>The next step is handling the <code>Coverage</code> statements from <code>codegen_statement</code>.</p>
+<p>Each <code>Coverage</code> statement contains opaque coverage
+information<sup class="footnote-reference"><a href="#note-opaque-coverage">7</a></sup> of the
+<a href="https://doc.rust-lang.org/nightly/nightly-rustc/rustc_middle/mir/coverage/enum.CoverageKind.html"><code>CoverageKind</code></a>
+type which can be processed to determine the type of coverage counter
+(<code>CounterIncrement</code> for physical counters, <code>ExpressionUsed</code> for counter
+expressions) and the ID number of the counter. These two pieces of information allow us to
+uniquely identify the counter within a given function. For example,
+<code>CounterIncrement(0)</code> would generally refer to the first physical counter in the
+function.</p>
+<p>Unfortunately, the <code>CoverageKind</code> information does not tell us anything about
+the code region that the counter covers. However, data about the code region can
+be pulled from the coverage mappings included in the <code>FunctionCoverageInfo</code> that
+is attached to the (internal) function body. Note that the coverage mappings
+includes information about all the coverage counters in a function, even for
+counters which have been dropped. Matching the <code>CoverageKind</code> information with
+that of the counters in the coverage mappings allows us to retrieve the code
+region for any counter.</p>
+<p>Using all this data, for each coverage statement<sup class="footnote-reference"><a href="#note-expression-integration">8</a></sup> we generate a coverage check
+that maintains the essence of the coverage checks described in the <a href="https://model-checking.github.io/kani/rfc/rfcs/0008-line-coverage.html">RFC for line
+coverage</a>:</p>
+<blockquote>
+<p>Coverage checks are a new class of checks similar to <a href="https://model-checking.github.io/kani/rfc/rfcs/0003-cover-statement.html"><code>cover</code> checks</a>.
+The main difference is that users cannot directly interact with coverage checks (i.e., they cannot add or remove them manually).
+Coverage checks are encoded as an <code>assert(false)</code> statement (to test reachability) with a fixed description.
+In addition, coverage checks are:</p>
+<ul>
+<li>Hidden from verification results.</li>
+<li>Postprocessed to produce coverage results.</li>
+</ul>
+</blockquote>
+<p>Therefore, the last step is to postprocess the results from coverage checks to
+produce coverage results. This is not too complicated to do since the checks
+already include the counter information (type + ID) and the function name in
+the check's description. If the span of the code region is also included
+(this is what <a href="https://github.com/model-checking/kani/pull/3119">#3119</a> is
+currently doing), we can directly generate a primitive output like this:</p>
+<pre><code>&lt;file_path&gt; (&lt;function_name&gt;)
+ * &lt;region_start&gt; - &lt;region_end&gt; &lt;status&gt;
+ * ...
+ * &lt;region_start&gt; - &lt;region_end&gt; &lt;status&gt;
+</code></pre>
+<p>For example, for the test case in
+<a href="https://github.com/model-checking/kani/pull/3119">#3119</a> we report this:</p>
+<pre><code>src/main.rs (main)
+ * 14:1 - 19:2 COVERED
+
+src/main.rs (test_cov)
+ * 5:1 - 6:15 COVERED
+ * 6:19 - 6:28 UNCOVERED
+ * 7:9 - 7:13 COVERED
+ * 9:9 - 9:14 UNCOVERED
+ * 11:1 - 11:2 COVERED
+</code></pre>
+<blockquote>
+<p><strong>NOTE: This section has been written according to the implementation in
+<a href="https://github.com/model-checking/kani/pull/3119">#3119</a>, which currently
+produces a text-based output like the one shown above. There is ongoing work to
+store the coverage mappings in a separate file (as described in the next
+section), which would save us the need to attach code region data to the
+coverage checks.</strong></p>
+</blockquote>
+<div class="footnote-definition" id="note-opaque-coverage"><sup class="footnote-definition-label">7</sup>
+<p>The Rust compiler uses the <code>Opaque</code> type to prevent
+others from interfacing with unstable types (e.g., the <code>Coverage</code> type
+<a href="https://github.com/rust-lang/rust/blob/f7eefec4e03f5ba723fbc04d94dbc1203b7c9bff/compiler/stable_mir/src/mir/body.rs#L389">here</a>).
+Nonetheless, this can be worked around by serializing its contents and parsing
+it back into an internal data type.</p>
+</div>
+<div class="footnote-definition" id="note-expression-integration"><sup class="footnote-definition-label">8</sup>
+<p>We could follow an alternative approach where we
+do not instrument each coverage statement, but only those that correspond to
+physical counters. Unfortunately, doing so would lead to incorrect coverage
+results due to the arithmetic nature of expression-based counters. We elaborate
+on this topic in the later parts of this document.</p>
+</div>
+<h3 id="the-default-coverage-workflow-in-kani"><a class="header" href="#the-default-coverage-workflow-in-kani">The default coverage workflow in Kani</a></h3>
+<p>In this section, we describe the default <code>--coverage</code> workflow from a
+developer's point of view. This will hopefully help developers understand how
+the different coverage components in Kani are connected. For example, we'll
+describe the raw coverage information that gets produced throughout the default
+<code>--coverage</code> workflow and define the basic <code>cov</code> commands that it will execute.</p>
+<p>The main difference with respect to the regular verification workflow is that,
+at the end of the verification-based coverage run, Kani will generate two types
+of files:</p>
+<ul>
+<li>One single file <code>.kanimap</code> file for the project. This file will contain the
+coverage mappings for the project's source code.</li>
+<li>One <code>.kaniraw</code> file for each harness. This file will contain the
+verification-based results for the coverage-oriented properties corresponding
+to a given harness.</li>
+</ul>
+<p>Note that <code>.kaniraw</code> files correspond to <code>.profraw</code> files in the LLVM coverage
+workflow. Similarly, the <code>.kanimap</code> file corresponds to the coverage-related
+information that's embedded into the project's binaries in the LLVM coverage
+workflow.<sup class="footnote-reference"><a href="#note-kanimap">9</a></sup></p>
+<p>The files will be written into a new timestamped directory associated with the
+coverage run. The path to this directory will be printed to standard output in
+by default. For example, the <a href="https://github.com/model-checking/kani/pull/3119">draft implementation</a>
+writes the coverage files into the <code>target/kani/&lt;target_triple&gt;/cov/</code> directory.</p>
+<p>Users aren't expected to read the information in any of these files.
+Therefore, there's no need to restrict their format.
+The <a href="https://github.com/model-checking/kani/pull/3119">draft implementation</a>
+uses the JSON format but we might consider using a binary format if it doesn't
+scale.</p>
+<p>In addition, Kani will produce two types of coverage results:</p>
+<ol>
+<li>A coverage summary with the default options.</li>
+<li>A terminal-based coverage report with the default options. However, we will
+only do this if the program is composed of a single source
+file<sup class="footnote-reference"><a href="#note-conditional-report">10</a></sup>.</li>
+</ol>
+<div class="footnote-definition" id="note-kanimap"><sup class="footnote-definition-label">9</sup>
+<p>Note that the <code>.kanimap</code> generation isn't implemented in
+<a href="https://github.com/model-checking/kani/pull/3119">#3119</a>. The <a href="https://github.com/model-checking/kani/pull/3121">draft
+implementation of
+<code>kani-cov</code></a> simply reads
+the source files referred to by the code coverage checks, but it doesn't get
+information about code trimmed out by the MIR linker.</p>
+</div>
+<div class="footnote-definition" id="note-conditional-report"><sup class="footnote-definition-label">10</sup>
+<p>In other words, standalone <code>kani</code> would always emit
+these terminal-based reports, but <code>cargo kani</code> would not unless the project
+contains a single Rust file (for example, <code>src/main.rs</code>).</p>
+</div>
+<h2 id="rationale-and-alternatives"><a class="header" href="#rationale-and-alternatives">Rationale and alternatives</a></h2>
+<h3 id="other-coverage-implementations"><a class="header" href="#other-coverage-implementations">Other coverage implementations</a></h3>
+<p>In a previous version of this feature, we used an ad-hoc coverage implementation.
+In addition to being very inefficient<sup class="footnote-reference"><a href="#note-benchmarks">11</a></sup>, the line-based coverage
+results were not trivial to interpret by users.
+At the moment, there's only another unstable, GCC-compatible code coverage implementation
+based on the Gcov format. The Gcov format is line-based so it's not able
+to report region coverage results.
+In other words, it's not as advanced nor precise as the source-based implementation.</p>
+<div class="footnote-definition" id="note-benchmarks"><sup class="footnote-definition-label">11</sup>
+<p>Actual performance benchmarks to follow in
+<a href="https://github.com/model-checking/kani/pull/3119">#3119</a>.</p>
+</div>
+<h2 id="open-questions"><a class="header" href="#open-questions">Open questions</a></h2>
+<ul>
+<li>Do we want to instrument dependencies by default? Preliminary benchmarking results show a slowdown of 100% and greater.
+More evaluations are required to determine how we handle instrumentation for dependencies, and what options we might want
+to provide to users.</li>
+<li>How do we handle features/options for <code>kani-cov</code>? In particular, do we need more details in this RFC?</li>
+</ul>
+<h2 id="future-possibilities"><a class="header" href="#future-possibilities">Future possibilities</a></h2>
+<h3 id="integration-with-llvm"><a class="header" href="#integration-with-llvm">Integration with LLVM</a></h3>
+<p>As part of this work, we explored a potential integration with the LLVM
+framework. The idea behind such an integration would essentially involve
+producing coverage results in formats compatible with the LLVM framework (e.g.,
+the <code>.profraw</code> format). The main advantage of integrating with the LLVM
+framework in this way is that we would not need a tool like <code>kani-cov</code> to
+aggregate coverage results; we could just use LLVM tools such as <code>llvm-profdata</code>
+and <code>llvm-cov</code> to consume them.</p>
+<p>However, at this time we recommend against integrating with LLVM due to these reasons:</p>
+<ol>
+<li>Generating the instrumented binary used in the <a href="#the-llvm-code-coverage-workflow">LLVM coverage
+workflow</a> requires a standard <code>rustc</code>
+compilation with <code>--cfg kani</code> in addition to other flags including <code>-C instrument-coverage</code>. This is likely to result in compilation errors since the
+standard <code>rustc</code> backend cannot produce code for Kani APIs, for example.</li>
+<li>Producing the <code>.profraw</code> files requires executing the instrumented binary at
+least once. This would be an issue for Rust projects which assume a particular
+environment for their execution.</li>
+<li>There are no stable interfaces to create or modify files in formats
+compatible with the LLVM framework. Even though the documentation for the <a href="https://llvm.org/docs/CoverageMappingFormat.html">LLVM
+Code Coverage Mapping Format</a>
+is excellent, the easiest way to interact with files on these format is through
+LLVM tools (e.g.,
+<a href="https://github.com/llvm/llvm-project/tree/main/llvm/tools/llvm-cov"><code>llvm-cov</code></a>)
+which bring in many other LLVM dependencies. During our exploration, we
+attempted to decode and re-encode files in the <code>.profraw</code> to set the counter
+data to the values obtained during verification. To this end, we tried tools
+like <a href="https://github.com/xd009642/llvm-profparser/"><code>llvm-profparser</code></a> which
+can be used as a replacement for <code>llvm-profdata</code> and <code>llvm-cov</code> but failed to
+parse coverage files emitted by the Rust compiler (this is also related to the
+next point). Another crate that we used is
+<a href="https://github.com/rust-lang/rust/tree/master/src/tools/coverage-dump"><code>coverage-dump</code></a>,
+a recent tool in the Rust compiler used for testing purposes. <code>coverage-dump</code>
+extracts coverage mappings from LLVM IR assembly files (i.e., human-readable
+<code>*.ll</code> files) but does not work with the binary-encoded formats. Finally, we
+also built some ad-hoc tooling to perform these modifications but it soon
+became evident that we would need to develop it further in order to handle any
+program.</li>
+<li>LLVM releases a new version approximately every six months. This would
+likely result in another &quot;toolchain update&quot; problem for Kani in order to
+provide compatibility with newer LLVM versions. Moreover, the Rust compiler
+supplies their own version of LLVM tools (<code>rust-profdata</code>, <code>rust-cov</code>, etc.)
+which are fully compatible with coverage-related artifacts produced by <code>rustc</code>.</li>
+</ol>
+<h3 id="optimization-with-coverage-counter-expressions"><a class="header" href="#optimization-with-coverage-counter-expressions">Optimization with coverage-counter expressions</a></h3>
+<p>In the <a href="#integrating-the-instrumentation-into-kani">subsection related to the
+integration</a>, we noted that we could
+follow an alternative approach where we only instrument coverage statements that
+correspond to physical counters. In fact, this would be the logical choice since
+the replacement of physical counters by expression-based counters would also be
+a performance optimization for us.</p>
+<p>However, the expressions used in expression-based counters are built with the
+arithmetic operators <code>Add</code> (<code>+</code>) and <code>Sub</code> (<code>-</code>). On the other hand, the
+coverage checks performed by Kani have a boolean meaning: you either cover a
+region or you do not. Thus, there are many cases where these two notions of
+coverage counters are incompatible. For example, let's say we have this
+function:</p>
+<pre><code class="language-rust">fn check_value(val: u32) {
+   if val == VALUE {
+      do_this();
+   } else {
+      do_that();
+   }
+   do_something_else();
+}
+</code></pre>
+<p>One way to optimize the counters in this function is to have two physical
+counters for the branches of the <code>if</code> statement (<code>c1</code> and <code>c2</code>), and then an
+expression-based counter associated to the <code>do_something_else()</code> statement
+adding those (i.e., <code>c3 = c1 + c2</code>). If we have, for example, two executions for
+this program, with each one taking a different branch, then the results for the
+coverage counters will be <code>c1 = 1</code>, <code>c2 = 1</code> and <code>c3 = c1 + c2 = 2</code>.</p>
+<p>But what does <code>c3 = 2</code> mean in the context of a verification-based coverage
+result? That is not clear. For instance, in a Kani trace, you could have a
+nondeterministic value for <code>val</code> which just happens to be <code>val == VALUE</code> and not
+at the same time. This would result in the same counters (<code>c1 = 1</code>, <code>c2 = 1</code> and
+<code>c3 = 2</code>), but the program is being run only once!</p>
+<p>Note that finding a verification-based replacement for the runtime operators in
+counter-based expressions is an interesting research topic. If we could
+establish a relation between the runtime and verification expressions, then we
+could avoid the instrumentation of coverage checks for expression-based
+counters. For example, could we replace the <code>Add</code> operator (<code>+</code>) with an <code>Or</code>
+operator (<code>||</code>)? Intuitively, this makes sense since verification-based coverage
+counters are binary. It also seems to work for our example since covering any of
+the branches should result in the <code>do_something_else()</code> statement being covered
+as well, with the counter values now being <code>c1 = 1</code>, <code>c2 = 1</code> and <code>c3 = 1</code>.
+However, it is not clear that this would work for all cases, nor it is clear
+that we can replace <code>Sub</code> with another verification-based operator.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../rfcs/0010-quantifiers.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                            <a rel="next" href="../rfcs/0012-loop-contracts.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../rfcs/0010-quantifiers.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                    <a rel="next" href="../rfcs/0012-loop-contracts.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+        <script type="text/javascript">
+            window.playground_copyable = true;
+        </script>
+        <script src="../elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../searcher.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+    </body>
+</html>

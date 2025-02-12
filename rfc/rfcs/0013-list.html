@@ -1,0 +1,336 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>0013-list - Kani RFC Book</title>
+        <!-- Custom HTML head -->
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="Design documents for Kani Rust Verifier">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="../intro.html">Introduction</a></li><li class="chapter-item expanded affix "><a href="../template.html">RFC Template</a></li><li class="chapter-item expanded affix "><li class="part-title">Kani RFCs</li><li class="chapter-item expanded "><a href="../rfcs/0001-mir-linker.html">0001-mir-linker</a></li><li class="chapter-item expanded "><a href="../rfcs/0002-function-stubbing.html">0002-function-stubbing</a></li><li class="chapter-item expanded "><a href="../rfcs/0003-cover-statement.html">0003-cover-statement</a></li><li class="chapter-item expanded "><a href="../rfcs/0004-loop-contract-synthesis.html">0004-loop-contract-synthesis</a></li><li class="chapter-item expanded "><a href="../rfcs/0005-should-panic-attr.html">0005-should-panic-attr</a></li><li class="chapter-item expanded "><a href="../rfcs/0006-unstable-api.html">0006-unstable-api</a></li><li class="chapter-item expanded "><a href="../rfcs/0007-global-conditions.html">0007-global-conditions</a></li><li class="chapter-item expanded "><a href="../rfcs/0008-line-coverage.html">0008-line-coverage</a></li><li class="chapter-item expanded "><a href="../rfcs/0009-function-contracts.html">0009-function-contracts</a></li><li class="chapter-item expanded "><a href="../rfcs/0010-quantifiers.html">0010-quantifiers</a></li><li class="chapter-item expanded "><a href="../rfcs/0011-source-coverage.html">0011-source-coverage</a></li><li class="chapter-item expanded "><a href="../rfcs/0012-loop-contracts.html">0012-loop-contracts</a></li><li class="chapter-item expanded "><a href="../rfcs/0013-list.html" class="active">0013-list</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Kani RFC Book</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/model-checking/kani" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+                        <a href="https://github.com/model-checking/kani/edit/main/rfc/src/rfcs/0013-list.md" title="Suggest an edit" aria-label="Suggest an edit">
+                            <i id="git-edit-button" class="fa fa-edit"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <ul>
+<li><strong>Feature Name:</strong> List Subcommand</li>
+<li><strong>Feature Request Issue:</strong> <a href="https://github.com/model-checking/kani/issues/2573">#2573</a>, <a href="https://github.com/model-checking/kani/issues/1612">#1612</a></li>
+<li><strong>RFC PR:</strong> #3463</li>
+<li><strong>Status:</strong> Unstable</li>
+<li><strong>Version:</strong> 2</li>
+</ul>
+<hr />
+<h2 id="summary"><a class="header" href="#summary">Summary</a></h2>
+<p>Add a subcommand <code>list</code> that, for each crate under verification, lists the information relevant to its verification.</p>
+<h2 id="user-impact"><a class="header" href="#user-impact">User Impact</a></h2>
+<p>Currently, there is no automated way for a user to gather metadata about Kani's integration with their project. If, for example, a user wants a list of harnesses for their project, they must search for all the relevant contract attributes (currently <code>#[proof]</code> or <code>#[proof_for_contract]</code>) themselves. If done manually, this process is tedious, especially for large projects. Even with a shell script, it is error-prone--if, for example, we introduce a new type of proof harness, users would have to account for it when searching their project.</p>
+<p>Internally, this feature will be useful for tracking our customers' use of Kani and our progress with standard library verification. Externally, users can leverage this feature to get a high-level view of which areas of their projects have harnesses (and, by extension, which areas are still in need of verification).</p>
+<p>This feature will not cause any regressions for exisiting users.</p>
+<h2 id="user-experience"><a class="header" href="#user-experience">User Experience</a></h2>
+<p>Users run a <code>list</code> subcommand, which prints metadata about the harnesses and contracts in each crate under verification. The subcommand takes two options:</p>
+<ul>
+<li><code>--message-format=[pretty|json]</code>: choose the output format. The default is <code>pretty</code>, which prints to the terminal. The <code>json</code> option creates and writes to a JSON file instead.</li>
+<li><code>--std</code>: this option should be specified when listing the harnesses and contracts in the standard library. This option is only available for <code>kani list</code> (not <code>cargo kani list</code>), which mirrors the verification workflow for the standard library.</li>
+</ul>
+<p>This subcommand does not fail. In the case that it does not find any harnesses or contracts, it prints a message informing the user of that fact.</p>
+<h3 id="pretty-format"><a class="header" href="#pretty-format">Pretty Format</a></h3>
+<p>The default format, <code>pretty</code>, prints a &quot;Contracts&quot; table and a &quot;Standard Harnesses&quot; list.
+Each row of the &quot;Contracts&quot; table consists of a function under contract and its contract harnesses.
+The results are printed in lexicographic order.</p>
+<p>For example:</p>
+<pre><code>Kani Rust Verifier 0.54.0 (standalone)
+
+Contracts:
+|-------|-------------------------|--------------------------------------------------|
+|       | Function                | Contract Harnesses (#[kani::proof_for_contract]) |
+|-------|-------------------------|--------------------------------------------------|
+|       | example::impl::bar      | example::verify::check_bar                       |
+|-------|-------------------------|--------------------------------------------------|
+|       | example::impl::baz      | example::verify::check_baz                       |
+|-------|-------------------------|--------------------------------------------------|
+|       | example::impl::foo      | example::verify::check_foo_u32                   |
+|       |                         | example::verify::check_foo_u64                   |
+|-------|-------------------------|--------------------------------------------------|
+|       | example::impl::func     | example::verify::check_func                      |
+|-------|-------------------------|--------------------------------------------------|
+|       | example::prep::parse    | NONE                                             |
+|-------|-------------------------|--------------------------------------------------|
+| Total | 5                       | 5                                                |
+|-------|-------------------------|--------------------------------------------------|
+
+Standard Harnesses (#[kani::proof]):
+1. example::verify::check_modify
+2. example::verify::check_new
+</code></pre>
+<p>All sections will be present in the output, regardless of the result.
+If there are no harnesses for a function under contract, Kani inserts <code>NONE</code> in the &quot;Contract Harnesses&quot; column.
+If the &quot;Contracts&quot; section is empty, Kani prints a message that &quot;No contracts or contract harnesses were found.&quot;
+If the &quot;Standard Harnesses&quot; section is empty, Kani prints a message that &quot;No standard harnesses were found.&quot;</p>
+<h3 id="json-format"><a class="header" href="#json-format">JSON Format</a></h3>
+<p>If the user wants an output format that's more easily parsed by a script, they can use the <code>json</code> option. </p>
+<p>The JSON format will contain the same information as the pretty format, with the addition of file paths and file version.
+The file version will use semantic versioning.
+This way, any users relying on this format for their scripts can detect when we've released a new major version and update their logic accordingly.</p>
+<p>For example:</p>
+<pre><code class="language-json">{
+    kani-version: 0.54,
+    file-version: 0.1,
+    standard-harnesses: [
+        {
+            file: /Users/johnsmith/example/kani_standard_proofs.rs
+            harnesses: [
+                example::verify::check_modify,
+                example::verify::check_new
+            ]
+        },
+    ],
+    contract-harnesses: [
+        {
+            file: /Users/johnsmith/example/kani_contract_proofs.rs
+            harnesses: [
+                example::verify::check_bar,
+                example::verify::check_baz,
+                example::verify::check_foo_u32,
+                example::verify::check_foo_u64, 
+                example::verify::check_func 
+            ]
+        },
+    ],
+    contracts: [
+        {
+            function: example::impl::bar
+            file: /Users/johnsmith/example/impl.rs
+            harnesses: [example::verify::check_bar]
+        },
+        {
+            function: example::impl::baz
+            file: /Users/johnsmith/example/impl.rs
+            harnesses: [example::verify::check_baz]
+        },
+        {
+            function: example::impl::foo
+            file: /Users/johnsmith/example/impl.rs
+            harnesses: [
+                example::verify::check_foo_u32,
+                example::verify::check_foo_u64
+            ]
+        },
+        {
+            function: example::impl::func
+            file: /Users/johnsmith/example/impl.rs
+            harnesses: [example::verify::check_func]
+        },
+        {
+            function: example::prep::parse
+            file: /Users/johnsmith/example/prep.rs
+            harnesses: []
+        }
+    ],
+    totals: {
+        standard-harnesses: 2,
+        contract-harnesses: 5,
+        functions-with-contracts: 5,
+    }
+}
+</code></pre>
+<p>All sections will be present in the output, regardless of the result.
+If there is no result for a given field (e.g., there are no contracts), Kani will output an empty list (or zero for totals).</p>
+<h2 id="software-design"><a class="header" href="#software-design">Software Design</a></h2>
+<h3 id="drivermetdata-changes"><a class="header" href="#drivermetdata-changes">Driver/Metdata Changes</a></h3>
+<p>We add a new <code>list</code> subcommand to <code>kani-driver</code>, which invokes the compiler to collect metadata, then post-processes that metadata and outputs the result.
+We extend <code>KaniMetadata</code> to include a new field containing each function under contract and its contract harnesses.</p>
+<h3 id="compiler-changes"><a class="header" href="#compiler-changes">Compiler Changes</a></h3>
+<p>In <code>codegen_crate</code>, we update the generation of <code>KaniMetadata</code> to include the new contracts information.
+We iterate through each local item in the crate.
+Each time we find a function under contract or a contract harness, we include it in the metadata.</p>
+<h2 id="rationale-and-alternatives"><a class="header" href="#rationale-and-alternatives">Rationale and alternatives</a></h2>
+<p>Users of Kani may have many questions about their project--not only where their contracts and harnesses are, but also where their stubs are, what kinds of contracts they have, etc. Rather than try to answer every question a user might have, which would make the output quite verbose, we focus on these four:</p>
+<ol>
+<li>Where are the harnesses?</li>
+<li>Where are the contracts?</li>
+<li>Which contracts are verified, and by which harnesses?</li>
+<li>How many harnesses and functions under contract are there?</li>
+</ol>
+<p>We believe these questions are the most important for our use cases of tracking verification progress for customers and the standard library. The UX is designed to answer these questions clearly and concisely.</p>
+<p>We could have a more verbose or granular output, e.g., printing the metadata on a per-crate or per-module level, or including stubs or other attributes. Such a design would have the benefit of providing more information, with the disadvantage of being more complex to implement and more information for the user to process.
+If we do not implement this feature, users will have to obtain this metadata through manual searching, or by writing a script to do it themselves. This feature will improve our internal productivity by automating the process.</p>
+<p>The Contracts table is close to Markdown, but not quite Markdown--it includes line separators between each row, when Markdown would only have a separator for the header.
+We include the separator because without it, it can be difficult to tell from reading the terminal output which entries are in the same row.
+The user can transform the table to Markdown by deleting these separators, and we can trivially add a Markdown option in the future if there is demand for it.</p>
+<h2 id="open-questions"><a class="header" href="#open-questions">Open questions</a></h2>
+<ol>
+<li>Do we want to include more contracts information? We could print more granular information about contracts, e.g., the text of the contracts or the number of contracts.</li>
+<li>More generally, we could introduce additional options that collect information about other Kani attributes (e.g., stubs). The default would be to leave them out, but this way a user could get more verbose output if they so choose.</li>
+<li>Do we want to add a filtering option? For instance, <code>--harnesses &lt;pattern&gt;</code> and <code>--contracts &lt;pattern&gt;</code>, where <code>pattern</code> corresponds to a Rust-style path. For example, <code>kani list --harnesses &quot;my_crate::my_module::*&quot;</code> would include all harnesses with that path prefix, while <code>kani list --contracts &quot;my_crate::my_module::*&quot;</code> would include all functions under contract with that path prefix. (If we do this work, we could use it to improve our <code>--harness</code> <a href="https://github.com/model-checking/kani/blob/main/kani-driver/src/metadata.rs#L187-L189">pattern handling for verification</a>).</li>
+</ol>
+<h2 id="out-of-scope--future-improvements"><a class="header" href="#out-of-scope--future-improvements">Out of scope / Future Improvements</a></h2>
+<p>It would be nice to differentiate between regular Kani harnesses and Bolero harnesses. Bolero harnesses invoke Kani using conditional compilation, e.g.:</p>
+<pre><code class="language-rust">#[cfg_attr(kani, kani::proof)]
+fn check() {
+    bolero::check!()...
+}
+</code></pre>
+<p>See <a href="https://model-checking.github.io/kani-verifier-blog/2022/10/27/using-kani-with-the-bolero-property-testing-framework.html">this blog post</a> for more information.</p>
+<p>There's no easy way for us to know whether a harness comes from Bolero, since Bolero takes care of rewriting the test to use Kani syntax and invoking the Kani engine. By the time the harness gets to Kani, there's no way for us to tell it apart from a regular harness. Fixing this would require some changes to our Bolero integration.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../rfcs/0012-loop-contracts.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../rfcs/0012-loop-contracts.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+        <script type="text/javascript">
+            window.playground_copyable = true;
+        </script>
+        <script src="../elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../searcher.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+    </body>
+</html>

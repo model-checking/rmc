@@ -1,0 +1,405 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>0001-mir-linker - Kani RFC Book</title>
+        <!-- Custom HTML head -->
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="Design documents for Kani Rust Verifier">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="../intro.html">Introduction</a></li><li class="chapter-item expanded affix "><a href="../template.html">RFC Template</a></li><li class="chapter-item expanded affix "><li class="part-title">Kani RFCs</li><li class="chapter-item expanded "><a href="../rfcs/0001-mir-linker.html" class="active">0001-mir-linker</a></li><li class="chapter-item expanded "><a href="../rfcs/0002-function-stubbing.html">0002-function-stubbing</a></li><li class="chapter-item expanded "><a href="../rfcs/0003-cover-statement.html">0003-cover-statement</a></li><li class="chapter-item expanded "><a href="../rfcs/0004-loop-contract-synthesis.html">0004-loop-contract-synthesis</a></li><li class="chapter-item expanded "><a href="../rfcs/0005-should-panic-attr.html">0005-should-panic-attr</a></li><li class="chapter-item expanded "><a href="../rfcs/0006-unstable-api.html">0006-unstable-api</a></li><li class="chapter-item expanded "><a href="../rfcs/0007-global-conditions.html">0007-global-conditions</a></li><li class="chapter-item expanded "><a href="../rfcs/0008-line-coverage.html">0008-line-coverage</a></li><li class="chapter-item expanded "><a href="../rfcs/0009-function-contracts.html">0009-function-contracts</a></li><li class="chapter-item expanded "><a href="../rfcs/0010-quantifiers.html">0010-quantifiers</a></li><li class="chapter-item expanded "><a href="../rfcs/0011-source-coverage.html">0011-source-coverage</a></li><li class="chapter-item expanded "><a href="../rfcs/0012-loop-contracts.html">0012-loop-contracts</a></li><li class="chapter-item expanded "><a href="../rfcs/0013-list.html">0013-list</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Kani RFC Book</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/model-checking/kani" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+                        <a href="https://github.com/model-checking/kani/edit/main/rfc/src/rfcs/0001-mir-linker.md" title="Suggest an edit" aria-label="Suggest an edit">
+                            <i id="git-edit-button" class="fa fa-edit"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <ul>
+<li><strong>Feature Name:</strong> MIR Linker (<code>mir_linker</code>)</li>
+<li><strong>RFC Tracking Issue</strong>: <a href="https://github.com/model-checking/kani/issues/1588">https://github.com/model-checking/kani/issues/1588</a></li>
+<li><strong>RFC PR:</strong> <a href="https://github.com/model-checking/kani/pull/1600">https://github.com/model-checking/kani/pull/1600</a></li>
+<li><strong>Status:</strong> Stable</li>
+<li><strong>Version:</strong> 3</li>
+</ul>
+<hr />
+<h2 id="summary"><a class="header" href="#summary">Summary</a></h2>
+<p>Fix linking issues with the rust standard library in a scalable manner by only generating goto-program for
+code that is reachable from the user harnesses.</p>
+<h2 id="user-impact"><a class="header" href="#user-impact">User Impact</a></h2>
+<p>The main goal of this RFC is to enable Kani users to link against all supported constructs from the <code>std</code> library.
+Currently, Kani will only link to items that are either generic or have an inline annotation.</p>
+<p>The approach introduced in this RFC will have the following secondary benefits.</p>
+<ul>
+<li>Reduce spurious warnings about unsupported features for cases where the feature is not reachable from any harness.</li>
+<li>In the verification mode, we will likely see a reduction on the compilation time and memory consumption
+by pruning the inputs of symtab2gb and goto-instrument.
+<ul>
+<li>Compared to linking against the standard library goto-models that take more than 5 GB.</li>
+</ul>
+</li>
+<li>In a potential assessment mode, only analyze code that is reachable from all public items in the target crate.</li>
+</ul>
+<p>One downside is that we will include a pre-compiled version of the std, our release bundle will double in size
+(See <a href="0001-mir-linker.html#rational-and-alternatives">Rational and Alternatives</a>
+for more information on the size overhead).
+This will negatively impact the time taken to set up Kani
+(triggered by either the first time a user invokes <code>kani | cargo-kani</code> , or explicit invoke the subcommand <code>setup</code>).</p>
+<h2 id="user-experience"><a class="header" href="#user-experience">User Experience</a></h2>
+<p>Once this RFC has been stabilized users shall use Kani in the same manner as they have been today.
+Until then, we wil add an unstable option <code>--mir-linker</code> to enable the cross-crate reachability analysis
+and the generation of the goto-program only when compiling the target crate.</p>
+<p>Kani setup will likely take longer and more disk space as mentioned in the section above.
+This change will not be guarded by <code>--mir-linker</code> option above.</p>
+<h2 id="detailed-design"><a class="header" href="#detailed-design">Detailed Design</a></h2>
+<p>In a nutshell, we will no longer generate a goto-program for every crate we compile.
+Instead, we will generate the MIR for every crate, and we will generate only one goto-program.
+This model will only include items reachable from the target crate's harnesses.</p>
+<p>The current system flow for a crate verification is the following (Kani here represents either <code>kani | cargo-kani</code>
+executable):</p>
+<ol>
+<li>Kani compiles the user crate as well as all its dependencies.
+For every crate compiled, <code>kani-compiler</code> will generate a goto-program.
+This model includes everything reachable from the crate's public functions.</li>
+<li>After that, Kani links all models together by invoking <code>goto-cc</code>.
+This step will also link against Kani's <code>C</code> library.</li>
+<li>For every harness, Kani invokes <code>goto-instrument</code> to prune the linked model to only include items reachable from the given harness.</li>
+<li>Finally, Kani instruments and verify each harness model via <code>goto-instrument</code> and <code>cbmc</code> calls.</li>
+</ol>
+<p>After this RFC, the system flow would be slightly different:</p>
+<ol>
+<li>Kani compiles the user crate dependencies up to the MIR translation.
+I.e., for every crate compiled, <code>kani-compiler</code> will generate an artifact that includes the MIR representation
+of all items in the crate.</li>
+<li>Kani will generate the goto-program only while compiling the target user crate.
+It will generate one goto-program that includes all items reachable from any harness in the target crate.</li>
+<li><code>goto-cc</code> will still be invoked to link the generated model against Kani's <code>C</code> library.</li>
+<li>Steps #3 and #4 above will be performed without any change.</li>
+</ol>
+<p>This feature will require three main changes to Kani which are detailed in the sub-sections below.</p>
+<h3 id="kanis-sysroot"><a class="header" href="#kanis-sysroot">Kani's Sysroot</a></h3>
+<p>Kani currently uses <code>rustup</code> sysroot to gather information from the standard library constructs.
+The artifacts from this <code>sysroot</code> include the MIR for generic items as well as for items that may be included in
+a crate compilation (e.g.: functions marked with <code>#[inline]</code> annotation).
+The artifacts do not include the MIR for items that have already been compiled to the <code>std</code> shared library.
+This leaves a gap that cannot be filled by the <code>kani-compiler</code>;
+thus, we are unable to translate these items into goto-program.</p>
+<p>In order to fulfill this gap, we must compile the standard library from scratch.
+This RFC proposes a similar method to what <a href="https://github.com/rust-lang/miri"><code>MIRI</code></a> implements.
+We will generate our own sysroot using the <code>-Z always-encode-mir</code> compilation flag.
+This sysroot will be pre-compiled and included in our release bundle.</p>
+<p>We will compile <code>kani</code>'s libraries (<code>kani</code> and <code>std</code>) also with <code>-Z always-encode-mir</code>
+and with the new sysroot.</p>
+<h3 id="cross-crate-reachability-analysis"><a class="header" href="#cross-crate-reachability-analysis">Cross-Crate Reachability Analysis</a></h3>
+<p><code>kani-compiler</code> will include a new <code>reachability</code> module to traverse over the local and external MIR items.
+This module will <code>monomorphize</code> all generic code as it's performing the traversal.</p>
+<p>The traversal logic will be customizable allowing different starting points to be used.
+The two options to be included in this RFC is starting from all local harnesses
+(tagged with <code>#[kani::proof]</code>) and all public functions in the local crate.</p>
+<p>The <code>kani-compiler</code> behavior will be customizable via a new flag:</p>
+<pre><code>--reachability=[ harnesses | pub_fns |  none | legacy | tests ]
+</code></pre>
+<p>where:</p>
+<ul>
+<li><code>harnesses</code>: Use the local harnesses as the starting points for the reachability analysis.</li>
+<li><code>pub_fns</code>: Use the public local functions as the starting points for the reachability analysis.</li>
+<li><code>none</code>: This will be the default value if <code>--reachability</code> flag is not provided. It will skip
+reachability analysis. No goto-program will be generated.
+This will be used to compile dependencies up to the MIR level.
+<code>kani-compiler</code> will still generate artifacts with the crate's MIR.</li>
+<li><code>tests</code>: Use the functions marked as tests with <code>#[tests]</code> as the starting points for the analysis.</li>
+<li><code>legacy</code>: Mimics <code>rustc</code> behavior by invoking
+<code>rustc_monomorphizer::collect_and_partition_mono_items()</code> to collect the items to be generated.
+This will not include many items that go beyond the crate boundary.
+<em>This option was only kept for now for internal usage in some of our compiler tests.</em>
+<em>It cannot be used as part of the end to end verification flow, and it will be removed in the future.</em></li>
+</ul>
+<p>These flags will not be exposed to the final user.
+They will only be used for the communication between <code>kani-driver</code> and <code>kani-compiler</code>.</p>
+<h3 id="dependencies-vs-target-crate-compilation"><a class="header" href="#dependencies-vs-target-crate-compilation">Dependencies vs Target Crate Compilation</a></h3>
+<p>The flags described in the section above will be used by <code>kani-driver</code> to implement the new system flow.
+For that, we propose the following mechanism:</p>
+<ul>
+<li>
+<p>For standalone <code>kani</code>, we will pass the option <code>--reachability=harnesses</code> to <code>kani-compiler</code>.</p>
+</li>
+<li>
+<p>For <code>cargo-kani</code>, we will replace</p>
+<pre><code>cargo build &lt;FLAGS&gt;
+</code></pre>
+<p>with:</p>
+<pre><code>cargo rustc &lt;FLAGS&gt; -- --reachability=harnesses
+</code></pre>
+<p>to build everything.
+This command will compile all dependencies without the <code>--reachability</code> argument, and it will only pass <code>harnesses</code>
+value to the compiler when compiling the target crate.</p>
+</li>
+</ul>
+<h2 id="rational-and-alternatives"><a class="header" href="#rational-and-alternatives">Rational and Alternatives</a></h2>
+<p>Not doing anything is not an alternative, since this fixes a major gap in Kani's usability.</p>
+<h3 id="benefits"><a class="header" href="#benefits">Benefits</a></h3>
+<ul>
+<li>The MIR linker will allow us to fix the linking issues with Rust's standard library.</li>
+<li>Once stabilized, the MIR linker will be transparent to the user.</li>
+<li>It will enable more powerful and precise static analysis to <code>kani-compiler</code>.</li>
+<li>It won't require any changes to our dependencies.</li>
+<li>This will fix the harnesses' dependency on the<code>#[no_mangle]</code> annotation
+(<a href="https://github.com/model-checking/kani/issues/661">Issue-661</a>).</li>
+</ul>
+<h3 id="risks"><a class="header" href="#risks">Risks</a></h3>
+<p>Failures in the linking stage would not impact the tool soundness. I anticipate the following failure scenarios:</p>
+<ul>
+<li>ICE (Internal compiler error): Some logic is incorrectly implemented and the linking stage crashes.
+Although this is a bad experience for the user, this will not impact the verification result.</li>
+<li>Missing items: This would either result in ICE during code generation or a verification failure if the missing
+item is reachable.</li>
+<li>Extra items: This shouldn't impact the verification results, and they should be pruned by CBMC's reachability
+analysis.
+This is already the case today. In extreme cases, this could include a symbol that we cannot compile and cause an ICE.</li>
+</ul>
+<p>The new reachability code would be highly dependent on the <code>rustc</code> unstable APIs, which could increase
+the cost of the upstream synchronization.
+That said, the APIs that would be required are already used today.</p>
+<p>Finally, this implementation relies on a few unstable options from <code>cargo</code> and <code>rustc</code>.
+These APIs are used by other tools such as MIRI, so we don't see a high risk that they would be removed.</p>
+<h3 id="alternatives"><a class="header" href="#alternatives">Alternatives</a></h3>
+<p>The other options explored were:</p>
+<ol>
+<li>Pre-compile the standard library, and the kani library, and ship the generated <code>*symtab.json</code> files.</li>
+<li>Pre-compile the standard library, and the kani library, convert the standard library and dependencies to goto-program
+(via<code>symtab2gb</code>) and link them into one single goto-program.
+Ship the generated model.</li>
+</ol>
+<p>Both would still require shipping the compiler metadata (via <code>rlib</code> or <code>rmeta</code>) for the kani library, its
+dependencies, and <code>kani_macro.so</code>.</p>
+<p>Both alternatives are very similar. They only differ on the artifact that would be shipped.
+They require generating and shipping a custom <code>sysroot</code>;
+however, there is no need to implement the reachability algorithm.</p>
+<p>We implemented a prototype for the MIR linker and one for the alternatives.
+Both prototypes generate the sysroot as part of the <code>cargo kani</code> flow.</p>
+<p>We performed a small experiment (on a <code>c5.4xlarge</code> ec2 instance running Ubuntu 20.04) to assess the options.</p>
+<p>For this experiment, we used the following harness:</p>
+<pre><code class="language-rust">#[kani::proof]
+#[kani::unwind(4)]
+pub fn check_format() {
+    assert!(&quot;2&quot;.parse::&lt;u32&gt;().unwrap() == 2);
+}
+</code></pre>
+<p>The experiment showed that the MIR linker approach is much more efficient.</p>
+<p>See the table bellow for the breakdown of time (in seconds) taken for each major step of
+the harness verification:</p>
+<table><thead><tr><th>Stage</th><th>MIR Linker</th><th>Alternative 1</th></tr></thead><tbody>
+<tr><td>compilation</td><td>22.2s</td><td>64.7s</td></tr>
+<tr><td>goto-program generation</td><td>2.4s</td><td>90.7s</td></tr>
+<tr><td>goto-program linking</td><td>0.8s</td><td>33.2s</td></tr>
+<tr><td>code instrumentation</td><td>0.8s</td><td>33.1</td></tr>
+<tr><td>verification</td><td>0.5s</td><td>8.5s</td></tr>
+</tbody></table>
+<p>It is possible that <code>goto-cc</code> time can be improved, but this would also require further experimentation and
+expertise that we don't have today.</p>
+<p>Every option would require a custom sysroot to either be built or shipped with Kani.
+The table below shows the size of the sysroot files for the alternative #2
+(goto-program files) vs compiler artifacts (<code>*.rmeta</code> files)
+files with <code>-Z always-encode-mir</code> for <code>x86_64-unknown-linux-gnu</code> (on Ubuntu 18.04).</p>
+<table><thead><tr><th>File Type</th><th>Raw size</th><th>Compressed size</th></tr></thead><tbody>
+<tr><td><code>symtab.json</code></td><td>950M</td><td>26M</td></tr>
+<tr><td><code>symtab.out</code></td><td>84M</td><td>24M</td></tr>
+<tr><td><code>*.rmeta</code></td><td>92M</td><td>25M</td></tr>
+</tbody></table>
+<p>These results were obtained by looking at the artifacts generated during the same experiment.</p>
+<h2 id="open-questions"><a class="header" href="#open-questions">Open questions</a></h2>
+<ul>
+<li><del>Should we build or download the sysroot during <code>kani setup</code>?</del>
+We include pre-built MIR artifacts for the <code>std</code> library.</li>
+<li><del>What's the best way to enable support to run Kani in the entire <code>workspace</code>?</del>
+We decided to run <code>cargo rustc</code> per package.</li>
+<li><del>Should we codegen all static items no matter what?</del>
+We only generate code for static items that are collected by the reachability analysis.
+Static objects can only be initialized via constant function.
+Thus, it shouldn't have any side effect.</li>
+<li><del>What's the best way to handle <code>cargo kani --tests</code>?</del>
+We are going to use the test profile and iterate over all the targets available in the crate:
+<ul>
+<li><code>cargo rustc --profile test -- --reachability=harnesses</code></li>
+</ul>
+</li>
+</ul>
+<h2 id="future-possibilities"><a class="header" href="#future-possibilities">Future possibilities</a></h2>
+<ul>
+<li>Split the goto-program into two or more items to optimize compilation result caching.
+<ul>
+<li>Dependencies: One model will include items from all the crate dependencies.
+This model will likely be more stable and require fewer updates.</li>
+<li>Target crate: The model for all items in the target crate.</li>
+</ul>
+</li>
+<li>Do the analysis per-harness. This might be adequate once we have a mechanism to cache translations.</li>
+<li>Add an option to include external functions to the analysis starting point in order to enable verification when
+calls are made from <code>C</code> to <code>rust</code>.</li>
+<li>Contribute the reachability analysis code back to upstream.</li>
+</ul>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../template.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                            <a rel="next" href="../rfcs/0002-function-stubbing.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../template.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                    <a rel="next" href="../rfcs/0002-function-stubbing.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+        <script type="text/javascript">
+            window.playground_copyable = true;
+        </script>
+        <script src="../elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../searcher.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+    </body>
+</html>
