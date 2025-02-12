@@ -177,6 +177,14 @@ pub enum ExprValue {
     Vector {
         elems: Vec<Expr>,
     },
+    Forall {
+        variable: Expr, // symbol
+        domain: Expr,   // where
+    },
+    Exists {
+        variable: Expr, // symbol
+        domain: Expr,   // where
+    },
 }
 
 /// Binary operators. The names are the same as in the Irep representation.
@@ -970,6 +978,16 @@ impl Expr {
         assert_eq!(typ.lookup_field_type(field, symbol_table).as_ref(), Some(value.typ()));
         let typ = typ.aggr_tag().unwrap();
         expr!(Union { value, field }, typ)
+    }
+
+    pub fn forall_expr(typ: Type, variable: Expr, domain: Expr) -> Expr {
+        assert!(variable.is_symbol());
+        expr!(Forall { variable, domain }, typ)
+    }
+
+    pub fn exists_expr(typ: Type, variable: Expr, domain: Expr) -> Expr {
+        assert!(variable.is_symbol());
+        expr!(Exists { variable, domain }, typ)
     }
 }
 

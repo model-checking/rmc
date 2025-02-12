@@ -133,6 +133,10 @@ pub enum KaniHook {
     Check,
     #[strum(serialize = "CoverHook")]
     Cover,
+    #[strum(serialize = "ExistsHook")]
+    Exists,
+    #[strum(serialize = "ForallHook")]
+    Forall,
     // TODO: this is temporarily implemented as a hook, but should be implemented as an intrinsic
     #[strum(serialize = "FloatToIntInRangeHook")]
     FloatToIntInRange,
