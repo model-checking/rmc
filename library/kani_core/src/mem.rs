@@ -178,10 +178,11 @@ macro_rules! kani_mem {
                 // stubbed.
                 // We first assert that the data_ptr
                 let data_ptr = ptr as *const ();
-                super::assert(
-                    unsafe { is_allocated(data_ptr, 0) },
-                    "Kani does not support reasoning about pointer to unallocated memory",
-                );
+                if !unsafe { is_allocated(data_ptr, 0) } {
+                    crate::kani::unsupported(
+                        "Kani does not support reasoning about pointer to unallocated memory",
+                    );
+                }
                 unsafe { is_allocated(data_ptr, sz) }
             }
         }
@@ -248,11 +249,11 @@ macro_rules! kani_mem {
             pub fn same_allocation(addr1: *const (), addr2: *const ()) -> bool {
                 let obj1 = crate::kani::mem::pointer_object(addr1);
                 (obj1 == crate::kani::mem::pointer_object(addr2)) && {
-                    // TODO(3571): This should be a unsupported check
-                    crate::kani::assert(
-                        unsafe { is_allocated(addr1, 0) || is_allocated(addr2, 0) },
-                        "Kani does not support reasoning about pointer to unallocated memory",
-                    );
+                    if !unsafe { is_allocated(addr1, 0) || is_allocated(addr2, 0) } {
+                        crate::kani::unsupported(
+                            "Kani does not support reasoning about pointer to unallocated memory",
+                        );
+                    }
                     unsafe { is_allocated(addr1, 0) && is_allocated(addr2, 0) }
                 }
             }

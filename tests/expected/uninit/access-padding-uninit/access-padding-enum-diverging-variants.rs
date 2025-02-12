@@ -21,7 +21,6 @@ enum E2 {
 }
 
 #[kani::proof]
-#[kani::should_panic]
 fn access_padding_unsupported() {
     let s = E1::A(0, 0);
     let ptr: *const u8 = addr_of!(s) as *const u8;

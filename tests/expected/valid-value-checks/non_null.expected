@@ -1,0 +1,9 @@
+ ** 1 of 39 failed (1 unreachable)\
+Failed Checks: Undefined Behavior: Invalid value of type `std::ptr::NonNull<u8>`
+
+ ** 1 of 6 failed\
+Failed Checks: Undefined Behavior: Invalid value of type `std::ptr::NonNull<u8>`
+
+Verification failed for - check_invalid_value_cfg
+Verification failed for - check_invalid_value
+Complete - 1 successfully verified harnesses, 2 failures, 3 total.

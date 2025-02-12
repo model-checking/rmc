@@ -5,7 +5,6 @@
 #![feature(core_intrinsics)]
 
 #[kani::proof]
-#[kani::should_panic]
 pub fn check_invalid_write() {
     let mut val = 'a';
     let ptr = &mut val as *mut char;

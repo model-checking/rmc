@@ -1,0 +1,4 @@
+Failed Checks: Kani does not support reasoning about pointer to unallocated memory
+
+Verification failed for - invalid_access::check_invalid_dyn_ptr
+Complete - 3 successfully verified harnesses, 1 failures, 4 total.

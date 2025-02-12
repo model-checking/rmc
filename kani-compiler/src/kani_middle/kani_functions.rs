@@ -148,6 +148,8 @@ pub enum KaniHook {
     PointerOffset,
     #[strum(serialize = "SafetyCheckHook")]
     SafetyCheck,
+    #[strum(serialize = "SafetyCheckNoAssumeHook")]
+    SafetyCheckNoAssume,
     #[strum(serialize = "UnsupportedCheckHook")]
     UnsupportedCheck,
     #[strum(serialize = "UntrackedDerefHook")]

@@ -1,0 +1,6 @@
+ ** 2 of 40 failed\
+Failed Checks: Undefined Behavior: Reading from an uninitialized pointer of type `*const u8`
+Failed Checks: Undefined Behavior: Reading from an uninitialized pointer of type `*const u8`
+
+Verification failed for - access_padding_uninit
+Complete - 1 successfully verified harnesses, 1 failures, 2 total.

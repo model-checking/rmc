@@ -1,0 +1,37 @@
+ ** 1 of 19 failed\
+Failed Checks: Undefined Behavior: Invalid value of type `Rating`
+
+ ** 1 of 33 failed (4 unreachable)\
+Failed Checks: Kani currently doesn't support checking validity of `copy_nonoverlapping` for `*const Rating`
+
+ ** 1 of 45 failed (4 unreachable)\
+Failed Checks: Kani currently doesn't support checking validity of `copy_nonoverlapping` for `*const Rating`
+
+ ** 1 of 33 failed (4 unreachable)\
+Failed Checks: Undefined Behavior: Invalid value of type `Rating`
+
+ ** 1 of 3 failed\
+Failed Checks: Undefined Behavior: Invalid value of type `Rating`
+
+ ** 1 of 15 failed\
+Failed Checks: Undefined Behavior: Invalid value of type `Rating`
+
+ ** 1 of 16 failed\
+Failed Checks: Undefined Behavior: Invalid value of type `Rating`
+
+ ** 1 of 4 failed\
+Failed Checks: Undefined Behavior: Invalid value of type `Rating`
+
+ ** 1 of 36 failed (1 unreachable)\
+Failed Checks: Undefined Behavior: Invalid value of type `Rating`
+
+Verification failed for - check_invalid_increment
+Verification failed for - check_copy_nonoverlap_ub
+Verification failed for - check_copy_nonoverlap
+Verification failed for - check_invalid_transmute_copy
+Verification failed for - check_invalid_transmute
+Verification failed for - check_invalid_dereference
+Verification failed for - check_new_with_ub_limits
+Verification failed for - check_unchecked_new_ub
+Verification failed for - check_new_with_ub
+Complete - 2 successfully verified harnesses, 9 failures, 11 total.

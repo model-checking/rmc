@@ -70,7 +70,8 @@ const SKIPPED_ITEMS: &[KaniFunction] = &[
 
 /// Instruments the code with checks for uninitialized memory, agnostic to the source of targets.
 pub struct UninitInstrumenter<'a> {
-    check_type: CheckType,
+    safety_check_type: CheckType,
+    unsupported_check_type: CheckType,
     /// Used to cache FnDef lookups of injected memory initialization functions.
     mem_init_fn_cache: &'a mut HashMap<KaniFunction, FnDef>,
 }
@@ -80,11 +81,13 @@ impl<'a> UninitInstrumenter<'a> {
     pub(crate) fn run(
         body: Body,
         instance: Instance,
-        check_type: CheckType,
+        safety_check_type: CheckType,
+        unsupported_check_type: CheckType,
         mem_init_fn_cache: &'a mut HashMap<KaniFunction, FnDef>,
         target_finder: impl TargetFinder,
     ) -> (bool, Body) {
-        let mut instrumenter = Self { check_type, mem_init_fn_cache };
+        let mut instrumenter =
+            Self { safety_check_type, unsupported_check_type, mem_init_fn_cache };
         let body = MutableBody::from(body);
         let (changed, new_body) = instrumenter.instrument(body, instance, target_finder);
         (changed, new_body.into())
@@ -134,12 +137,11 @@ impl<'a> UninitInstrumenter<'a> {
         source: &mut SourceInstruction,
         operation: MemoryInitOp,
     ) {
-        if let MemoryInitOp::Unsupported { reason } | MemoryInitOp::TriviallyUnsafe { reason } =
-            &operation
-        {
-            // If the operation is unsupported or trivially accesses uninitialized memory, encode
-            // the check as `assert!(false)`.
-            self.inject_assert_false(body, source, operation.position(), reason);
+        if let MemoryInitOp::Unsupported { reason } = &operation {
+            self.inject_unsupported_check(body, source, operation.position(), reason);
+            return;
+        } else if let MemoryInitOp::TriviallyUnsafe { reason } = &operation {
+            self.inject_safety_check(body, source, operation.position(), reason);
             return;
         };
 
@@ -162,7 +164,7 @@ impl<'a> UninitInstrumenter<'a> {
                     let reason = format!(
                         "Kani currently doesn't support checking memory initialization for pointers to `{pointee_ty}. {reason}",
                     );
-                    self.inject_assert_false(body, source, operation.position(), &reason);
+                    self.inject_unsupported_check(body, source, operation.position(), &reason);
                     return;
                 }
             }
@@ -284,7 +286,7 @@ impl<'a> UninitInstrumenter<'a> {
             }
             PointeeLayout::TraitObject => {
                 let reason = "Kani does not support reasoning about memory initialization of pointers to trait objects.";
-                self.inject_assert_false(body, source, operation.position(), reason);
+                self.inject_unsupported_check(body, source, operation.position(), reason);
                 return;
             }
             PointeeLayout::Union { .. } => {
@@ -292,7 +294,7 @@ impl<'a> UninitInstrumenter<'a> {
                 // TODO: we perhaps need to check that the union at least contains an intersection
                 // of all layouts initialized.
                 let reason = "Interaction between raw pointers and unions is not yet supported.";
-                self.inject_assert_false(body, source, operation.position(), reason);
+                self.inject_unsupported_check(body, source, operation.position(), reason);
                 return;
             }
         };
@@ -309,10 +311,10 @@ impl<'a> UninitInstrumenter<'a> {
             _ => unreachable!(),
         };
         body.insert_check(
-            &self.check_type,
+            &self.safety_check_type,
             source,
             operation.position(),
-            ret_place.local,
+            Some(ret_place.local),
             &format!(
                 "Undefined Behavior: Reading from an uninitialized pointer of type `{operand_ty}`"
             ),
@@ -452,7 +454,7 @@ impl<'a> UninitInstrumenter<'a> {
                     None => {
                         let reason =
                             "Interaction between raw pointers and unions is not yet supported.";
-                        self.inject_assert_false(body, source, operation.position(), reason);
+                        self.inject_unsupported_check(body, source, operation.position(), reason);
                         return;
                     }
                 };
@@ -617,7 +619,7 @@ impl<'a> UninitInstrumenter<'a> {
         body.insert_bb(BasicBlock { statements, terminator }, source, operation.position());
     }
 
-    fn inject_assert_false(
+    fn inject_safety_check(
         &self,
         body: &mut MutableBody,
         source: &mut SourceInstruction,
@@ -631,7 +633,17 @@ impl<'a> UninitInstrumenter<'a> {
             user_ty: None,
         }));
         let result = body.insert_assignment(rvalue, source, position);
-        body.insert_check(&self.check_type, source, position, result, reason);
+        body.insert_check(&self.safety_check_type, source, position, Some(result), reason);
+    }
+
+    fn inject_unsupported_check(
+        &self,
+        body: &mut MutableBody,
+        source: &mut SourceInstruction,
+        position: InsertPosition,
+        reason: &str,
+    ) {
+        body.insert_check(&self.unsupported_check_type, source, position, None, reason);
     }
 }
 

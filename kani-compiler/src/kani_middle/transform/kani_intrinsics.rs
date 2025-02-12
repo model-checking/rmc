@@ -39,7 +39,7 @@ use tracing::{debug, trace};
 /// Generate the body for a few Kani intrinsics.
 #[derive(Debug)]
 pub struct IntrinsicGeneratorPass {
-    check_type: CheckType,
+    unsupported_check_type: CheckType,
     /// Used to cache FnDef lookups for models and Kani intrinsics.
     kani_defs: HashMap<KaniFunction, FnDef>,
     /// Whether the user enabled uninitialized memory checks when they invoked Kani.
@@ -86,11 +86,11 @@ impl TransformPass for IntrinsicGeneratorPass {
 }
 
 impl IntrinsicGeneratorPass {
-    pub fn new(check_type: CheckType, queries: &QueryDb) -> Self {
+    pub fn new(unsupported_check_type: CheckType, queries: &QueryDb) -> Self {
         let enable_uninit = queries.args().ub_check.contains(&ExtraChecks::Uninit);
         let kani_defs = queries.kani_functions().clone();
         debug!(?kani_defs, ?enable_uninit, "IntrinsicGeneratorPass::new");
-        IntrinsicGeneratorPass { check_type, enable_uninit, kani_defs }
+        IntrinsicGeneratorPass { unsupported_check_type, enable_uninit, kani_defs }
     }
 
     /// Generate the body for valid value. Which should be something like:
@@ -151,21 +151,14 @@ impl IntrinsicGeneratorPass {
             }
             Err(msg) => {
                 // We failed to retrieve all the valid ranges.
-                let rvalue = Rvalue::Use(Operand::Constant(ConstOperand {
-                    const_: MirConst::from_bool(false),
-                    span,
-                    user_ty: None,
-                }));
-                let result =
-                    new_body.insert_assignment(rvalue, &mut terminator, InsertPosition::Before);
                 let reason = format!(
                     "Kani currently doesn't support checking validity of `{target_ty}`. {msg}"
                 );
                 new_body.insert_check(
-                    &self.check_type,
+                    &self.unsupported_check_type,
                     &mut terminator,
                     InsertPosition::Before,
-                    result,
+                    None,
                     &reason,
                 );
             }
@@ -314,39 +307,25 @@ impl IntrinsicGeneratorPass {
                         );
                     }
                     PointeeLayout::TraitObject => {
-                        let rvalue = Rvalue::Use(Operand::Constant(ConstOperand {
-                            const_: MirConst::from_bool(false),
-                            span: source.span(new_body.blocks()),
-                            user_ty: None,
-                        }));
-                        let result =
-                            new_body.insert_assignment(rvalue, &mut source, InsertPosition::Before);
                         let reason: &str = "Kani does not support reasoning about memory initialization of pointers to trait objects.";
 
                         new_body.insert_check(
-                            &self.check_type,
+                            &self.unsupported_check_type,
                             &mut source,
                             InsertPosition::Before,
-                            result,
+                            None,
                             &reason,
                         );
                     }
                     PointeeLayout::Union { .. } => {
-                        let rvalue = Rvalue::Use(Operand::Constant(ConstOperand {
-                            const_: MirConst::from_bool(false),
-                            span: source.span(new_body.blocks()),
-                            user_ty: None,
-                        }));
-                        let result =
-                            new_body.insert_assignment(rvalue, &mut source, InsertPosition::Before);
                         let reason: &str =
                             "Kani does not yet support using initialization predicates on unions.";
 
                         new_body.insert_check(
-                            &self.check_type,
+                            &self.unsupported_check_type,
                             &mut source,
                             InsertPosition::Before,
-                            result,
+                            None,
                             &reason,
                         );
                     }
@@ -354,21 +333,14 @@ impl IntrinsicGeneratorPass {
             }
             Err(reason) => {
                 // We failed to retrieve the type layout.
-                let rvalue = Rvalue::Use(Operand::Constant(ConstOperand {
-                    const_: MirConst::from_bool(false),
-                    span: source.span(new_body.blocks()),
-                    user_ty: None,
-                }));
-                let result =
-                    new_body.insert_assignment(rvalue, &mut source, InsertPosition::Before);
                 let reason = format!(
                     "Kani currently doesn't support checking memory initialization for pointers to `{pointee_ty}. {reason}",
                 );
                 new_body.insert_check(
-                    &self.check_type,
+                    &self.unsupported_check_type,
                     &mut source,
                     InsertPosition::Before,
-                    result,
+                    None,
                     &reason,
                 );
             }

@@ -27,12 +27,12 @@ use stable_mir::abi::{FieldsShape, Scalar, TagEncoding, ValueAbi, VariantsShape,
 use stable_mir::mir::mono::Instance;
 use stable_mir::mir::visit::{Location, PlaceContext, PlaceRef};
 use stable_mir::mir::{
-    AggregateKind, BasicBlockIdx, BinOp, Body, CastKind, ConstOperand, FieldIdx, Local, LocalDecl,
-    MirVisitor, Mutability, NonDivergingIntrinsic, Operand, Place, ProjectionElem, RawPtrKind,
-    Rvalue, Statement, StatementKind, Terminator, TerminatorKind,
+    AggregateKind, BasicBlockIdx, BinOp, Body, CastKind, FieldIdx, Local, LocalDecl, MirVisitor,
+    Mutability, NonDivergingIntrinsic, Operand, Place, ProjectionElem, RawPtrKind, Rvalue,
+    Statement, StatementKind, Terminator, TerminatorKind,
 };
 use stable_mir::target::{MachineInfo, MachineSize};
-use stable_mir::ty::{AdtKind, IndexedVal, MirConst, RigidTy, Span, Ty, TyKind, UintTy};
+use stable_mir::ty::{AdtKind, IndexedVal, RigidTy, Span, Ty, TyKind, UintTy};
 use std::fmt::Debug;
 use strum_macros::AsRefStr;
 use tracing::{debug, trace};
@@ -40,7 +40,8 @@ use tracing::{debug, trace};
 /// Instrument the code with checks for invalid values.
 #[derive(Debug)]
 pub struct ValidValuePass {
-    pub check_type: CheckType,
+    pub safety_check_type: CheckType,
+    pub unsupported_check_type: CheckType,
 }
 
 impl TransformPass for ValidValuePass {
@@ -92,10 +93,10 @@ impl ValidValuePass {
                         let msg =
                             format!("Undefined Behavior: Invalid value of type `{target_ty}`",);
                         body.insert_check(
-                            &self.check_type,
+                            &self.safety_check_type,
                             &mut source,
                             InsertPosition::Before,
-                            result,
+                            Some(result),
                             &msg,
                         );
                     }
@@ -106,10 +107,10 @@ impl ValidValuePass {
                         let msg =
                             format!("Undefined Behavior: Invalid value of type `{pointee_ty}`",);
                         body.insert_check(
-                            &self.check_type,
+                            &self.safety_check_type,
                             &mut source,
                             InsertPosition::Before,
-                            result,
+                            Some(result),
                             &msg,
                         );
                     }
@@ -130,14 +131,13 @@ impl ValidValuePass {
         source: &mut SourceInstruction,
         reason: &str,
     ) {
-        let span = source.span(body.blocks());
-        let rvalue = Rvalue::Use(Operand::Constant(ConstOperand {
-            const_: MirConst::from_bool(false),
-            span,
-            user_ty: None,
-        }));
-        let result = body.insert_assignment(rvalue, source, InsertPosition::Before);
-        body.insert_check(&self.check_type, source, InsertPosition::Before, result, reason);
+        body.insert_check(
+            &self.unsupported_check_type,
+            source,
+            InsertPosition::Before,
+            None,
+            reason,
+        );
     }
 }
 

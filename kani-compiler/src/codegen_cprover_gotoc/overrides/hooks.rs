@@ -160,24 +160,25 @@ impl GotocHook for UnsupportedCheck {
         target: Option<BasicBlockIdx>,
         span: Span,
     ) -> Stmt {
-        assert_eq!(fargs.len(), 2);
+        assert_eq!(fargs.len(), 1);
         let msg = fargs.pop().unwrap();
-        let cond = fargs.pop().unwrap().cast_to(Type::bool());
         let msg = gcx.extract_const_message(&msg).unwrap();
-        let target = target.unwrap();
         let caller_loc = gcx.codegen_caller_span_stable(span);
-        Stmt::block(
-            vec![
-                gcx.codegen_assert_assume(
-                    cond,
-                    PropertyClass::UnsupportedConstruct,
-                    &msg,
-                    caller_loc,
-                ),
-                Stmt::goto(bb_label(target), caller_loc),
-            ],
-            caller_loc,
-        )
+        if let Some(target) = target {
+            Stmt::block(
+                vec![
+                    gcx.codegen_assert_assume_false(
+                        PropertyClass::UnsupportedConstruct,
+                        &msg,
+                        caller_loc,
+                    ),
+                    Stmt::goto(bb_label(target), caller_loc),
+                ],
+                caller_loc,
+            )
+        } else {
+            gcx.codegen_assert_assume_false(PropertyClass::UnsupportedConstruct, &msg, caller_loc)
+        }
     }
 }
 
@@ -205,6 +206,37 @@ impl GotocHook for SafetyCheck {
         Stmt::block(
             vec![
                 gcx.codegen_assert_assume(cond, PropertyClass::SafetyCheck, &msg, caller_loc),
+                Stmt::goto(bb_label(target), caller_loc),
+            ],
+            caller_loc,
+        )
+    }
+}
+
+struct SafetyCheckNoAssume;
+impl GotocHook for SafetyCheckNoAssume {
+    fn hook_applies(&self, _tcx: TyCtxt, _instance: Instance) -> bool {
+        unreachable!("{UNEXPECTED_CALL}")
+    }
+
+    fn handle(
+        &self,
+        gcx: &mut GotocCtx,
+        _instance: Instance,
+        mut fargs: Vec<Expr>,
+        _assign_to: &Place,
+        target: Option<BasicBlockIdx>,
+        span: Span,
+    ) -> Stmt {
+        assert_eq!(fargs.len(), 2);
+        let msg = fargs.pop().unwrap();
+        let cond = fargs.pop().unwrap().cast_to(Type::bool());
+        let msg = gcx.extract_const_message(&msg).unwrap();
+        let target = target.unwrap();
+        let caller_loc = gcx.codegen_caller_span_stable(span);
+        Stmt::block(
+            vec![
+                gcx.codegen_assert(cond, PropertyClass::SafetyCheck, &msg, caller_loc),
                 Stmt::goto(bb_label(target), caller_loc),
             ],
             caller_loc,
@@ -738,6 +770,7 @@ pub fn fn_hooks() -> GotocHooks {
         (KaniHook::Cover, Rc::new(Cover)),
         (KaniHook::AnyRaw, Rc::new(Nondet)),
         (KaniHook::SafetyCheck, Rc::new(SafetyCheck)),
+        (KaniHook::SafetyCheckNoAssume, Rc::new(SafetyCheckNoAssume)),
         (KaniHook::IsAllocated, Rc::new(IsAllocated)),
         (KaniHook::PointerObject, Rc::new(PointerObject)),
         (KaniHook::PointerOffset, Rc::new(PointerOffset)),

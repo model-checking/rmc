@@ -33,13 +33,22 @@ mod instrumentation_visitor;
 
 #[derive(Debug)]
 pub struct DelayedUbPass {
-    pub check_type: CheckType,
+    pub safety_check_type: CheckType,
+    pub unsupported_check_type: CheckType,
     pub mem_init_fn_cache: HashMap<KaniFunction, FnDef>,
 }
 
 impl DelayedUbPass {
-    pub fn new(check_type: CheckType, queries: &QueryDb) -> Self {
-        Self { check_type, mem_init_fn_cache: queries.kani_functions().clone() }
+    pub fn new(
+        safety_check_type: CheckType,
+        unsupported_check_type: CheckType,
+        queries: &QueryDb,
+    ) -> Self {
+        Self {
+            safety_check_type,
+            unsupported_check_type,
+            mem_init_fn_cache: queries.kani_functions().clone(),
+        }
     }
 }
 
@@ -122,7 +131,8 @@ impl GlobalPass for DelayedUbPass {
                 let (instrumentation_added, body) = UninitInstrumenter::run(
                     body,
                     instance,
-                    self.check_type.clone(),
+                    self.safety_check_type.clone(),
+                    self.unsupported_check_type.clone(),
                     &mut self.mem_init_fn_cache,
                     target_finder,
                 );

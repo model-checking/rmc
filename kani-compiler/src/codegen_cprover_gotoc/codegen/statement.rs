@@ -251,19 +251,25 @@ impl GotocCtx<'_> {
                     if *expected { r } else { Expr::not(r) }
                 };
 
-                let msg = if let AssertMessage::BoundsCheck { .. } = msg {
+                let (msg, property_class) = if let AssertMessage::BoundsCheck { .. } = msg {
                     // For bounds check the following panic message is generated at runtime:
                     // "index out of bounds: the length is {len} but the index is {index}",
                     // but CBMC only accepts static messages so we don't add values to the message.
-                    "index out of bounds: the length is less than or equal to the given index"
+                    (
+                        "index out of bounds: the length is less than or equal to the given index",
+                        PropertyClass::Assertion,
+                    )
                 } else if let AssertMessage::MisalignedPointerDereference { .. } = msg {
                     // Misaligned pointer dereference check messages is also a runtime messages.
                     // Generate a generic one here.
-                    "misaligned pointer dereference: address must be a multiple of its type's \
-                    alignment"
+                    (
+                        "misaligned pointer dereference: address must be a multiple of its type's \
+                    alignment",
+                        PropertyClass::SafetyCheck,
+                    )
                 } else {
                     // For all other assert kind we can get the static message.
-                    msg.description().unwrap()
+                    (msg.description().unwrap(), PropertyClass::Assertion)
                 };
 
                 let (msg_str, reach_stmt) =
@@ -274,7 +280,7 @@ impl GotocCtx<'_> {
                         reach_stmt,
                         self.codegen_assert_assume(
                             cond.cast_to(Type::bool()),
-                            PropertyClass::Assertion,
+                            property_class,
                             &msg_str,
                             loc,
                         ),

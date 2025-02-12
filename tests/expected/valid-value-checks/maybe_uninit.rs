@@ -14,7 +14,6 @@ pub fn check_valid_zeroed() {
 }
 
 #[kani::proof]
-#[kani::should_panic]
 pub fn check_invalid_zeroed() {
     let maybe = MaybeUninit::zeroed();
     let _val: NonZeroI64 = unsafe { maybe.assume_init() };

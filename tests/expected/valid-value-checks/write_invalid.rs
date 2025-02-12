@@ -9,7 +9,6 @@
 use std::num::NonZeroU8;
 
 #[kani::proof]
-#[kani::should_panic]
 pub fn write_invalid_bytes_no_ub_with_spurious_cex() {
     let mut non_zero: NonZeroU8 = kani::any();
     let dest = &mut non_zero as *mut _;
@@ -17,7 +16,6 @@ pub fn write_invalid_bytes_no_ub_with_spurious_cex() {
 }
 
 #[kani::proof]
-#[kani::should_panic]
 pub fn write_valid_before_read() {
     let mut non_zero: NonZeroU8 = kani::any();
     let mut non_zero_2: NonZeroU8 = kani::any();
@@ -28,7 +26,6 @@ pub fn write_valid_before_read() {
 }
 
 #[kani::proof]
-#[kani::should_panic]
 pub fn read_invalid_is_ub() {
     let mut non_zero: NonZeroU8 = kani::any();
     let dest = &mut non_zero as *mut _;

@@ -1,0 +1,5 @@
+ ** 1 of 14 failed (1 unreachable)\
+Failed Checks: Undefined Behavior: Invalid value of type `std::num::NonZero<i64>`
+
+Verification failed for - check_invalid_zeroed
+Complete - 1 successfully verified harnesses, 1 failures, 2 total.

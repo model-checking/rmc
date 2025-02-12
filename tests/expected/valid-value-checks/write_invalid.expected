@@ -1,0 +1,13 @@
+ ** 1 of 19 failed (2 unreachable)\
+Failed Checks: Kani currently doesn't support checking validity of `transmute` for `std::option::Option<std::num::NonZero<u8>>`
+
+ ** 1 of 43 failed (2 unreachable)\
+Failed Checks: Kani currently doesn't support checking validity of `transmute` for `std::option::Option<std::num::NonZero<u8>>`
+
+ ** 1 of 18 failed (1 unreachable)\
+Failed Checks: Kani currently doesn't support checking validity of `transmute` for `std::option::Option<std::num::NonZero<u8>>`
+
+Verification failed for - read_invalid_is_ub
+Verification failed for - write_valid_before_read
+Verification failed for - write_invalid_bytes_no_ub_with_spurious_cex
+Complete - 0 successfully verified harnesses, 3 failures, 3 total.

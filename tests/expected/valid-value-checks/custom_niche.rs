@@ -38,41 +38,35 @@ impl Rating {
 }
 
 #[kani::proof]
-#[kani::should_panic]
 pub fn check_new_with_ub() {
     assert_eq!(Rating::new(10), None);
 }
 
 #[kani::proof]
-#[kani::should_panic]
 pub fn check_unchecked_new_ub() {
     let val = kani::any();
     assert_eq!(unsafe { Rating::new_unchecked(val).stars }, val);
 }
 
 #[kani::proof]
-#[kani::should_panic]
 pub fn check_new_with_ub_limits() {
     let stars = kani::any_where(|s: &u8| *s == 0 || *s > 5);
     let _ = Rating::new(stars);
 }
 
 #[kani::proof]
-#[kani::should_panic]
 pub fn check_invalid_dereference() {
     let any: u8 = kani::any();
     let _rating: Rating = unsafe { *(&any as *const _ as *const _) };
 }
 
 #[kani::proof]
-#[kani::should_panic]
 pub fn check_invalid_transmute() {
     let any: u8 = kani::any();
     let _rating: Rating = unsafe { mem::transmute(any) };
 }
 
 #[kani::proof]
-#[kani::should_panic]
 pub fn check_invalid_transmute_copy() {
     let any: u8 = kani::any();
     let _rating: Rating = unsafe { mem::transmute_copy(&any) };
@@ -82,7 +76,6 @@ pub fn check_invalid_transmute_copy() {
 ///
 /// FIX-ME: This is not supported today, and we fail due to unsupported check.
 #[kani::proof]
-#[kani::should_panic]
 pub fn check_copy_nonoverlap() {
     let stars = kani::any_where(|s: &u8| *s == 0 || *s > 5);
     let mut rating: Rating = kani::any();
@@ -90,7 +83,6 @@ pub fn check_copy_nonoverlap() {
 }
 
 #[kani::proof]
-#[kani::should_panic]
 pub fn check_copy_nonoverlap_ub() {
     let any: u8 = kani::any();
     let mut rating: Rating = kani::any();
@@ -98,7 +90,6 @@ pub fn check_copy_nonoverlap_ub() {
 }
 
 #[kani::proof]
-#[kani::should_panic]
 pub fn check_invalid_increment() {
     let mut orig: Rating = kani::any();
     unsafe { orig.stars += 1 };

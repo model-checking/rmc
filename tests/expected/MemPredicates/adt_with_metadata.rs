@@ -42,7 +42,6 @@ mod invalid_access {
     use super::*;
     use std::ptr;
     #[kani::proof]
-    #[kani::should_panic]
     pub fn check_invalid_dyn_ptr() {
         unsafe fn new_dead_ptr<T>(val: T) -> *const T {
             let local = val;

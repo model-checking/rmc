@@ -32,14 +32,12 @@ mod valid_access {
 mod invalid_access {
     use super::*;
     #[kani::proof]
-    #[kani::should_panic]
     pub fn check_invalid_ptr() {
         let raw_ptr = unsafe { new_dead_ptr::<u8>(0) };
         assert!(!can_dereference(raw_ptr));
     }
 
     #[kani::proof]
-    #[kani::should_panic]
     pub fn check_invalid_array() {
         let raw_ptr = unsafe { new_dead_ptr::<[char; 2]>(['a', 'b']) };
         assert!(can_dereference(raw_ptr));

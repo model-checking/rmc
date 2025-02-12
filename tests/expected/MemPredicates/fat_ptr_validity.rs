@@ -38,14 +38,12 @@ mod valid_access {
 mod invalid_access {
     use super::*;
     #[kani::proof]
-    #[kani::should_panic]
     pub fn check_invalid_dyn_ptr() {
         let raw_ptr: *const dyn PartialEq<u8> = unsafe { new_dead_ptr::<u8>(0) };
         assert!(can_dereference(raw_ptr));
     }
 
     #[kani::proof]
-    #[kani::should_panic]
     pub fn check_invalid_slice_ptr() {
         let raw_ptr: *const [char] = unsafe { new_dead_ptr::<[char; 2]>(['a', 'b']) };
         assert!(can_dereference(raw_ptr));
