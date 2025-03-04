@@ -76,6 +76,7 @@ export RUSTC_LOG=error
 RUST_FLAGS=(
     "-Cpanic=abort"
     "-Zalways-encode-mir"
+    "--emit=mir"
 )
 export RUSTFLAGS="${RUST_FLAGS[@]}"
 export RUSTC="$KANI_DIR/target/debug/scan"

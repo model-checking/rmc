@@ -102,3 +102,12 @@ pub fn start_recursion() {
 pub fn not_recursive() {
     let _ = ok();
 }
+
+extern "C" {
+    fn external_function();
+}
+
+/// Ensure scanner finds unsafe calls to external functions.
+pub fn call_external() {
+    unsafe { external_function() };
+}

@@ -1,6 +1,7 @@
 5 test_scan_fn_loops.csv
-19 test_scan_functions.csv
+20 test_scan_functions.csv
 5 test_scan_input_tys.csv
-16 test_scan_overall.csv
+17 test_scan_overall.csv
 3 test_scan_recursion.csv
-5 test_scan_unsafe_ops.csv
+9 test_scan_unsafe_distance.csv
+6 test_scan_unsafe_ops.csv
