@@ -544,7 +544,8 @@ pub fn resolve_unwind_value(
 ) -> Option<u32> {
     // Check for which flag is being passed and prioritize extracting unwind from the
     // respective flag/annotation.
-    args.unwind.or(harness_metadata.attributes.unwind_value).or(args.default_unwind)
+    // If no unwind value is specified, default to 1 to prevent memory consumption issues
+    args.unwind.or(harness_metadata.attributes.unwind_value).or(args.default_unwind).or(Some(1))
 }
 
 #[cfg(test)]
@@ -575,7 +576,7 @@ mod tests {
         }
 
         // test against no unwind annotation
-        assert_eq!(resolve(&args_empty, &harness_none), None);
+        assert_eq!(resolve(&args_empty, &harness_none), Some(1));
         assert_eq!(resolve(&args_only_default, &harness_none), Some(2));
         assert_eq!(resolve(&args_only_harness, &harness_none), Some(1));
         assert_eq!(resolve(&args_both, &harness_none), Some(1));
