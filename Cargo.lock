@@ -176,7 +176,7 @@ dependencies = [
 
 [[package]]
 name = "build-kani"
-version = "0.59.0"
+version = "0.60.0"
 dependencies = [
  "anyhow",
  "cargo_metadata",
@@ -333,7 +333,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "117725a109d387c937a1533ce01b450cbde6b88abceea8473c4d7a85853cda3c"
 dependencies = [
  "lazy_static",
- "windows-sys 0.59.0",
+ "windows-sys 0.52.0",
 ]
 
 [[package]]
@@ -397,7 +397,7 @@ dependencies = [
 
 [[package]]
 name = "cprover_bindings"
-version = "0.59.0"
+version = "0.60.0"
 dependencies = [
  "lazy_static",
  "linear-map",
@@ -611,7 +611,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "33d852cb9b869c2a9b3df2f71a3074817f01e1844f839a144f5fcef059a4eb5d"
 dependencies = [
  "libc",
- "windows-sys 0.59.0",
+ "windows-sys 0.52.0",
 ]
 
 [[package]]
@@ -808,7 +808,7 @@ checksum = "72167d68f5fce3b8655487b8038691a3c9984ee769590f93f2a631f4ad64e4f5"
 
 [[package]]
 name = "kani"
-version = "0.59.0"
+version = "0.60.0"
 dependencies = [
  "kani_core",
  "kani_macros",
@@ -816,7 +816,7 @@ dependencies = [
 
 [[package]]
 name = "kani-compiler"
-version = "0.59.0"
+version = "0.60.0"
 dependencies = [
  "charon",
  "clap",
@@ -855,7 +855,7 @@ dependencies = [
 
 [[package]]
 name = "kani-driver"
-version = "0.59.0"
+version = "0.60.0"
 dependencies = [
  "anyhow",
  "cargo_metadata",
@@ -887,7 +887,7 @@ dependencies = [
 
 [[package]]
 name = "kani-verifier"
-version = "0.59.0"
+version = "0.60.0"
 dependencies = [
  "anyhow",
  "home",
@@ -896,14 +896,14 @@ dependencies = [
 
 [[package]]
 name = "kani_core"
-version = "0.59.0"
+version = "0.60.0"
 dependencies = [
  "kani_macros",
 ]
 
 [[package]]
 name = "kani_macros"
-version = "0.59.0"
+version = "0.60.0"
 dependencies = [
  "proc-macro-error2",
  "proc-macro2",
@@ -913,7 +913,7 @@ dependencies = [
 
 [[package]]
 name = "kani_metadata"
-version = "0.59.0"
+version = "0.60.0"
 dependencies = [
  "clap",
  "cprover_bindings",
@@ -1447,7 +1447,7 @@ dependencies = [
  "errno",
  "libc",
  "linux-raw-sys",
- "windows-sys 0.59.0",
+ "windows-sys 0.52.0",
 ]
 
 [[package]]
@@ -1627,12 +1627,12 @@ dependencies = [
  "cfg-if",
  "libc",
  "psm",
- "windows-sys 0.59.0",
+ "windows-sys 0.52.0",
 ]
 
 [[package]]
 name = "std"
-version = "0.59.0"
+version = "0.60.0"
 dependencies = [
  "kani",
 ]
@@ -1706,7 +1706,7 @@ dependencies = [
  "getrandom 0.3.1",
  "once_cell",
  "rustix",
- "windows-sys 0.59.0",
+ "windows-sys 0.52.0",
 ]
 
 [[package]]
@@ -2100,7 +2100,7 @@ version = "0.1.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "cf221c93e13a30d793f7645a0e7762c55d169dbb0a49671918a2319d289b10bb"
 dependencies = [
- "windows-sys 0.59.0",
+ "windows-sys 0.52.0",
 ]
 
 [[package]]

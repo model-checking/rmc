@@ -3,7 +3,7 @@
 
 [package]
 name = "kani-verifier"
-version = "0.59.0"
+version = "0.60.0"
 edition = "2021"
 description = "A bit-precise model checker for Rust."
 readme = "README.md"

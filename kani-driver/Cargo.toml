@@ -3,7 +3,7 @@
 
 [package]
 name = "kani-driver"
-version = "0.59.0"
+version = "0.60.0"
 edition = "2021"
 description = "Build a project with Kani and run all proof harnesses"
 license = "MIT OR Apache-2.0"
