@@ -12,6 +12,7 @@ use std::fmt::Write;
 use std::path::Path;
 use std::sync::OnceLock;
 use std::time::{Duration, Instant};
+use strum_macros::Display;
 use tokio::process::Command as TokioCommand;
 
 use crate::args::common::Verbosity;
@@ -29,7 +30,7 @@ use crate::util::render_command;
 /// Note: Kissat was marginally better, but it is an external solver which could be more unstable.
 static DEFAULT_SOLVER: CbmcSolver = CbmcSolver::Cadical;
 
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Display, PartialEq, Eq)]
 pub enum VerificationStatus {
     Success,
     Failure,

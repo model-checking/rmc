@@ -5,6 +5,7 @@ use std::ffi::OsString;
 use std::process::ExitCode;
 
 use anyhow::Result;
+use autoharness::{autoharness_cargo, autoharness_standalone};
 use time::{OffsetDateTime, format_description};
 
 use args::{CargoKaniSubcommand, check_is_valid};
@@ -73,25 +74,21 @@ fn cargokani_main(input_args: Vec<OsString>) -> Result<()> {
         return list_cargo(*list_args, args.verify_opts);
     }
 
+    if let Some(CargoKaniSubcommand::Autoharness(autoharness_args)) = args.command {
+        return autoharness_cargo(*autoharness_args);
+    }
+
     let mut session = match args.command {
         Some(CargoKaniSubcommand::Assess(assess_args)) => {
             let sess = session::KaniSession::new(args.verify_opts)?;
             return assess::run_assess(sess, *assess_args);
         }
-        Some(CargoKaniSubcommand::Autoharness(args)) => {
-            let mut sess = session::KaniSession::new(args.verify_opts)?;
-            sess.enable_autoharness();
-            sess.add_auto_harness_args(
-                args.common_autoharness_args.include_function,
-                args.common_autoharness_args.exclude_function,
-            );
-
-            sess
-        }
         Some(CargoKaniSubcommand::Playback(args)) => {
             return playback_cargo(*args);
         }
-        Some(CargoKaniSubcommand::List(_)) => unreachable!(),
+        Some(CargoKaniSubcommand::Autoharness(_)) | Some(CargoKaniSubcommand::List(_)) => {
+            unreachable!()
+        }
         None => session::KaniSession::new(args.verify_opts)?,
     };
 
@@ -114,19 +111,7 @@ fn standalone_main() -> Result<()> {
 
     let (session, project) = match args.command {
         Some(StandaloneSubcommand::Autoharness(args)) => {
-            let mut session = KaniSession::new(args.verify_opts)?;
-            session.enable_autoharness();
-            session.add_auto_harness_args(
-                args.common_autoharness_args.include_function,
-                args.common_autoharness_args.exclude_function,
-            );
-
-            if !session.args.common_args.quiet {
-                print_kani_version(InvocationType::Standalone);
-            }
-
-            let project = project::standalone_project(&args.input, args.crate_name, &session)?;
-            (session, project)
+            return autoharness_standalone(*args);
         }
         Some(StandaloneSubcommand::Playback(args)) => return playback_standalone(*args),
         Some(StandaloneSubcommand::List(list_args)) => {

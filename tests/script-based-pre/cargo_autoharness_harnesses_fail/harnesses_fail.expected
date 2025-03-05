@@ -23,13 +23,6 @@ arithmetic_overflow\
 	 - Status: FAILURE\
 	 - Description: "attempt to compute `unchecked_mul` which would overflow"
 
-Verification failed for - panic
-Verification failed for - integer_overflow
-Verification failed for - oob_unsafe_array_access
-Verification failed for - oob_safe_array_access
-Verification failed for - unchecked_mul
-Complete - 0 successfully verified functions, 5 failures, 5 total.
-
 Checking harness panic_harness...
 panic.assertion\
 	 - Status: FAILURE\
@@ -54,4 +47,30 @@ arithmetic_overflow\
 	 - Status: FAILURE\
 	 - Description: "attempt to compute `unchecked_mul` which would overflow"
 
+Manual Harness Summary:
+Verification failed for - unchecked_mul_harness
+Verification failed for - panic_harness
+Verification failed for - integer_overflow_harness
+Verification failed for - oob_unsafe_array_access_harness
+Verification failed for - oob_safe_array_access_harness
 Complete - 0 successfully verified harnesses, 5 failures, 5 total.
+
+Autoharness Summary:
++-------------------------+---------------------------+---------------------+
+| Selected Function       | Kind of Automatic Harness | Verification Result |
++===========================================================================+
+| unchecked_mul           | #[kani::proof]            | Failure             |
+|-------------------------+---------------------------+---------------------|
+| panic                   | #[kani::proof]            | Failure             |
+|-------------------------+---------------------------+---------------------|
+| integer_overflow        | #[kani::proof]            | Failure             |
+|-------------------------+---------------------------+---------------------|
+| oob_unsafe_array_access | #[kani::proof]            | Failure             |
+|-------------------------+---------------------------+---------------------|
+| oob_safe_array_access   | #[kani::proof]            | Failure             |
++-------------------------+---------------------------+---------------------+
+Note that `kani autoharness` sets default --harness-timeout of 30s and --default-unwind of 20.
+If verification failed because of timing out or too low of an unwinding bound, try passing larger values for these arguments (or, if possible, writing a loop contract).
+Complete - 0 successfully verified functions, 5 failures, 5 total.
+
+Skipped Functions: None. Kani generated automatic harnesses for all functions in the available crate(s).

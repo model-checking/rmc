@@ -1,4 +1,4 @@
 # Copyright Kani Contributors
 # SPDX-License-Identifier: Apache-2.0 OR MIT
-script: loops.sh
-expected: loops.expected
+script: dependencies.sh
+expected: dependencies.expected

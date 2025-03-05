@@ -1,4 +1,23 @@
 Autoharness: Checking function include::simple against all possible inputs...
 VERIFICATION:- SUCCESSFUL
-Verification succeeded for - include::simple
+
+Manual Harness Summary:
+No proof harnesses (functions with #[kani::proof]) were found to verify.
+
+Autoharness Summary:
++-------------------+---------------------------+---------------------+
+| Selected Function | Kind of Automatic Harness | Verification Result |
++=====================================================================+
+| include::simple   | #[kani::proof]            | Success             |
++-------------------+---------------------------+---------------------+
 Complete - 1 successfully verified functions, 0 failures, 1 total.
+
+Kani did not generate automatic harnesses for the following functions.
+If you believe that the provided reason is incorrect and Kani should have generated an automatic harness, please comment on this issue: https://github.com/model-checking/kani/issues/3832
++------------------+--------------------------------+
+| Skipped Function | Reason for Skipping            |
++===================================================+
+| excluded::simple | Did not match provided filters |
+|------------------+--------------------------------|
+| include::generic | Generic Function               |
++------------------+--------------------------------+

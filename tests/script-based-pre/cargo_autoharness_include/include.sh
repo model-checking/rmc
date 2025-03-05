@@ -2,4 +2,4 @@
 # Copyright Kani Contributors
 # SPDX-License-Identifier: Apache-2.0 OR MIT
 
-cargo kani autoharness -Z unstable-options --include-function include
+cargo kani autoharness -Z autoharness --include-function include

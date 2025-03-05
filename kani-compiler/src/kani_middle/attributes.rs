@@ -310,6 +310,17 @@ impl<'tcx> KaniAttributes<'tcx> {
         })
     }
 
+    // Is this a function inserted by Kani instrumentation?
+    pub fn is_kani_instrumentation(&self) -> bool {
+        self.fn_marker().is_some() || self.is_contract_generated()
+    }
+
+    // Is this a contract-generated function?
+    // Note that this function currently always returns false because of https://github.com/model-checking/kani/issues/3921
+    fn is_contract_generated(&self) -> bool {
+        self.map.contains_key(&KaniAttributeKind::IsContractGenerated)
+    }
+
     /// Return a function marker if any.
     pub fn fn_marker(&self) -> Option<Symbol> {
         self.attribute_value(KaniAttributeKind::FnMarker)

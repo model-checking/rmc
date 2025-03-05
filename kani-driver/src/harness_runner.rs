@@ -246,10 +246,6 @@ impl KaniSession {
         let (automatic, manual): (Vec<_>, Vec<_>) =
             results.iter().partition(|r| r.harness.is_automatically_generated);
 
-        if self.auto_harness {
-            self.print_autoharness_summary(automatic)?;
-        }
-
         let (successes, failures): (Vec<_>, Vec<_>) =
             manual.into_iter().partition(|r| r.result.status == VerificationStatus::Success);
 
@@ -269,10 +265,8 @@ impl KaniSession {
             }
         }
 
-        // We currently omit a summary if there was just 1 harness
-        if failing > 0 {
-            println!("Manual Harness Summary:");
-        }
+        println!("Manual Harness Summary:");
+
         for failure in failures.iter() {
             println!("Verification failed for - {}", failure.harness.pretty_name);
         }
@@ -304,7 +298,11 @@ impl KaniSession {
             self.show_coverage_summary()?;
         }
 
-        if failing > 0 {
+        if self.auto_harness {
+            self.print_autoharness_summary(automatic)?;
+        }
+
+        if failing > 0 && !self.auto_harness {
             // Failure exit code without additional error message
             drop(self);
             std::process::exit(1);

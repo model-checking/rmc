@@ -1,0 +1,12 @@
+# Copyright Kani Contributors
+# SPDX-License-Identifier: Apache-2.0 OR MIT
+[package]
+name = "cargo_autoharness_dependencies"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+other_crate = { path = "other_crate" }
+
+[package.metadata.kani.unstable]
+stubbing = true

@@ -61,17 +61,12 @@ pub struct StandaloneAutoharnessArgs {
 impl ValidateArgs for CargoAutoharnessArgs {
     fn validate(&self) -> Result<(), Error> {
         self.verify_opts.validate()?;
-        if !self
-            .verify_opts
-            .common_args
-            .unstable_features
-            .contains(UnstableFeature::UnstableOptions)
-        {
+        if !self.verify_opts.common_args.unstable_features.contains(UnstableFeature::Autoharness) {
             return Err(Error::raw(
                 ErrorKind::MissingRequiredArgument,
                 format!(
                     "The `autoharness` subcommand is unstable and requires -Z {}",
-                    UnstableFeature::UnstableOptions
+                    UnstableFeature::Autoharness
                 ),
             ));
         }
@@ -95,17 +90,12 @@ impl ValidateArgs for CargoAutoharnessArgs {
 impl ValidateArgs for StandaloneAutoharnessArgs {
     fn validate(&self) -> Result<(), Error> {
         self.verify_opts.validate()?;
-        if !self
-            .verify_opts
-            .common_args
-            .unstable_features
-            .contains(UnstableFeature::UnstableOptions)
-        {
+        if !self.verify_opts.common_args.unstable_features.contains(UnstableFeature::Autoharness) {
             return Err(Error::raw(
                 ErrorKind::MissingRequiredArgument,
                 format!(
                     "The `autoharness` subcommand is unstable and requires -Z {}",
-                    UnstableFeature::UnstableOptions
+                    UnstableFeature::Autoharness
                 ),
             ));
         }

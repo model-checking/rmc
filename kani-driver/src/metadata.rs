@@ -97,6 +97,7 @@ pub fn merge_kani_metadata(files: Vec<KaniMetadata>) -> KaniMetadata {
         unsupported_features: vec![],
         test_harnesses: vec![],
         contracted_functions: vec![],
+        autoharness_skipped_fns: None,
     };
     for md in files {
         // Note that we're taking ownership of the original vec, and so we can move the data into the new data structure.
@@ -106,6 +107,7 @@ pub fn merge_kani_metadata(files: Vec<KaniMetadata>) -> KaniMetadata {
         result.unsupported_features.extend(md.unsupported_features);
         result.test_harnesses.extend(md.test_harnesses);
         result.contracted_functions.extend(md.contracted_functions);
+        // We do not handle autoharness metadata here, since this function is not reachable from the autoharness subcommand.
     }
     result
 }

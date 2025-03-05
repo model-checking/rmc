@@ -1,0 +1,14 @@
+Autoharness: Checking function yes_harness against all possible inputs...
+
+Manual Harness Summary:
+No proof harnesses (functions with #[kani::proof]) were found to verify.
+
+Autoharness Summary:
++-------------------+---------------------------+---------------------+
+| Selected Function | Kind of Automatic Harness | Verification Result |
++=====================================================================+
+| yes_harness       | #[kani::proof]            | Success             |
++-------------------+---------------------------+---------------------+
+Complete - 1 successfully verified functions, 0 failures, 1 total.
+
+Skipped Functions: None. Kani generated automatic harnesses for all functions in the available crate(s).

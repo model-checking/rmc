@@ -3,7 +3,7 @@ assertion\
 	 - Status: FAILURE\
 	 - Description: "|result : &u32| *result == x"
 
-Autoharness: Checking function should_pass::has_loop_contract's contract against all possible inputs...
+Autoharness: Checking function should_pass::has_loop_contract against all possible inputs...
 should_pass::has_loop_contract.assertion\
 	 - Status: SUCCESS\
 	 - Description: "assertion failed: x == 2"
@@ -20,9 +20,25 @@ arithmetic_overflow\
 	 - Status: SUCCESS\
 	 - Description: "attempt to compute `unchecked_mul` which would overflow"
 
-Verification succeeded for - should_pass::unchecked_mul
-Verification succeeded for - should_pass::has_loop_contract
-Verification succeeded for - should_pass::has_recursion_gcd
-Verification succeeded for - should_pass::div
-Verification failed for - should_fail::max
+Manual Harness Summary:
+No proof harnesses (functions with #[kani::proof]) were found to verify.
+
+Autoharness Summary:
++--------------------------------+-----------------------------+---------------------+
+| Selected Function              | Kind of Automatic Harness   | Verification Result |
++====================================================================================+
+| should_pass::unchecked_mul     | #[kani::proof_for_contract] | Success             |
+|--------------------------------+-----------------------------+---------------------|
+| should_pass::has_loop_contract | #[kani::proof]              | Success             |
+|--------------------------------+-----------------------------+---------------------|
+| should_pass::has_recursion_gcd | #[kani::proof_for_contract] | Success             |
+|--------------------------------+-----------------------------+---------------------|
+| should_pass::div               | #[kani::proof_for_contract] | Success             |
+|--------------------------------+-----------------------------+---------------------|
+| should_fail::max               | #[kani::proof_for_contract] | Failure             |
++--------------------------------+-----------------------------+---------------------+
+Note that `kani autoharness` sets default --harness-timeout of 30s and --default-unwind of 20.
+If verification failed because of timing out or too low of an unwinding bound, try passing larger values for these arguments (or, if possible, writing a loop contract).
 Complete - 4 successfully verified functions, 1 failures, 5 total.
+
+Skipped Functions: None. Kani generated automatic harnesses for all functions in the available crate(s).

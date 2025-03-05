@@ -4,7 +4,11 @@
 extern crate clap;
 
 use serde::{Deserialize, Serialize};
-use std::{collections::HashSet, path::PathBuf};
+use std::{
+    collections::{BTreeMap, HashSet},
+    path::PathBuf,
+};
+use strum_macros::{Display, EnumString};
 
 pub use artifact::ArtifactType;
 pub use cbmc_solver::CbmcSolver;
@@ -33,7 +37,34 @@ pub struct KaniMetadata {
     pub test_harnesses: Vec<HarnessMetadata>,
     /// The functions with contracts in this crate
     pub contracted_functions: Vec<ContractedFunction>,
+    /// Metadata for the `autoharness` subcommand
+    pub autoharness_skipped_fns: Option<AutoHarnessSkippedFns>,
 }
+
+/// Reasons that Kani does not generate an automatic harness for a function.
+#[derive(Debug, Clone, Serialize, Deserialize, Display, EnumString)]
+pub enum AutoHarnessSkipReason {
+    /// The function is generic.
+    #[strum(serialize = "Generic Function")]
+    GenericFn,
+    /// A Kani-internal function: already a harness, implementation of a Kani associated item or Kani contract instrumentation functions).
+    #[strum(serialize = "Kani implementation")]
+    KaniImpl,
+    /// At least one of the function's arguments does not implement kani::Arbitrary
+    /// (The Vec<String> contains the list of argument names that do not implement it)
+    #[strum(serialize = "Missing Arbitrary implementation for argument(s)")]
+    MissingArbitraryImpl(Vec<String>),
+    /// The function does not have a body.
+    #[strum(serialize = "The function does not have a body")]
+    NoBody,
+    /// The function doesn't match the user's provided filters.
+    #[strum(serialize = "Did not match provided filters")]
+    UserFilter,
+}
+
+/// For the autoharness subcommand: map function names to the reason why we did not generate an automatic harness for that function.
+/// We use an ordered map so that when we print the data, it is ordered alphabetically by function name.
+pub type AutoHarnessSkippedFns = BTreeMap<String, AutoHarnessSkipReason>;
 
 #[derive(Debug, Clone, Serialize, Deserialize, Eq, PartialEq, PartialOrd, Ord)]
 pub struct ContractedFunction {

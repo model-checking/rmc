@@ -104,6 +104,8 @@ pub enum UnstableFeature {
     FloatLib,
     /// Enable vtable restriction.
     RestrictVtable,
+    /// Enable the autoharness subcommand.
+    Autoharness,
 }
 
 impl UnstableFeature {

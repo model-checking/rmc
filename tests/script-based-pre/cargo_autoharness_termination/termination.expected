@@ -1,0 +1,42 @@
+Autoharness: Checking function timeout::check_harness_timeout against all possible inputs...
+CBMC failed
+VERIFICATION:- FAILED
+CBMC timed out. You may want to rerun your proof with a larger timeout or use stubbing to reduce the size of the code the verifier reasons about.
+
+Autoharness: Checking function unwind_bound::gcd_recursion against all possible inputs...
+Not unwinding recursion unwind_bound::gcd_recursion iteration 21
+
+unwind_bound::gcd_recursion.assertion\
+	 - Status: FAILURE\
+	 - Description: "attempt to calculate the remainder with a divisor of zero"
+
+unwind_bound::gcd_recursion.recursion\
+	 - Status: FAILURE\
+	 - Description: "recursion unwinding assertion"
+
+VERIFICATION:- FAILED
+[Kani] info: Verification output shows one or more unwinding failures.
+
+Autoharness: Checking function unwind_bound::infinite_loop against all possible inputs...
+unwind_bound::infinite_loop.unwind\
+	 - Status: FAILURE\
+	 - Description: "unwinding assertion loop 0"
+
+VERIFICATION:- FAILED
+[Kani] info: Verification output shows one or more unwinding failures.
+
+Autoharness Summary:
++--------------------------------+---------------------------+---------------------+
+| Selected Function              | Kind of Automatic Harness | Verification Result |
++==================================================================================+
+| timeout::check_harness_timeout | #[kani::proof]            | Failure             |
+|--------------------------------+---------------------------+---------------------|
+| unwind_bound::gcd_recursion    | #[kani::proof]            | Failure             |
+|--------------------------------+---------------------------+---------------------|
+| unwind_bound::infinite_loop    | #[kani::proof]            | Failure             |
++--------------------------------+---------------------------+---------------------+
+Note that `kani autoharness` sets default --harness-timeout of 30s and --default-unwind of 20.
+If verification failed because of timing out or too low of an unwinding bound, try passing larger values for these arguments (or, if possible, writing a loop contract).
+Complete - 0 successfully verified functions, 3 failures, 3 total.
+
+Skipped Functions: None. Kani generated automatic harnesses for all functions in the available crate(s).

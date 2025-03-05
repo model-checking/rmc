@@ -613,6 +613,7 @@ impl GotoCodegenResults {
             // removes any contracts logic for ReachabilityType::Test or ReachabilityType::PubFns,
             // which are the two ReachabilityTypes under which the compiler calls this function.
             contracted_functions: vec![],
+            autoharness_skipped_fns: None,
         }
     }
 
