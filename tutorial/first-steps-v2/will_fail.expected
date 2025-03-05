@@ -1,0 +1,2 @@
+FAILURE\
+assertion failed: x < 4096

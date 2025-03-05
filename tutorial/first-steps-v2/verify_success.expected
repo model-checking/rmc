@@ -1,0 +1,4 @@
+SUCCESS\
+assertion failed: x < 4096
+SUCCESS\
+assertion failed: y < 10

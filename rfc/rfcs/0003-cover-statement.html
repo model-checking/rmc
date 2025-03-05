@@ -1,0 +1,321 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>0003-cover-statement - Kani RFC Book</title>
+        <!-- Custom HTML head -->
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="Design documents for Kani Rust Verifier">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="../intro.html">Introduction</a></li><li class="chapter-item expanded affix "><a href="../template.html">RFC Template</a></li><li class="chapter-item expanded affix "><li class="part-title">Kani RFCs</li><li class="chapter-item expanded "><a href="../rfcs/0001-mir-linker.html">0001-mir-linker</a></li><li class="chapter-item expanded "><a href="../rfcs/0002-function-stubbing.html">0002-function-stubbing</a></li><li class="chapter-item expanded "><a href="../rfcs/0003-cover-statement.html" class="active">0003-cover-statement</a></li><li class="chapter-item expanded "><a href="../rfcs/0004-loop-contract-synthesis.html">0004-loop-contract-synthesis</a></li><li class="chapter-item expanded "><a href="../rfcs/0005-should-panic-attr.html">0005-should-panic-attr</a></li><li class="chapter-item expanded "><a href="../rfcs/0006-unstable-api.html">0006-unstable-api</a></li><li class="chapter-item expanded "><a href="../rfcs/0007-global-conditions.html">0007-global-conditions</a></li><li class="chapter-item expanded "><a href="../rfcs/0008-line-coverage.html">0008-line-coverage</a></li><li class="chapter-item expanded "><a href="../rfcs/0009-function-contracts.html">0009-function-contracts</a></li><li class="chapter-item expanded "><a href="../rfcs/0010-quantifiers.html">0010-quantifiers</a></li><li class="chapter-item expanded "><a href="../rfcs/0011-source-coverage.html">0011-source-coverage</a></li><li class="chapter-item expanded "><a href="../rfcs/0012-loop-contracts.html">0012-loop-contracts</a></li><li class="chapter-item expanded "><a href="../rfcs/0013-list.html">0013-list</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Kani RFC Book</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/model-checking/kani" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+                        <a href="https://github.com/model-checking/kani/edit/main/rfc/src/rfcs/0003-cover-statement.md" title="Suggest an edit" aria-label="Suggest an edit">
+                            <i id="git-edit-button" class="fa fa-edit"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <ul>
+<li><strong>Feature Name:</strong> Cover statement (<code>cover-statement</code>)</li>
+<li><strong>Feature Request Issue:</strong> <a href="https://github.com/model-checking/kani/issues/696">https://github.com/model-checking/kani/issues/696</a></li>
+<li><strong>RFC PR:</strong> <a href="https://github.com/model-checking/kani/pull/1906">https://github.com/model-checking/kani/pull/1906</a></li>
+<li><strong>Status:</strong> Stable</li>
+<li><strong>Version:</strong> 2</li>
+</ul>
+<hr />
+<h2 id="summary"><a class="header" href="#summary">Summary</a></h2>
+<p>A new Kani API that allows users to check that a certain condition can occur at a specific location in the code.</p>
+<h2 id="user-impact"><a class="header" href="#user-impact">User Impact</a></h2>
+<p>Users typically want to gain confidence that a proof checks what it is supposed to check, i.e. that properties are not passing vacuously due to an over-constrained environment.</p>
+<p>A new Kani macro, <code>cover</code> will be created that can be used for checking that a certain condition <em>can</em> occur at a specific location in the code.
+The purpose of the macro is to verify, for example, that assumptions are not ruling out those conditions, e.g.:</p>
+<pre><code class="language-rust">let mut v: Vec&lt;i32&gt; = Vec::new();
+let len: usize = kani::any();
+kani::assume(len &lt; 5);
+for _i in 0..len {
+    v.push(kani::any());
+}
+// make sure we can get a vector of length 5
+kani::cover!(v.len() == 5);
+</code></pre>
+<p>This is typically used to ensure that verified checks are not passing <em>vacuously</em>, e.g. due to overconstrained pre-conditions.</p>
+<p>The special case of verifying that a certain line of code is reachable can be achieved using <code>kani::cover!()</code> (which is equivalent to <code>cover!(true)</code>), e.g.</p>
+<pre><code class="language-rust">match x {
+    val_1 =&gt; ...,
+    val_2 =&gt; ...,
+    ...
+    val_i =&gt; kani::cover!(), // verify that `x` can take the value `val_i`
+}
+</code></pre>
+<p>Similar to Rust's <code>assert</code> macro, a custom message can be specified, e.g.</p>
+<pre><code class="language-rust">kani::cover!(x &gt; y, &quot;x can be greater than y&quot;);
+</code></pre>
+<h2 id="user-experience"><a class="header" href="#user-experience">User Experience</a></h2>
+<p>The <code>cover</code> macro instructs Kani to find <em>at least one</em> possible execution that satisfies the specified condition at that line of code.  If no such execution is possible, the check is reported as <em>unsatisfiable</em>.</p>
+<p>Each cover statement will be reported as a check whose description is <code>cover condition: cond</code> and whose status is:</p>
+<ul>
+<li><code>SATISFIED</code> (green): if Kani found an execution that satisfies the condition.</li>
+<li><code>UNSATISFIABLE</code> (yellow): if Kani proved that the condition cannot be satisfied.</li>
+<li><code>UNREACHABLE</code> (yellow): if Kani proved that the cover statement itself cannot be reached.</li>
+</ul>
+<p>For example, for the following <code>cover</code> statement:</p>
+<pre><code class="language-rust">kani::cover!(a == 0);
+</code></pre>
+<p>An example result is:</p>
+<pre><code>Check 2: main.cover.2
+         - Status: SATISFIED
+         - Description: &quot;cover condition: a == 0&quot;
+         - Location: foo.rs:9:5 in function main
+</code></pre>
+<h3 id="impact-on-overall-verification-status"><a class="header" href="#impact-on-overall-verification-status">Impact on Overall Verification Status</a></h3>
+<p>By default, unsatisfiable and unreachable <code>cover</code> checks will not impact verification success or failure.
+This is to avoid getting verification failure for harnesses for which a <code>cover</code> check is not relevant.
+For example, on the following program, verification should not fail for <code>another_harness_that_doesnt_call_foo</code> because the <code>cover</code> statement in <code>foo</code> is unreachable from it.</p>
+<pre><code class="language-rust">[kani::proof]
+fn a_harness_that_calls_foo() {
+    foo();
+}
+
+#[kani::proof]
+fn another_harness_that_doesnt_call_foo() {
+    // ...
+}
+
+fn foo() {
+    kani::cover!( /* some condition */);
+}
+</code></pre>
+<p>The <code>--fail-uncoverable</code> option will allow users to fail the verification if a cover property is unsatisfiable or unreachable.
+This option will be integrated within the framework of <a href="https://model-checking.github.io/kani/rfc/rfcs/0007-global-conditions.html">Global Conditions</a>, which is used to define properties that depend on other properties.</p>
+<p>Using the <code>--fail-uncoverable</code> option will enable the global condition with name <code>fail_uncoverable</code>.
+Following the format for global conditions, the outcome will be one of the following:</p>
+<ol>
+<li><code> - fail_uncoverable: FAILURE (expected all cover statements to be satisfied, but at least one was not)</code></li>
+<li><code> - fail_uncoverable: SUCCESS (all cover statements were satisfied as expected)</code></li>
+</ol>
+<p>Note that the criteria to achieve a <code>SUCCESS</code> status depends on all properties of the <code>&quot;cover&quot;</code> class having a <code>SATISFIED</code> status.
+Otherwise, we return a <code>FAILURE</code> status.</p>
+<h3 id="inclusion-in-the-verification-summary"><a class="header" href="#inclusion-in-the-verification-summary">Inclusion in the Verification Summary</a></h3>
+<p>Cover checks will be reported separately in the verification summary, e.g.</p>
+<pre><code>SUMMARY:
+ ** 1 of 206 failed (2 unreachable)
+ Failed Checks: assertion failed: x[0] == x[1]
+
+ ** 30 of 35 cover statements satisfied (1 unreachable) &lt;--- NEW
+</code></pre>
+<p>In this example, 5 of the 35 cover statements were found to be unsatisfiable, and one of those 5 is additionally unreachable.</p>
+<h3 id="interaction-with-other-checks"><a class="header" href="#interaction-with-other-checks">Interaction with Other Checks</a></h3>
+<p>If one or more unwinding assertions fail or an unsupported construct is found to be reachable (which indicate an incomplete path exploration), and Kani found the condition to be unsatisfiable or unreachable, the result will be reported as <code>UNDETERMINED</code>.</p>
+<h2 id="detailed-design"><a class="header" href="#detailed-design">Detailed Design</a></h2>
+<p>The implementation will touch the following components:</p>
+<ul>
+<li>Kani library: The <code>cover</code> macro will be added there along with a <code>cover</code> function with a <code>rustc_diagnostic_item</code></li>
+<li><code>kani-compiler</code>: The <code>cover</code> function will be handled via a hook and codegen as two assertions (<code>cover(cond)</code> will be codegen as <code>__CPROVER_assert(false); __CPROVER_assert(!cond)</code>).
+The purpose of the <code>__CPROVER_assert(false)</code> is to determine whether the <code>cover</code> statement is reachable.
+If it is, the second <code>__CPROVER_assert(!cond)</code> indicates whether the condition is satisfiable or not.</li>
+<li><code>kani-driver</code>: The CBMC output parser will extract cover properties through their property class, and their result will be set based on the result of the two assertions:
+<ul>
+<li>The first (reachability) assertion is proven: report as <code>FAILURE (UNREACHABLE)</code></li>
+<li>The first assertion fails, and the second one is proven: report as <code>FAILURE</code> to indicate that the condition is unsatisfiable</li>
+<li>The first assertion fails, and the second one fails: report as <code>SUCCESS</code> to indicate that the condition is satisfiable</li>
+</ul>
+</li>
+</ul>
+<h2 id="rationale-and-alternatives"><a class="header" href="#rationale-and-alternatives">Rationale and alternatives</a></h2>
+<ul>
+<li>
+<p>What are the pros and cons of this design?
+CBMC has its own <a href="https://diffblue.github.io/cbmc//cprover__builtin__headers_8h.html#a44f072b21e93cb0f72adcccc9005f307">cover API (<code>__CPROVER_cover</code>)</a>, for which <code>SUCCESS</code> is reported if an execution is found, and <code>FAILURE</code> is reported otherwise.
+However, using this API currently requires running CBMC in a separate <a href="https://github.com/diffblue/cbmc/issues/6613">&quot;cover&quot; mode</a>.
+Having to run CBMC in that mode would complicate the Kani driver as it will have to perform two CBMC runs, and then combine their results into a single report.
+Thus, the advantage of the proposed design is that it keeps the Kani driver simple.
+In addition, the proposed solution does not depend on a feature in the backend, and thus will continue to work if we were to integrate a different backend.</p>
+</li>
+<li>
+<p>What is the impact of not doing this?
+The current workaround to accomplish the same effect of verifying that a condition can be covered is to use <code>assert!(!cond)</code>.
+However, if the condition can indeed be covered, verification would fail due to the failure of the assertion.</p>
+</li>
+</ul>
+<h2 id="open-questions"><a class="header" href="#open-questions">Open questions</a></h2>
+<ul>
+<li>~Should we allow format arguments in the macro, e.g. <code>kani::cover!(x &gt; y, &quot;{} can be greater than {}&quot;, x, y)</code>?
+Users may expect this to be supported since the macro looks similar to the <code>assert</code> macro, but Kani doesn't include the formatted string in the message description, since it's not available at compile time.~
+<ul>
+<li>For now, this macro will not accept format arguments, since this
+is not well handled by Kani.
+This is an extesion to this API that can be easily added later on if Kani
+ever supports runtime formatting.</li>
+</ul>
+</li>
+</ul>
+<h2 id="other-considerations"><a class="header" href="#other-considerations">Other Considerations</a></h2>
+<p>We need to make sure the concrete playback feature can be used with <code>cover</code> statements that were found to be coverable.</p>
+<h2 id="future-possibilities"><a class="header" href="#future-possibilities">Future possibilities</a></h2>
+<p>The new cover API subsumes the current <code>kani::expect_fail</code> function.
+Once it's implemented, we should be able to get rid of <code>expect_fail</code>, and all the related code in <code>compiletest</code> that handles the <code>EXPECTED FAILURE</code> message in a special manner.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../rfcs/0002-function-stubbing.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                            <a rel="next" href="../rfcs/0004-loop-contract-synthesis.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../rfcs/0002-function-stubbing.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                    <a rel="next" href="../rfcs/0004-loop-contract-synthesis.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+        <script type="text/javascript">
+            window.playground_copyable = true;
+        </script>
+        <script src="../elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../searcher.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+    </body>
+</html>

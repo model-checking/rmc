@@ -1,0 +1,5 @@
+SUCCESS\
+"NonZeroU32 is internally a u32 but it should never be 0."
+SUCCESS\
+assertion failed: inventory.get(&id).unwrap() == quantity
+VERIFICATION:- SUCCESSFUL
