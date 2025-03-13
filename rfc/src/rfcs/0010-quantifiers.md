@@ -1,7 +1,7 @@
 - **Feature Name:** Quantifiers
 - **Feature Request Issue:** [#2546](https://github.com/model-checking/kani/issues/2546) and [#836](https://github.com/model-checking/kani/issues/836)
 - **RFC PR:** [#](https://github.com/model-checking/kani/pull/)
-- **Status:** Unstable
+- **Status:** Under Review
 - **Version:** 1.0
 
 -------------------
@@ -24,11 +24,11 @@ This new feature doesn't introduce any breaking changes to users. It will only a
 
 ## User Experience
 
-We propose a syntax inspired by ["Pattern Types"](https://github.com/rust-lang/rust/pull/120131). The syntax of existential (i.e., `kani::exists`) and universal (i.e., `kani::forall`) quantifiers are:
+The syntax of existential (i.e., `kani::exists`) and universal (i.e., `kani::forall`) quantifiers are:
 
 ```rust
-kani::exists(|<var>: <type> [is <range-expr>] | <boolean-expression>)
-kani::forall(|<var>: <type> [is <range-expr>] | <boolean-expression>)
+kani::exists(|<var>: <type> [in (<range-expr>)] | <boolean-expression>)
+kani::forall(|<var>: <type> [in (<range-expr>)] | <boolean-expression>)
 ```
 
 If `<range-expr>` is not provided, we assume `<var>` can range over all possible values of the given `<type>` (i.e., syntactic sugar for full range `|<var>: <type> as .. |`). CBMC's SAT backend only supports bounded quantification under **constant** lower and upper bounds (for more details, see the [documentation for quantifiers in CBMC](https://diffblue.github.io/cbmc/contracts-quantifiers.html)). The SMT backend, on the other hand, supports arbitrary Boolean expressions. In any case, `<boolean-expression>` should not have side effects, as the purpose of quantifiers is to assert a condition over a domain of objects without altering the state.
@@ -36,7 +36,6 @@ If `<range-expr>` is not provided, we assume `<var>` can range over all possible
 Consider the following example adapted from the documentation for the [from_raw_parts](https://doc.rust-lang.org/std/vec/struct.Vec.html#method.from_raw_parts) function:
 
 ```rust
-use std::ptr;
 use std::mem;
 
 #[kani::proof]
@@ -67,7 +66,6 @@ fn main() {
 Given the `v` vector has non-deterministic values, there are potential arithmetic overflows that might happen in the for loop. So we need to constrain all values of the array. We may also want to check all values of `rebuilt` after the operation. Without quantifiers, we might be tempted to use loops as follows:
 
 ```rust
-use std::ptr;
 use std::mem;
 
 #[kani::proof]
@@ -105,14 +103,17 @@ fn main() {
 This, however, might unnecessary increase the complexity of the verication process. We can achieve the same effect using quantifiers as shown below.
 
 ```rust
-use std::ptr;
 use std::mem;
+
+extern crate kani;
+use kani::{kani_forall, kani_exists};
 
 #[kani::proof]
 fn main() {
     let original_v = vec![kani::any::<usize>(); 3];
     let v = original_v.clone();
-    kani::assume(kani::forall(|i: usize is ..v.len() | v[i] < 5));
+    let v_len = v.len();
+    kani::assume(kani::forall!(|i in (0,v_len) | v[i] < 5));
 
     // Prevent running `v`'s destructor so we are in complete control
     // of the allocation.
@@ -131,7 +132,7 @@ fn main() {
 
         // Put everything back together into a Vec
         let rebuilt = Vec::from_raw_parts(p, len, cap);
-        assert!(kani::forall(|i: usize is ..len | rebuilt[i] == original_v[i]+1));
+        assert!(kani::forall!(|i in (0, len) | rebuilt[i] == original_v[i]+1));
     }
 }
 ```
@@ -139,14 +140,17 @@ fn main() {
 The same principle applies if we want to use the existential quantifier.
 
 ```rust
-use std::ptr;
 use std::mem;
+
+extern crate kani;
+use kani::{kani_forall, kani_exists};
 
 #[kani::proof]
 fn main() {
     let original_v = vec![kani::any::<usize>(); 3];
     let v = original_v.clone();
-    kani::assume(kani::forall(|i: usize is ..v.len() | v[i] < 5));
+    let v_len = v.len();
+    kani::assume(kani::forall!(|i in (0,v_len) | v[i] < 5));
 
     // Prevent running `v`'s destructor so we are in complete control
     // of the allocation.
@@ -168,7 +172,7 @@ fn main() {
 
         // Put everything back together into a Vec
         let rebuilt = Vec::from_raw_parts(p, len, cap);
-        assert!(kani::exists(|i: usize is ..len | rebuilt[i] == 0));
+        assert!(kani::exists!(| i in (0, len) | rebuilt[i] == 0));
     }
 }
 ```

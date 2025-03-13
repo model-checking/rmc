@@ -376,6 +376,30 @@ impl ToIrep for ExprValue {
                 sub: elems.iter().map(|x| x.to_irep(mm)).collect(),
                 named_sub: linear_map![],
             },
+            ExprValue::Forall { variable, domain } => Irep {
+                id: IrepId::Forall,
+                sub: vec![
+                    Irep {
+                        id: IrepId::Tuple,
+                        sub: vec![variable.to_irep(mm)],
+                        named_sub: linear_map![],
+                    },
+                    domain.to_irep(mm),
+                ],
+                named_sub: linear_map![],
+            },
+            ExprValue::Exists { variable, domain } => Irep {
+                id: IrepId::Exists,
+                sub: vec![
+                    Irep {
+                        id: IrepId::Tuple,
+                        sub: vec![variable.to_irep(mm)],
+                        named_sub: linear_map![],
+                    },
+                    domain.to_irep(mm),
+                ],
+                named_sub: linear_map![],
+            },
         }
     }
 }
