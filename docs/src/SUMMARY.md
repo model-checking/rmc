@@ -30,11 +30,12 @@
 
 - [Developer documentation](dev-documentation.md)
   - [Coding conventions](./conventions.md)
+  - [Command cheat sheets](./cheat-sheets.md)
   - [Working with CBMC](./cbmc-hacks.md)
   - [Working with `rustc`](./rustc-hacks.md)
   - [Migrating to StableMIR](./stable-mir.md)
-  - [Command cheat sheets](./cheat-sheets.md)
   - [cargo kani assess](./dev-assess.md)
+  - [Demonic non-determinism](./demonic-nondet.md)
   - [Testing](./testing.md)
     - [Regression testing](./regression-testing.md)
     - [(Experimental) Testing with a Large Number of Repositories](./repo-crawl.md)
