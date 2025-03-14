@@ -19,3 +19,4 @@
 - [0011-source-coverage](rfcs/0011-source-coverage.md)
 - [0012-loop-contracts](rfcs/0012-loop-contracts.md)
 - [0013-list](rfcs/0013-list.md)
+- [0014-may-panic-if-attr](rfcs/0014-may-panic-if-attr.md)
