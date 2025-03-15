@@ -1,0 +1,83 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `library/kani/src/shadow.rs`."><title>shadow.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Italic-81dc35de.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-MediumItalic-ccf7e434.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../../static.files/rustdoc-916cea96.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="kani" data-themes="" data-resource-suffix="" data-rustdoc-version="1.87.0-nightly (ecade534c 2025-03-14)" data-channel="nightly" data-search-js="search-e7298875.js" data-settings-js="settings-d72f25bb.js" ><script src="../../static.files/storage-d8ac8691.js"></script><script defer src="../../static.files/src-script-b8d3f215.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-fb8c74a8.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-893ab5e7.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-6580c154.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-044be391.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="main-heading"><h1><div class="sub-heading">kani/</div>shadow.rs</h1><rustdoc-toolbar></rustdoc-toolbar></div><div class="example-wrap digits-2"><pre class="rust"><code><a href=#1 id=1 data-nosnippet>1</a><span class="comment">// Copyright Kani Contributors
+<a href=#2 id=2 data-nosnippet>2</a>// SPDX-License-Identifier: Apache-2.0 OR MIT
+<a href=#3 id=3 data-nosnippet>3</a>
+<a href=#4 id=4 data-nosnippet>4</a></span><span class="doccomment">//! This module contains an API for shadow memory.
+<a href=#5 id=5 data-nosnippet>5</a>//! Shadow memory is a mechanism by which we can store metadata on memory
+<a href=#6 id=6 data-nosnippet>6</a>//! locations, e.g. whether a memory location is initialized.
+<a href=#7 id=7 data-nosnippet>7</a>//!
+<a href=#8 id=8 data-nosnippet>8</a>//! The main data structure provided by this module is the `ShadowMem` struct,
+<a href=#9 id=9 data-nosnippet>9</a>//! which allows us to store metadata on a given memory location.
+<a href=#10 id=10 data-nosnippet>10</a>//!
+<a href=#11 id=11 data-nosnippet>11</a>//! # Example
+<a href=#12 id=12 data-nosnippet>12</a>//!
+<a href=#13 id=13 data-nosnippet>13</a>//! ```no_run
+<a href=#14 id=14 data-nosnippet>14</a>//! use kani::shadow::ShadowMem;
+<a href=#15 id=15 data-nosnippet>15</a>//! use std::alloc::{alloc, Layout};
+<a href=#16 id=16 data-nosnippet>16</a>//!
+<a href=#17 id=17 data-nosnippet>17</a>//! let mut sm = ShadowMem::new(false);
+<a href=#18 id=18 data-nosnippet>18</a>//!
+<a href=#19 id=19 data-nosnippet>19</a>//! unsafe {
+<a href=#20 id=20 data-nosnippet>20</a>//!     let ptr = alloc(Layout::new::&lt;u8&gt;());
+<a href=#21 id=21 data-nosnippet>21</a>//!     // assert the memory location is not initialized
+<a href=#22 id=22 data-nosnippet>22</a>//!     assert!(!sm.get(ptr));
+<a href=#23 id=23 data-nosnippet>23</a>//!     // write to the memory location
+<a href=#24 id=24 data-nosnippet>24</a>//!     *ptr = 42;
+<a href=#25 id=25 data-nosnippet>25</a>//!     // update the shadow memory to indicate that this location is now initialized
+<a href=#26 id=26 data-nosnippet>26</a>//!     sm.set(ptr, true);
+<a href=#27 id=27 data-nosnippet>27</a>//! }
+<a href=#28 id=28 data-nosnippet>28</a>//! ```
+<a href=#29 id=29 data-nosnippet>29</a>
+<a href=#30 id=30 data-nosnippet>30</a></span><span class="kw">const </span>MAX_NUM_OBJECTS: usize = <span class="number">1024</span>;
+<a href=#31 id=31 data-nosnippet>31</a><span class="kw">const </span>MAX_OBJECT_SIZE: usize = <span class="number">64</span>;
+<a href=#32 id=32 data-nosnippet>32</a>
+<a href=#33 id=33 data-nosnippet>33</a><span class="kw">const </span>MAX_NUM_OBJECTS_ASSERT_MSG: <span class="kw-2">&amp;</span>str = <span class="string">"The number of objects exceeds the maximum number supported by Kani's shadow memory model (1024)"</span>;
+<a href=#34 id=34 data-nosnippet>34</a><span class="kw">const </span>MAX_OBJECT_SIZE_ASSERT_MSG: <span class="kw-2">&amp;</span>str =
+<a href=#35 id=35 data-nosnippet>35</a>    <span class="string">"The object size exceeds the maximum size supported by Kani's shadow memory model (64)"</span>;
+<a href=#36 id=36 data-nosnippet>36</a>
+<a href=#37 id=37 data-nosnippet>37</a><span class="doccomment">/// A shadow memory data structure that contains a two-dimensional array of a
+<a href=#38 id=38 data-nosnippet>38</a>/// generic type `T`.
+<a href=#39 id=39 data-nosnippet>39</a>/// Each element of the outer array represents an object, and each element of
+<a href=#40 id=40 data-nosnippet>40</a>/// the inner array represents a byte in the object.
+<a href=#41 id=41 data-nosnippet>41</a></span><span class="kw">pub struct </span>ShadowMem&lt;T: Copy&gt; {
+<a href=#42 id=42 data-nosnippet>42</a>    mem: [[T; MAX_OBJECT_SIZE]; MAX_NUM_OBJECTS],
+<a href=#43 id=43 data-nosnippet>43</a>}
+<a href=#44 id=44 data-nosnippet>44</a>
+<a href=#45 id=45 data-nosnippet>45</a><span class="kw">impl</span>&lt;T: Copy&gt; ShadowMem&lt;T&gt; {
+<a href=#46 id=46 data-nosnippet>46</a>    <span class="doccomment">/// Create a new shadow memory instance initialized with the given value
+<a href=#47 id=47 data-nosnippet>47</a>    </span><span class="attr">#[<span class="kw">crate</span>::unstable(
+<a href=#48 id=48 data-nosnippet>48</a>        feature = <span class="string">"ghost-state"</span>,
+<a href=#49 id=49 data-nosnippet>49</a>        issue = <span class="number">3184</span>,
+<a href=#50 id=50 data-nosnippet>50</a>        reason = <span class="string">"experimental ghost state/shadow memory API"
+<a href=#51 id=51 data-nosnippet>51</a>    </span>)]
+<a href=#52 id=52 data-nosnippet>52</a>    </span><span class="kw">pub const fn </span>new(val: T) -&gt; <span class="self">Self </span>{
+<a href=#53 id=53 data-nosnippet>53</a>        <span class="self">Self </span>{ mem: [[val; MAX_OBJECT_SIZE]; MAX_NUM_OBJECTS] }
+<a href=#54 id=54 data-nosnippet>54</a>    }
+<a href=#55 id=55 data-nosnippet>55</a>
+<a href=#56 id=56 data-nosnippet>56</a>    <span class="doccomment">/// Get the shadow memory value of the given pointer
+<a href=#57 id=57 data-nosnippet>57</a>    </span><span class="attr">#[<span class="kw">crate</span>::unstable(
+<a href=#58 id=58 data-nosnippet>58</a>        feature = <span class="string">"ghost-state"</span>,
+<a href=#59 id=59 data-nosnippet>59</a>        issue = <span class="number">3184</span>,
+<a href=#60 id=60 data-nosnippet>60</a>        reason = <span class="string">"experimental ghost state/shadow memory API"
+<a href=#61 id=61 data-nosnippet>61</a>    </span>)]
+<a href=#62 id=62 data-nosnippet>62</a>    </span><span class="kw">pub fn </span>get&lt;U&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, ptr: <span class="kw-2">*const </span>U) -&gt; T {
+<a href=#63 id=63 data-nosnippet>63</a>        <span class="kw">let </span>obj = <span class="kw">crate</span>::mem::pointer_object(ptr);
+<a href=#64 id=64 data-nosnippet>64</a>        <span class="kw">let </span>offset = <span class="kw">crate</span>::mem::pointer_offset(ptr);
+<a href=#65 id=65 data-nosnippet>65</a>        <span class="kw">crate</span>::assert(obj &lt; MAX_NUM_OBJECTS, MAX_NUM_OBJECTS_ASSERT_MSG);
+<a href=#66 id=66 data-nosnippet>66</a>        <span class="kw">crate</span>::assert(offset &lt; MAX_OBJECT_SIZE, MAX_OBJECT_SIZE_ASSERT_MSG);
+<a href=#67 id=67 data-nosnippet>67</a>        <span class="self">self</span>.mem[obj][offset]
+<a href=#68 id=68 data-nosnippet>68</a>    }
+<a href=#69 id=69 data-nosnippet>69</a>
+<a href=#70 id=70 data-nosnippet>70</a>    <span class="doccomment">/// Set the shadow memory value of the given pointer
+<a href=#71 id=71 data-nosnippet>71</a>    </span><span class="attr">#[<span class="kw">crate</span>::unstable(
+<a href=#72 id=72 data-nosnippet>72</a>        feature = <span class="string">"ghost-state"</span>,
+<a href=#73 id=73 data-nosnippet>73</a>        issue = <span class="number">3184</span>,
+<a href=#74 id=74 data-nosnippet>74</a>        reason = <span class="string">"experimental ghost state/shadow memory API"
+<a href=#75 id=75 data-nosnippet>75</a>    </span>)]
+<a href=#76 id=76 data-nosnippet>76</a>    </span><span class="kw">pub fn </span>set&lt;U&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, ptr: <span class="kw-2">*const </span>U, val: T) {
+<a href=#77 id=77 data-nosnippet>77</a>        <span class="kw">let </span>obj = <span class="kw">crate</span>::mem::pointer_object(ptr);
+<a href=#78 id=78 data-nosnippet>78</a>        <span class="kw">let </span>offset = <span class="kw">crate</span>::mem::pointer_offset(ptr);
+<a href=#79 id=79 data-nosnippet>79</a>        <span class="kw">crate</span>::assert(obj &lt; MAX_NUM_OBJECTS, MAX_NUM_OBJECTS_ASSERT_MSG);
+<a href=#80 id=80 data-nosnippet>80</a>        <span class="kw">crate</span>::assert(offset &lt; MAX_OBJECT_SIZE, MAX_OBJECT_SIZE_ASSERT_MSG);
+<a href=#81 id=81 data-nosnippet>81</a>        <span class="self">self</span>.mem[obj][offset] = val;
+<a href=#82 id=82 data-nosnippet>82</a>    }
+<a href=#83 id=83 data-nosnippet>83</a>}</code></pre></div></section></main></body></html>

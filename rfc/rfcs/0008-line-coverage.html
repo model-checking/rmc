@@ -1,0 +1,325 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>0008-line-coverage - Kani RFC Book</title>
+        <!-- Custom HTML head -->
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="Design documents for Kani Rust Verifier">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="../intro.html">Introduction</a></li><li class="chapter-item expanded affix "><a href="../template.html">RFC Template</a></li><li class="chapter-item expanded affix "><li class="part-title">Kani RFCs</li><li class="chapter-item expanded "><a href="../rfcs/0001-mir-linker.html">0001-mir-linker</a></li><li class="chapter-item expanded "><a href="../rfcs/0002-function-stubbing.html">0002-function-stubbing</a></li><li class="chapter-item expanded "><a href="../rfcs/0003-cover-statement.html">0003-cover-statement</a></li><li class="chapter-item expanded "><a href="../rfcs/0004-loop-contract-synthesis.html">0004-loop-contract-synthesis</a></li><li class="chapter-item expanded "><a href="../rfcs/0005-should-panic-attr.html">0005-should-panic-attr</a></li><li class="chapter-item expanded "><a href="../rfcs/0006-unstable-api.html">0006-unstable-api</a></li><li class="chapter-item expanded "><a href="../rfcs/0007-global-conditions.html">0007-global-conditions</a></li><li class="chapter-item expanded "><a href="../rfcs/0008-line-coverage.html" class="active">0008-line-coverage</a></li><li class="chapter-item expanded "><a href="../rfcs/0009-function-contracts.html">0009-function-contracts</a></li><li class="chapter-item expanded "><a href="../rfcs/0010-quantifiers.html">0010-quantifiers</a></li><li class="chapter-item expanded "><a href="../rfcs/0011-source-coverage.html">0011-source-coverage</a></li><li class="chapter-item expanded "><a href="../rfcs/0012-loop-contracts.html">0012-loop-contracts</a></li><li class="chapter-item expanded "><a href="../rfcs/0013-list.html">0013-list</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Kani RFC Book</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/model-checking/kani" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+                        <a href="https://github.com/model-checking/kani/edit/main/rfc/src/rfcs/0008-line-coverage.md" title="Suggest an edit" aria-label="Suggest an edit">
+                            <i id="git-edit-button" class="fa fa-edit"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <ul>
+<li><strong>Feature Name:</strong> Line coverage (<code>line-coverage</code>)</li>
+<li><strong>Feature Request Issue:</strong> <a href="https://github.com/model-checking/kani/issues/2610">https://github.com/model-checking/kani/issues/2610</a></li>
+<li><strong>RFC PR:</strong> <a href="https://github.com/model-checking/kani/pull/2609">https://github.com/model-checking/kani/pull/2609</a></li>
+<li><strong>Status:</strong> Cancelled</li>
+<li><strong>Version:</strong> 0</li>
+<li><strong>Proof-of-concept:</strong> <a href="https://github.com/model-checking/kani/pull/2609">https://github.com/model-checking/kani/pull/2609</a> (Kani) + <a href="https://github.com/model-checking/kani-vscode-extension/pull/122">https://github.com/model-checking/kani-vscode-extension/pull/122</a> (Kani VS Code Extension)</li>
+</ul>
+<hr />
+<h2 id="summary"><a class="header" href="#summary">Summary</a></h2>
+<p>Add verification-based line coverage reports to Kani.</p>
+<h2 id="user-impact"><a class="header" href="#user-impact">User Impact</a></h2>
+<p>Nowadays, users can't easily obtain verification-based coverage reports in Kani.
+Generally speaking, coverage reports show which parts of the code under verification are covered and which are not.
+Because of that, coverage is often seen as a great metric to determine the quality of a verification effort.</p>
+<p>Moreover, some users prefer using coverage information for harness development and debugging.
+That's because coverage information provides users with more familiar way to interpret verification results.</p>
+<p>This RFC proposes adding a new option for verification-based line coverage reports to Kani.
+As mentioned earlier, we expect users to employ this coverage-related option on several stages of a verification effort:</p>
+<ul>
+<li><strong>Learning:</strong> New users are more familiar with coverage reports than property-based results.</li>
+<li><strong>Development:</strong> Some users prefer coverage results to property-based results since they are easier to interpret.</li>
+<li><strong>CI Integration</strong>: Users may want to enforce a minimum percentage of code coverage for new contributions.</li>
+<li><strong>Debugging:</strong> Users may find coverage reports particularly helpful when inputs are over-constrained (missing some corner cases).</li>
+<li><strong>Evaluation:</strong> Users can easily evaluate where and when more verification work is needed (some projects aim for 100% coverage).</li>
+</ul>
+<p>Moreover, adding this option directly to Kani, instead of relying on another tools, is likely to:</p>
+<ol>
+<li>Increase the speed of development</li>
+<li>Improve testing for coverage features</li>
+</ol>
+<p>Which translates into faster and more reliable coverage options for users.</p>
+<h2 id="user-experience"><a class="header" href="#user-experience">User Experience</a></h2>
+<p>The goal is for Kani to generate code coverage report per harness in a well established format, such as <a href="https://github.com/linux-test-project/lcov">LCOV</a>, and possibly a summary in the output.
+For now, we will focus on an interim solution that will enable us to assess the results of <a href="#injection-of-coverage-checks">our instrumentation</a> and enable integration with the Kani VS Code extension.</p>
+<h3 id="high-level-changes"><a class="header" href="#high-level-changes">High-level changes</a></h3>
+<p>For the first version, this experimental feature will report verification results along coverage reports.
+Because of that, we'll add a new section <code>Coverage results</code> that shows coverage results for each individual harness.</p>
+<p>In the following, we describe an experimental output format.
+Note that the final output format and overall UX is to be determined.</p>
+<h3 id="experimental-output-format-for-coverage-results"><a class="header" href="#experimental-output-format-for-coverage-results">Experimental output format for coverage results</a></h3>
+<p>The <code>Coverage results</code> section for each harness will produce coverage information in a CSV format as follows:</p>
+<pre><code>&lt;file&gt;, &lt;line&gt;, &lt;status&gt;
+</code></pre>
+<p>where <code>&lt;status&gt;</code> is either <code>FULL</code>, <code>PARTIAL</code> or <code>NONE</code>.</p>
+<p>As mentioned, this format is designed for evaluating the <a href="#detailed-design">native instrumentation-based design</a> and is likely to be substituted with another well-established format as soon as possible.</p>
+<p><strong>Users are not expected to consume this output directly.</strong>
+Instead, coverage data is to be consumed by the <a href="https://github.com/model-checking/kani-vscode-extension">Kani VS Code extension</a> and displayed as in <a href="https://github.com/model-checking/kani-vscode-extension/pull/122">the VS Code Extension prototype</a>.</p>
+<p>How to activate and display coverage information in the extension is out of scope for this RFC.
+That said, a proof-of-concept implementation is available <a href="https://github.com/model-checking/kani-vscode-extension/pull/122">here</a>.</p>
+<h2 id="detailed-design"><a class="header" href="#detailed-design">Detailed Design</a></h2>
+<h3 id="architecture"><a class="header" href="#architecture">Architecture</a></h3>
+<p>We will add a new unstable <code>--coverage</code> verification option to Kani which will require <code>-Z line-coverage</code> until this feature is stabilized.
+We will also add a new <code>--coverage-checks</code> option to <code>kani-compiler</code>, which will result in the injection of coverage checks before each Rust statement and terminator<sup class="footnote-reference"><a href="#coverage-experiments">1</a></sup>.
+This option will be supplied by <code>kani-driver</code> when the <code>--coverage</code> option is selected.
+These options will cause Kani to inject coverage checks during compilation and postprocess them to produce the coverage results sections described earlier.</p>
+<h3 id="coverage-checks"><a class="header" href="#coverage-checks">Coverage Checks</a></h3>
+<p>Coverage checks are a new class of checks similar to <a href="https://model-checking.github.io/kani/rfc/rfcs/0003-cover-statement.html"><code>cover</code> checks</a>.
+The main difference is that users cannot directly interact with coverage checks (i.e., they cannot add or remove them manually).
+Coverage checks are encoded as an <code>assert(false)</code> statement (to test reachability) with a fixed description.
+In addition, coverage checks are:</p>
+<ul>
+<li>Hidden from verification results.</li>
+<li>Postprocessed to produce coverage results.</li>
+</ul>
+<p>In the following, we describe the injection and postprocessing procedures to generate coverage results.</p>
+<h4 id="injection-of-coverage-checks"><a class="header" href="#injection-of-coverage-checks">Injection of Coverage Checks</a></h4>
+<p>The injection of coverage checks will be done while generating code for basic blocks.
+This allows us to add one coverage check before each statement and terminator, which provides the most accurate results<sup class="footnote-reference"><a href="#coverage-experiments">1</a></sup>.
+It's not completely clear how this compares to the coverage instrumentation done in the Rust compiler, but an exploration to use the compiler APIs revealed that they're quite similar<sup class="footnote-reference"><a href="#coverage-api">2</a></sup>.</p>
+<h4 id="postprocessing-coverage-checks"><a class="header" href="#postprocessing-coverage-checks">Postprocessing Coverage Checks</a></h4>
+<p>The injection of coverage checks often results in one or more checks per line (assuming a well-formatted program).
+We'll postprocess these checks so for each line</p>
+<ul>
+<li>if all checks are <code>SATISFIED</code>: return <code>FULL</code></li>
+<li>if all checks are <code>UNSATISFIED</code>: return <code>NONE</code></li>
+<li>otherwise: return <code>PARTIAL</code></li>
+</ul>
+<p>We won't report coverage status for lines which don't include a coverage check.</p>
+<h2 id="rationale-and-alternatives"><a class="header" href="#rationale-and-alternatives">Rationale and alternatives</a></h2>
+<h3 id="benefits-from-a-native-coverage-solution"><a class="header" href="#benefits-from-a-native-coverage-solution">Benefits from a native coverage solution</a></h3>
+<p>Kani has relied on <a href="https://github.com/model-checking/cbmc-viewer"><code>cbmc-viewer</code></a> to report coverage information since the beginning.
+In essence, <code>cbmc-viewer</code> consumes data from coverage-focused invocations of CBMC and produces an HTML report containing (1) coverage information and (2) counterexample traces.
+Recently, there have been some issues with the coverage information reported by <code>cbmc-viewer</code> (e.g., <a href="https://github.com/model-checking/kani/issues/2048">#2048</a> or <a href="https://github.com/model-checking/kani/issues/1707">#1707</a>), forcing us to mark the <code>--visualize</code> option as unstable and disable coverage results in the reports (in <a href="https://github.com/model-checking/kani/pull/2206">#2206</a>).</p>
+<p>However, it's possible for Kani to report coverage information without <code>cbmc-viewer</code>, as explained before.
+This would give Kani control on both ends:</p>
+<ul>
+<li><strong>The instrumentation performed</strong> on the program. Eventually, this would allow us to report more precise coverage information (maybe similar to <a href="https://doc.rust-lang.org/rustc/instrument-coverage.html">Rust's instrument-based code coverage</a>).</li>
+<li><strong>The format of the coverage report</strong> to be generated. Similarly, this would allow us to generate coverage data in different formats (see <a href="https://github.com/model-checking/kani/issues/1706">#1706</a> for GCOV, or <a href="https://github.com/model-checking/kani/issues/1777">#1777</a> for LCOV). While technically this is also doable from <code>cbmc-viewer</code>'s output, development is likely to be faster this way.</li>
+</ul>
+<h4 id="coverage-through-cbmc-viewer"><a class="header" href="#coverage-through-cbmc-viewer">Coverage through <code>cbmc-viewer</code></a></h4>
+<p>As an alternative, we could fix and use <code>cbmc-viewer</code> to report line coverage.</p>
+<p>Most of the issues with <code>cbmc-viewer</code> are generally due to:</p>
+<ol>
+<li>Missing locations due to non-propagation of locations in either Kani or CBMC.</li>
+<li>Differences in the definition of a basic block in CBMC and Rust's MIR.</li>
+<li>Scarce documentation for coverage-related options (i.e., <code>--cover &lt;option&gt;</code>) in CBMC.</li>
+<li>Limited testing with Rust code in <code>cbmc-viewer</code>.</li>
+</ol>
+<p>Note that (1) is not exclusive to coverage results from <code>cbmc-viewer</code>.
+Finding checks with missing locations and propagating them if possible (as suggested in <a href="https://github.com/model-checking/kani/issues/2048#issuecomment-1599680694">this comment</a>) should be done regardless of the approach used for line coverage reports.</p>
+<p>In contrast, (2) and (3) can be considered the main problems for Kani contributors to develop coverage options on top of <code>cbmc-viewer</code> and CBMC.
+It's not clear how much effort this would involve, but (3) is likely to require substantial documentation contributions.
+But (4) shouldn't be an issue if we decided to invest in <code>cbmc-viewer</code>.</p>
+<p>Finally, the following downside must be considered:
+<code>cbmc-viewer</code> can report line coverage but <strong>the path to report region-based coverage may involve a complete rewrite</strong>.</p>
+<h4 id="other-output-formats"><a class="header" href="#other-output-formats">Other output formats</a></h4>
+<p>One of the long-term goals for this feature is to provide a UX that is familiar for users.
+This is particularly relevant when talking about output formats.
+Some services and frameworks working with certain coverage output formats have become quite popular.</p>
+<p>However, this version doesn't consider common output formats (i.e., GCOV or LCOV) since coverage results will only be consumed by the Kani VS Code Extension at first.
+But other output formats will be considered in the future.</p>
+<h2 id="open-questions"><a class="header" href="#open-questions">Open questions</a></h2>
+<p>Open questions:</p>
+<ul>
+<li>Do we want to report line coverage as <code>COVERED</code>/<code>UNCOVERED</code> or <code>FULL</code>/<code>PARTIAL</code>/<code>NONE</code>?</li>
+<li>Should we report coverage results and verification results or not? Doing both is likely to result in worse performance. We have to perform an experimental evaluation with hard benchmarks.</li>
+<li>Should we instrument dependencies or not? Doing so is likely to result in worse performance. We have to perform an experimental evaluation.</li>
+<li>What should be the final UX for this feature? For instance, we could print a coverage summary and generate a report file per harness. But it's not clear if individual results are relevant to users, so another possibility is to automatically combine results.</li>
+<li>What's the most appropriate and well-established output format we can emit?</li>
+<li>Determine if there are cases in which coverage information is confusing for users (due to, e.g., constant propagation or other compiler optimizations). How can work around such cases?</li>
+<li>Do we want to report coverage information for dependencies? For CI, most users may be only interested in their code. Most coverage frameworks have an aggregation tool with <a href="https://doc.rust-lang.org/rustc/instrument-coverage.html#compiling-with-coverage-enabled">an option to exclude dependencies</a> from coverage metrics.</li>
+</ul>
+<p>Feedback to gather before stabilization:</p>
+<ul>
+<li>Compare the injection-based approach in this RFC with <a href="https://doc.rust-lang.org/rustc/instrument-coverage.html">Rust's instrument-based code coverage</a>?</li>
+</ul>
+<h2 id="future-possibilities"><a class="header" href="#future-possibilities">Future possibilities</a></h2>
+<p>We expect many incremental improvements in the coverage area:</p>
+<ol>
+<li>Consuming the output produced in coverage results from the <a href="https://github.com/model-checking/kani-vscode-extension">Kani VS Code extension</a>.</li>
+<li>Building a tool that produces coverage results by combining the coverage results of more than one harness.</li>
+<li>Including span information in coverage checks and building region-based coverage reports.</li>
+<li>Adding new user-requested coverage formats such as GCOV <a href="https://github.com/model-checking/kani/issues/1706">#1706</a> or LCOV <a href="https://github.com/model-checking/kani/issues/1777">#1777</a>.</li>
+</ol>
+<div class="footnote-definition" id="coverage-experiments"><sup class="footnote-definition-label">1</sup>
+<p>We have experimented with different options for injecting coverage checks.
+For example, we have tried injecting one before each basic block, or one before each statement, etc.
+The proposed option (one before each statement AND each terminator) gives us the most accurate results.</p>
+</div>
+<div class="footnote-definition" id="coverage-api"><sup class="footnote-definition-label">2</sup>
+<p>In particular, comments in <a href="https://doc.rust-lang.org/nightly/nightly-rustc/rustc_mir_transform/coverage/spans/struct.CoverageSpan.html"><code>CoverageSpan</code></a> and <a href="https://doc.rust-lang.org/nightly/nightly-rustc/rustc_mir_transform/coverage/spans/struct.CoverageSpans.html#method.generate_coverage_spans"><code>generate_coverage_spans</code></a> hint that the initial set of spans come from <code>Statement</code>s and <code>Terminators</code>. <a href="https://github.com/model-checking/kani/pull/2612#issuecomment-1646312827">This comment</a> goes in detail about the attempt to use the compiler APIs.</p>
+</div>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../rfcs/0007-global-conditions.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                            <a rel="next" href="../rfcs/0009-function-contracts.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../rfcs/0007-global-conditions.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                    <a rel="next" href="../rfcs/0009-function-contracts.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+        <script type="text/javascript">
+            window.playground_copyable = true;
+        </script>
+        <script src="../elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../searcher.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+    </body>
+</html>

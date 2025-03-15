@@ -1,0 +1,85 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Allow users to auto generate `Arbitrary` implementations by using `#[derive(Arbitrary)]` macro."><title>Arbitrary in kani - Rust</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Italic-81dc35de.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-MediumItalic-ccf7e434.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../static.files/rustdoc-916cea96.css"><meta name="rustdoc-vars" data-root-path="../" data-static-root-path="../static.files/" data-current-crate="kani" data-themes="" data-resource-suffix="" data-rustdoc-version="1.87.0-nightly (ecade534c 2025-03-14)" data-channel="nightly" data-search-js="search-e7298875.js" data-settings-js="settings-d72f25bb.js" ><script src="../static.files/storage-d8ac8691.js"></script><script defer src="sidebar-items.js"></script><script defer src="../static.files/main-fb8c74a8.js"></script><noscript><link rel="stylesheet" href="../static.files/noscript-893ab5e7.css"></noscript><link rel="alternate icon" type="image/png" href="../static.files/favicon-32x32-6580c154.png"><link rel="icon" type="image/svg+xml" href="../static.files/favicon-044be391.svg"></head><body class="rustdoc derive"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle" title="show sidebar"></button></nav><nav class="sidebar"><div class="sidebar-crate"><h2><a href="../kani/index.html">kani</a><span class="version">0.60.0</span></h2></div><div class="sidebar-elems"><section id="rustdoc-toc"><h2 class="location"><a href="#">Arbitrary</a></h2><h3><a href="#">Sections</a></h3><ul class="block top-toc"><li><a href="#type-safety-specification-with-the-safety_constraint-attribute" title="Type safety specification with the `#[safety_constraint(...)]` attribute">Type safety specification with the <code>#[safety_constraint(...)]</code> attribute</a><ul><li><a href="#adding-safety_constraint-to-the-struct-as-opposed-to-its-fields" title="Adding `#[safety_constraint(...)]` to the struct as opposed to its fields">Adding <code>#[safety_constraint(...)]</code> to the struct as opposed to its fields</a></li></ul></li></ul></section><div id="rustdoc-modnav"><h2 class="in-crate"><a href="index.html">In crate kani</a></h2></div></div></nav><div class="sidebar-resizer"></div><main><div class="width-limiter"><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="main-heading"><div class="rustdoc-breadcrumbs"><a href="index.html">kani</a></div><h1>Derive Macro <span class="derive">Arbitrary</span><button id="copy-path" title="Copy item path to clipboard">Copy item path</button></h1><rustdoc-toolbar></rustdoc-toolbar><span class="sub-heading"></span></div><pre class="rust item-decl"><code>#[derive(Arbitrary)]
+{
+    <span class="comment">// Attributes available to this derive:</span>
+    #[safety_constraint]
+}
+</code></pre><details class="toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><p>Allow users to auto generate <code>Arbitrary</code> implementations by using
+<code>#[derive(Arbitrary)]</code> macro.</p>
+<h3 id="type-safety-specification-with-the-safety_constraint-attribute"><a class="doc-anchor" href="#type-safety-specification-with-the-safety_constraint-attribute">§</a>Type safety specification with the <code>#[safety_constraint(...)]</code> attribute</h3>
+<p>When using <code>#[derive(Arbitrary)]</code> on a struct, the
+<code>#[safety_constraint(&lt;cond&gt;)]</code> attribute can be added to either the struct
+or its fields (but not both) to indicate a type safety invariant condition
+<code>&lt;cond&gt;</code>. Since <code>kani::any()</code> is always expected to produce type-safe
+values, <strong>adding <code>#[safety_constraint(...)]</code> to the struct or any of its
+fields will further constrain the objects generated with <code>kani::any()</code></strong>.</p>
+<p>For example, the <code>check_positive</code> harness in this code is expected to
+pass:</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="attr">#[derive(kani::Arbitrary)]
+</span><span class="kw">struct </span>AlwaysPositive {
+    <span class="attr">#[safety_constraint(<span class="kw-2">*</span>inner &gt;= <span class="number">0</span>)]
+    </span>inner: i32,
+}
+
+<span class="attr">#[kani::proof]
+</span><span class="kw">fn </span>check_positive() {
+    <span class="kw">let </span>val: AlwaysPositive = kani::any();
+    <span class="macro">assert!</span>(val.inner &gt;= <span class="number">0</span>);
+}</code></pre></div>
+<p>But using the <code>#[safety_constraint(...)]</code> attribute can lead to vacuous
+results when the values are over-constrained. For example, in this code
+the <code>check_positive</code> harness will pass too:</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="attr">#[derive(kani::Arbitrary)]
+</span><span class="kw">struct </span>AlwaysPositive {
+    <span class="attr">#[safety_constraint(<span class="kw-2">*</span>inner &gt;= <span class="number">0 </span>&amp;&amp; <span class="kw-2">*</span>inner &lt; i32::MIN)]
+    </span>inner: i32,
+}
+
+<span class="attr">#[kani::proof]
+</span><span class="kw">fn </span>check_positive() {
+    <span class="kw">let </span>val: AlwaysPositive = kani::any();
+    <span class="macro">assert!</span>(val.inner &gt;= <span class="number">0</span>);
+}</code></pre></div>
+<p>Unfortunately, we made a mistake when specifying the condition because
+<code>*inner &gt;= 0 &amp;&amp; *inner &lt; i32::MIN</code> is equivalent to <code>false</code>. This results
+in the relevant assertion being unreachable:</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code>Check <span class="number">1</span>: check_positive.assertion.<span class="number">1
+        </span>- Status: UNREACHABLE
+        - Description: <span class="string">"assertion failed: val.inner &gt;= 0"
+        </span>- Location: src/main.rs:<span class="number">22</span>:<span class="number">5 </span><span class="kw">in </span>function check_positive</code></pre></div>
+<p>As usual, we recommend users to defend against these behaviors by using
+<code>kani::cover!(...)</code> checks and watching out for unreachable assertions in
+their project’s code.</p>
+<h4 id="adding-safety_constraint-to-the-struct-as-opposed-to-its-fields"><a class="doc-anchor" href="#adding-safety_constraint-to-the-struct-as-opposed-to-its-fields">§</a>Adding <code>#[safety_constraint(...)]</code> to the struct as opposed to its fields</h4>
+<p>As mentioned earlier, the <code>#[safety_constraint(...)]</code> attribute can be added
+to either the struct or its fields, but not to both. Adding the
+<code>#[safety_constraint(...)]</code> attribute to both the struct and its fields will
+result in an error.</p>
+<p>In practice, only one type of specification is need. If the condition for
+the type safety invariant involves a relation between two or more struct
+fields, the struct-level attribute should be used. Otherwise, using the
+<code>#[safety_constraint(...)]</code> on field(s) is recommended since it helps with readability.</p>
+<p>For example, if we were defining a custom vector <code>MyVector</code> and wanted to
+specify that the inner vector’s length is always less than or equal to its
+capacity, we should do it as follows:</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="attr">#[derive(Arbitrary)]
+#[safety_constraint(vector.len() &lt;= <span class="kw-2">*</span>capacity)]
+</span><span class="kw">struct </span>MyVector&lt;T&gt; {
+    vector: Vec&lt;T&gt;,
+    capacity: usize,
+}</code></pre></div>
+<p>However, if we were defining a struct whose fields are not related in any
+way, we would prefer using the <code>#[safety_constraint(...)]</code> attribute on its
+fields:</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="attr">#[derive(Arbitrary)]
+</span><span class="kw">struct </span>PositivePoint {
+    <span class="attr">#[safety_constraint(<span class="kw-2">*</span>x &gt;= <span class="number">0</span>)]
+    </span>x: i32,
+    <span class="attr">#[safety_constraint(<span class="kw-2">*</span>y &gt;= <span class="number">0</span>)]
+    </span>y: i32,
+}</code></pre></div>
+</div></details></section></div></main></body></html>

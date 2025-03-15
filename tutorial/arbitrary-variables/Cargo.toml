@@ -1,0 +1,11 @@
+# Copyright Kani Contributors
+# SPDX-License-Identifier: Apache-2.0 OR MIT
+[package]
+name = "arbitrary-variables"
+version = "0.1.0"
+edition = "2018"
+
+[dependencies]
+vector-map = "1.0.1"
+
+[workspace]

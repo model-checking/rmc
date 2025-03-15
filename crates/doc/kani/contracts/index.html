@@ -1,0 +1,200 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Kani implementation of function contracts."><title>kani::contracts - Rust</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Italic-81dc35de.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-MediumItalic-ccf7e434.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../../static.files/rustdoc-916cea96.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="kani" data-themes="" data-resource-suffix="" data-rustdoc-version="1.87.0-nightly (ecade534c 2025-03-14)" data-channel="nightly" data-search-js="search-e7298875.js" data-settings-js="settings-d72f25bb.js" ><script src="../../static.files/storage-d8ac8691.js"></script><script defer src="../sidebar-items.js"></script><script defer src="../../static.files/main-fb8c74a8.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-893ab5e7.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-6580c154.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-044be391.svg"></head><body class="rustdoc mod"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle" title="show sidebar"></button></nav><nav class="sidebar"><div class="sidebar-crate"><h2><a href="../../kani/index.html">kani</a><span class="version">0.60.0</span></h2></div><div class="sidebar-elems"><section id="rustdoc-toc"><h2 class="location"><a href="#">Module contracts</a></h2><h3><a href="#">Sections</a></h3><ul class="block top-toc"><li><a href="#step-by-step-guide" title="Step-by-step Guide">Step-by-step Guide</a></li><li><a href="#specification-attributes-overview" title="Specification Attributes Overview">Specification Attributes Overview</a></li><li><a href="#contract-use-attributes-overview" title="Contract Use Attributes Overview">Contract Use Attributes Overview</a></li><li><a href="#inductive-verification" title="Inductive Verification">Inductive Verification</a></li><li><a href="#write-sets" title="Write Sets">Write Sets</a></li><li><a href="#history-expressions" title="History Expressions">History Expressions</a></li></ul><h3><a href="#attributes">Module Items</a></h3><ul class="block"><li><a href="#attributes" title="Attribute Macros">Attribute Macros</a></li></ul></section><div id="rustdoc-modnav"><h2 class="in-crate"><a href="../index.html">In crate kani</a></h2></div></div></nav><div class="sidebar-resizer"></div><main><div class="width-limiter"><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="main-heading"><div class="rustdoc-breadcrumbs"><a href="../index.html">kani</a></div><h1>Module <span>contracts</span><button id="copy-path" title="Copy item path to clipboard">Copy item path</button></h1><rustdoc-toolbar></rustdoc-toolbar><span class="sub-heading"><a class="src" href="../../src/kani/contracts.rs.html#4-278">Source</a> </span></div><details class="toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><p>Kani implementation of function contracts.</p>
+<p>Function contracts are still under development. Using the APIs therefore
+requires the unstable <code>-Zfunction-contracts</code> flag to be passed. You can join
+the discussion on contract design by reading our
+<a href="https://model-checking.github.io/kani/rfc/rfcs/0009-function-contracts.html">RFC</a>
+and <a href="https://github.com/model-checking/kani/issues/2652">commenting on the tracking
+issue</a>.</p>
+<p>The function contract API is expressed as proc-macro attributes, and there
+are two parts to it.</p>
+<ol>
+<li><a href="#specification-attributes-overview">Contract specification attributes</a>:
+<a href="../attr.requires.html" title="attr kani::requires"><code>requires</code></a> and <a href="../attr.ensures.html" title="attr kani::ensures"><code>ensures</code></a>.</li>
+<li><a href="#contract-use-attributes-overview">Contract use attributes</a>:
+<a href="../attr.proof_for_contract.html" title="attr kani::proof_for_contract"><code>proof_for_contract</code></a> and
+<a href="../attr.stub_verified.html" title="attr kani::stub_verified"><code>stub_verified</code></a>.</li>
+</ol>
+<h3 id="step-by-step-guide"><a class="doc-anchor" href="#step-by-step-guide">§</a>Step-by-step Guide</h3>
+<p>Let us explore using a workflow involving contracts on the example of a
+simple division function <code>my_div</code>:</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">fn </span>my_div(dividend: usize, divisor: usize) -&gt; usize {
+  dividend / divisor
+}</code></pre></div>
+<p>With the contract specification attributes we can specify the behavior of
+this function declaratively. The <a href="../attr.requires.html" title="attr kani::requires"><code>requires</code></a> attribute
+allows us to declare constraints on what constitutes valid inputs to our
+function. In this case we would want to disallow a divisor that is <code>0</code>.</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="attr">#[requires(divisor != <span class="number">0</span>)]</span></code></pre></div>
+<p>This is called a precondition, because it is enforced before (pre-) the
+function call. As you can see attribute has access to the functions
+arguments. The condition itself is just regular Rust code. You can use any
+Rust code, including calling functions and methods. However you may not
+perform I/O (like <a href="https://doc.rust-lang.org/nightly/std/macro.println.html" title="macro std::println"><code>println!</code></a>) or mutate memory (like <a href="https://doc.rust-lang.org/nightly/alloc/vec/struct.Vec.html#method.push" title="method alloc::vec::Vec::push"><code>Vec::push</code></a>).</p>
+<p>The <a href="../attr.ensures.html" title="attr kani::ensures"><code>ensures</code></a> attribute on the other hand lets us describe
+the output value in terms of the inputs. You may be as (im)precise as you
+like in the <a href="../attr.ensures.html" title="attr kani::ensures"><code>ensures</code></a> clause, depending on your needs. One
+approximation of the result of division for instance could be this:</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="attr">#[ensures(|result : <span class="kw-2">&amp;</span>usize| <span class="kw-2">*</span>result &lt;= dividend)]</span></code></pre></div>
+<p>This is called a postcondition and it also has access to the arguments and
+is expressed in regular Rust code. The same restrictions apply as did for
+<a href="../attr.requires.html" title="attr kani::requires"><code>requires</code></a>. In addition to the postcondition is expressed
+as a closure where the value returned from the function is passed to this
+closure by reference.</p>
+<p>You may combine as many <a href="../attr.requires.html" title="attr kani::requires"><code>requires</code></a> and
+<a href="../attr.ensures.html" title="attr kani::ensures"><code>ensures</code></a> attributes on a single function as you please.
+They all get enforced (as if their conditions were <code>&amp;&amp;</code>ed together) and the
+order does not matter. In our example putting them together looks like this:</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>kani::{requires, ensures};
+
+<span class="attr">#[requires(divisor != <span class="number">0</span>)]
+#[ensures(|result : <span class="kw-2">&amp;</span>usize| <span class="kw-2">*</span>result &lt;= dividend)]
+</span><span class="kw">fn </span>my_div(dividend: usize, divisor: usize) -&gt; usize {
+  dividend / divisor
+}</code></pre></div>
+<p>Once we are finished specifying our contract we can ask Kani to check it’s
+validity. For this we need to provide a proof harness that exercises the
+function. The harness is created like any other, e.g. as a test-like
+function with inputs and using <code>kani::any</code> to create arbitrary values.
+However we do not need to add any assertions or assumptions about the
+inputs, Kani will use the pre- and postconditions we have specified for that
+and we use the <a href="../attr.proof_for_contract.html" title="attr kani::proof_for_contract"><code>proof_for_contract</code></a> attribute
+instead of <a href="../attr.proof.html" title="attr kani::proof"><code>proof</code></a> and provide it with the path to the
+function we want to check.</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="attr">#[kani::proof_for_contract(my_div)]
+</span><span class="kw">fn </span>my_div_harness() {
+    my_div(kani::any(), kani::any());
+}</code></pre></div>
+<p>The harness is checked like any other by running <code>cargo kani</code> and can be
+specifically selected with <code>--harness my_div_harness</code>.</p>
+<p>Once we have verified that our contract holds, we can use perhaps it’s
+coolest feature: verified stubbing. This allows us to use the conditions of
+the contract <em>instead</em> of it’s implementation. This can be very powerful for
+expensive implementations (involving loops for instance).</p>
+<p>Verified stubbing is available to any harness via the
+<a href="../attr.stub_verified.html" title="attr kani::stub_verified"><code>stub_verified</code></a> harness attribute. We must provide
+the attribute with the path to the function to stub, but unlike with
+<a href="../attr.stub.html" title="attr kani::stub"><code>stub</code></a> we do not need to provide a function to replace with,
+the contract will be used automatically.</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="attr">#[kani::proof]
+#[kani::stub_verified(my_div)]
+</span><span class="kw">fn </span>use_div() {
+  <span class="kw">let </span>v = kani::vec::any_vec::&lt;char, <span class="number">5</span>&gt;();
+  <span class="kw">let </span>some_idx = my_div(v.len() - <span class="number">1</span>, <span class="number">3</span>);
+  v[some_idx];
+}</code></pre></div>
+<p>In this example the contract is sufficient to prove that the element access
+in the last line cannot be out-of-bounds.</p>
+<h3 id="specification-attributes-overview"><a class="doc-anchor" href="#specification-attributes-overview">§</a>Specification Attributes Overview</h3>
+<p>The basic two specification attributes available for describing
+function behavior are <a href="../attr.requires.html" title="attr kani::requires"><code>requires</code></a> for preconditions and
+<a href="../attr.ensures.html" title="attr kani::ensures"><code>ensures</code></a> for postconditions. Both admit arbitrary Rust
+expressions as their bodies which may also reference the function arguments
+but must not mutate memory or perform I/O. The postcondition may
+additionally reference the return value of the function as the variable
+<code>result</code>.</p>
+<p>In addition Kani provides the <a href="../attr.modifies.html" title="attr kani::modifies"><code>modifies</code></a> attribute. This
+works a bit different in that it does not contain conditions but a comma
+separated sequence of expressions that evaluate to pointers. This attribute
+constrains to which memory locations the function is allowed to write. Each
+expression can contain arbitrary Rust syntax, though it may not perform side
+effects and it is also currently unsound if the expression can panic. For more
+information see the <a href="#write-sets">write sets</a> section.</p>
+<p>During verified stubbing the return value of a function with a contract is
+replaced by a call to <code>kani::any</code>. As such the return value must implement
+the <code>kani::Arbitrary</code> trait.</p>
+<p>In Kani, function contracts are optional. As such a function with at least
+one specification attribute is considered to “have a contract” and any
+absent specification type defaults to its most general interpretation
+(<code>true</code>). All functions with not a single specification attribute are
+considered “not to have a contract” and are ineligible for use as the target
+of a <a href="../attr.proof_for_contract.html" title="attr kani::proof_for_contract"><code>proof_for_contract</code></a> of
+<a href="../attr.stub_verified.html" title="attr kani::stub_verified"><code>stub_verified</code></a> attribute.</p>
+<h3 id="contract-use-attributes-overview"><a class="doc-anchor" href="#contract-use-attributes-overview">§</a>Contract Use Attributes Overview</h3>
+<p>Contract are used both to verify function behavior and to leverage the
+verification result as a sound abstraction.</p>
+<p>Verifying function behavior currently requires the designation of at least
+one checking harness with the
+<a href="../attr.proof_for_contract.html" title="attr kani::proof_for_contract"><code>proof_for_contract</code></a> attribute. A harness may
+only have one <code>proof_for_contract</code> attribute and it may not also have a
+<code>proof</code> attribute.</p>
+<p>The checking harness is expected to set up the arguments that <code>foo</code> should
+be called with and initialized any <code>static mut</code> globals that are reachable.
+All of these should be initialized to as general value as possible, usually
+achieved using <code>kani::any</code>. The harness must call e.g. <code>foo</code> at least once
+and if <code>foo</code> has type parameters, only one instantiation of those parameters
+is admissible. Violating either results in a compile error.</p>
+<p>If any inputs have special invariants you <em>can</em> use <code>kani::assume</code> to
+enforce them but this may introduce unsoundness. In general all restrictions
+on input parameters should be part of the <a href="../attr.requires.html" title="attr kani::requires"><code>requires</code></a>
+clause of the function contract.</p>
+<p>Once the contract has been verified it may be used as a verified stub. For
+this the <a href="../attr.stub_verified.html" title="attr kani::stub_verified"><code>stub_verified</code></a> attribute is used.
+<code>stub_verified</code> is a harness attribute, like
+<a href="../attr.unwind.html" title="attr kani::unwind"><code>unwind</code></a>, meaning it is used on functions that are
+annotated with <a href="../attr.proof.html" title="attr kani::proof"><code>proof</code></a>. It may also be used on a
+<code>proof_for_contract</code> proof.</p>
+<p>Unlike <code>proof_for_contract</code> multiple <code>stub_verified</code> attributes are allowed
+on the same proof harness though they must target different functions.</p>
+<h3 id="inductive-verification"><a class="doc-anchor" href="#inductive-verification">§</a>Inductive Verification</h3>
+<p>Function contracts by default use inductive verification to efficiently
+verify recursive functions. In inductive verification a recursive function
+is executed once and every recursive call instead uses the contract
+replacement. In this way many recursive calls can be checked with a
+single verification pass.</p>
+<p>The downside of inductive verification is that the return value of a
+contracted function must implement <code>kani::Arbitrary</code>. Due to restrictions to
+code generation in proc macros, the contract macros cannot determine reliably
+in all cases whether a given function with a contract is recursive. As a
+result it conservatively sets up inductive verification for every function
+and requires the <code>kani::Arbitrary</code> constraint for contract checks.</p>
+<p>If you feel strongly about this issue you can join the discussion on issue
+<a href="https://github.com/model-checking/kani/issues/2823">#2823</a> to enable
+opt-out of inductive verification.</p>
+<h3 id="write-sets"><a class="doc-anchor" href="#write-sets">§</a>Write Sets</h3>
+<p>The <a href="../attr.modifies.html" title="attr kani::modifies"><code>modifies</code></a> attribute is used to describe which
+locations in memory a function may assign to. The attribute contains a comma
+separated series of expressions that reference the function arguments.
+Syntactically any expression is permissible, though it may not perform side
+effects (I/O, mutation) or panic. As an example consider this super simple
+function:</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="attr">#[kani::modifies(ptr, my_box.as_ref())]
+</span><span class="kw">fn </span>a_function(ptr: <span class="kw-2">&amp;mut </span>u32, my_box: <span class="kw-2">&amp;mut </span>Box&lt;u32&gt;) {
+    <span class="kw-2">*</span>ptr = <span class="number">80</span>;
+    <span class="kw-2">*</span>my_box.as_mut() = <span class="number">90</span>;
+}</code></pre></div>
+<p>Because the function performs an observable side-effect (setting both the
+value behind the pointer and the value pointed-to by the box) we need to
+provide a <code>modifies</code> attribute. Otherwise Kani will reject a contract on
+this function.</p>
+<p>An expression used in a <code>modifies</code> clause must return a pointer to the
+location that you would like to allow to be modified. This can be any basic
+Rust pointer type (<code>&amp;T</code>, <code>&amp;mut T</code>, <code>*const T</code> or <code>*mut T</code>). In addition <code>T</code>
+must implement <a href="../trait.Arbitrary.html" title="trait kani::Arbitrary"><code>Arbitrary</code></a>. This is used to assign
+<code>kani::any()</code> to the location when the function is used in a <code>stub_verified</code>.</p>
+<h3 id="history-expressions"><a class="doc-anchor" href="#history-expressions">§</a>History Expressions</h3>
+<p>Additionally, an ensures clause is allowed to refer to the state of the function arguments before function execution and perform simple computations on them
+via an <code>old</code> monad. Any instance of <code>old(computation)</code> will evaluate the
+computation before the function is called. It is required that this computation
+is effect free and closed with respect to the function arguments.</p>
+<p>For example, the following code passes kani tests:</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="attr">#[kani::modifies(a)]
+#[kani::ensures(|result| old(<span class="kw-2">*</span>a).wrapping_add(<span class="number">1</span>) == <span class="kw-2">*</span>a)]
+#[kani::ensures(|result : <span class="kw-2">&amp;</span>u32| old(<span class="kw-2">*</span>a).wrapping_add(<span class="number">1</span>) == <span class="kw-2">*</span>result)]
+</span><span class="kw">fn </span>add1(a : <span class="kw-2">&amp;mut </span>u32) -&gt; u32 {
+    <span class="kw-2">*</span>a=a.wrapping_add(<span class="number">1</span>);
+    <span class="kw-2">*</span>a
+}</code></pre></div>
+<p>Here, the value stored in <code>a</code> is precomputed and remembered after the function
+is called, even though the contents of <code>a</code> changed during the function execution.</p>
+</div></details><h2 id="attributes" class="section-header">Attribute Macros<a href="#attributes" class="anchor">§</a></h2><dl class="item-table"><dt><a class="attr" href="attr.ensures.html" title="attr kani::contracts::ensures">ensures</a></dt><dd>Add a postcondition to this function.</dd><dt><a class="attr" href="attr.modifies.html" title="attr kani::contracts::modifies">modifies</a></dt><dd>Declaration of an explicit write-set for the annotated function.</dd><dt><a class="attr" href="attr.proof_for_contract.html" title="attr kani::contracts::proof_for_contract">proof_<wbr>for_<wbr>contract</a></dt><dd>Designates this function as a harness to check a function contract.</dd><dt><a class="attr" href="attr.requires.html" title="attr kani::contracts::requires">requires</a></dt><dd>Add a precondition to this function.</dd><dt><a class="attr" href="attr.stub_verified.html" title="attr kani::contracts::stub_verified">stub_<wbr>verified</a></dt><dd><code>stub_verified(TARGET)</code> is a harness attribute (to be used on
+<a href="../attr.proof.html" title="attr kani::proof"><code>proof</code></a> or <a href="../attr.proof_for_contract.html" title="attr kani::proof_for_contract"><code>proof_for_contract</code></a>
+function) that replaces all occurrences of <code>TARGET</code> reachable from this
+harness with a stub generated from the contract on <code>TARGET</code>.</dd></dl></section></div></main></body></html>

@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["SchedulingAssumption"],"fn":["block_on","block_on_with_spawn","spawn","yield_now"],"struct":["JoinHandle","RoundRobin"],"trait":["SchedulingStrategy"]};
